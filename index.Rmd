@@ -16,7 +16,7 @@ library(BiocStyle)
 
 # Preface {-}
 
-The [Bioconductor](https://bioconductor.org/) `r Biocpkg("iSEE")` package provides functions for creating an interactive graphical user interface (GUI) using the [RStudio])(https://rstudio.com/) `r CRANpkg("Shiny")` package for exploring data stored in SummarizedExperiment objects, including row- and column-level metadata.
+The [Bioconductor](https://bioconductor.org/) `r Biocpkg("iSEE")` package provides functions for creating an interactive graphical user interface (GUI) using the [RStudio](https://rstudio.com/) `r CRANpkg("Shiny")` package for exploring data stored in SummarizedExperiment objects, including row- and column-level metadata.
 In this book we describe how to create web-applications that leverage the built-in panels and develop new ones.
 
 ```{r include=FALSE}
