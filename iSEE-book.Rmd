@@ -1,0 +1,58 @@
+--- 
+title: "Extending iSEE"
+author: Kevin Rue-Albrecht, Federico Marini, Charlotte Soneson, and Aaron Lun
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+documentclass: book
+bibliography: [book.bib, packages.bib]
+biblio-style: apalike
+link-citations: yes
+description: "This is a minimal example of using the bookdown package to write a book. The output format for this example is bookdown::gitbook."
+---
+
+```{r, include=FALSE}
+library(BiocStyle)
+```
+
+# Preface {-}
+
+The [Bioconductor](https://bioconductor.org/) `r Biocpkg("iSEE")` package provides functions for creating an interactive graphical user interface (GUI) using the [RStudio](https://rstudio.com/) `r CRANpkg("Shiny")` package for exploring data stored in SummarizedExperiment objects, including row- and column-level metadata.
+In this book we describe how to create web-applications that leverage the built-in panels and develop new ones.
+
+```{r include=FALSE}
+# automatically create a bib database for R packages
+knitr::write_bib(c(
+  .packages(), 'bookdown', 'knitr', 'rmarkdown'
+), 'packages.bib')
+```
+
+<!--chapter:end:index.Rmd-->
+
+# The iSEE server {#server}
+
+Panels are defined as a hierarchy of S4 classes.
+
+<!-- Source: https://www.overleaf.com/project/5de43f2303966900014b99c2 -->
+\begin{tikzpicture}
+  \node {Family: DotPlot}
+    child { node {Family: ColumnDotPlot}
+        child { node {RedDimPlot}}
+        child { node {ColDataPlot}}
+        child { node {FeatAssayPlot}}
+    }
+    child { node {Family: ColumnDotPlot}
+        child { node {RowDataPlot}}
+        child { node {SampAssayPlot}}
+    }};
+\end{tikzpicture}
+
+The app memory is a list of instances 
+
+<!--chapter:end:01-server.Rmd-->
+
+`r if (knitr::is_html_output()) '
+# References {-}
+'`
+
+<!--chapter:end:06-references.Rmd-->
+
