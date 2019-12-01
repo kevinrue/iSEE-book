@@ -1,0 +1,1 @@
+This book describes how to use the [Bioconductor](https://bioconductor.org/) `r Biocpkg("iSEE")` package to create web-applications for exploring data stored in `r Biocpkg("SummarizedExperiment")` objects.
