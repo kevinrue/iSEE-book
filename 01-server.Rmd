@@ -2,6 +2,8 @@
 
 ## Panel classes
 
+### Overview
+
 The types of panels available to compose an `r Biocpkg("iSEE")` app are defined as a hierarchy of S4 classes.
 
 <!-- TODO Replace the bullet list below by a figure, like a filesystem tree. -->
@@ -22,15 +24,20 @@ The types of panels available to compose an `r Biocpkg("iSEE")` app are defined 
       - ColStatTable
   - HeatMapPlot
 
+### The Panel class
+
 The top-most class is called `Panel`.
-It defines the core properties common to any panel - existing or future - that may be displayed in the interface:
+It defines the core properties common to any panel - existing or future - that may be displayed in the interface.
 
 |   |   |
 | - | - |
 | `PanelId` | Integer index indicating the i^th^ panel of a given type. |
 | `PanelHeight` | Height of the panel, in pixels. |
-| `PanelWidth` | Width of the panel, an integer value from 1 to 12. |
-
+| `PanelWidth` | Width of the panel, an integer value indicating the number of columns to use, from 1 to 12. |
+| `SelectBoxOpen` | Logical value indicating if the _Selection parameters_ box of the panel is open when the app starts. |
+| `SelectByPlot` | Encoded name of the panel from which to receive a selection of data points. |
+| `SelectMultiType` | Keyword indicating the method to deal with multiple incoming selections of data points. |
+| `SelectMultiSaved` | Integer index indicating a single data point selection to use, among multiple incoming selections. |
 
 The `Panel` class is directly derived into three subtypes:
 
