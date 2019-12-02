@@ -4,19 +4,14 @@
 
 Panels are defined as a hierarchy of S4 classes.
 
-<!-- Source: https://www.overleaf.com/project/5de43f2303966900014b99c2 -->
-\begin{tikzpicture}
-  \node {Family: DotPlot}
-    child { node {Family: ColumnDotPlot}
-        child { node {RedDimPlot}}
-        child { node {ColDataPlot}}
-        child { node {FeatAssayPlot}}
-    }
-    child { node {Family: ColumnDotPlot}
-        child { node {RowDataPlot}}
-        child { node {SampAssayPlot}}
-    }};
-\end{tikzpicture}
+- DotPlot
+  - ColumnDotPlot
+    - RedDimPlot
+    - ColDataPlot
+    - FeatAssayPlot
+  - RowDotPlot
+    - RowDataPlot
+    - SampAssayPlot
 
 The app memory is a list of instances of those classes.
 
