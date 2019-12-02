@@ -1,28 +1,59 @@
 # The iSEE server {#server}
 
-## Overview
+## Panel classes
 
-Panels are defined as a hierarchy of S4 classes.
+The types of panels available to compose an `r Biocpkg("iSEE")` app are defined as a hierarchy of S4 classes.
+
+<!-- TODO Replace the bullet list below by a figure, like a filesystem tree. -->
+
+- Panel
+  - DotPlot
+    - ColumnDotPlot
+      - RedDimPlot
+      - ColDataPlot
+      - FeatAssayPlot
+    - RowDotPlot
+      - RowDataPlot
+      - SampAssayPlot
+  - Table
+    - RowTable
+      - RowStatTable
+    - ColumnTable
+      - ColStatTable
+  - HeatMapPlot
+
+The top-most class is called `Panel`.
+It defines the core properties common to any panel - existing or future - that may be displayed in the interface:
+
+|   |   |
+| - | - |
+| `PanelId` | Integer index indicating the i^th^ panel of a given type. |
+| `PanelHeight` | Height of the panel, in pixels. |
+| `PanelWidth` | Width of the panel, an integer value from 1 to 12. |
+
+
+The `Panel` class is directly derived into three subtypes:
 
 - DotPlot
-  - ColumnDotPlot
-    - RedDimPlot
-    - ColDataPlot
-    - FeatAssayPlot
-  - RowDotPlot
-    - RowDataPlot
-    - SampAssayPlot
+- Table
+- HeatMapPlot
 
-The app memory is a list of instances of those classes.
+## The app memory
+
+The app `memory` is a list of instances of those classes, which keeps track of the order in which individual panels are displayed in the GUI.
 
 ## The panel API
 
 ### .cacheCommonInfo
 
-Each panel defines a `.cacheCommonInfo` function.
+Each individual panel (e.g., _RedDimPlot_) and family of panels (e.g., _ColDotPlot_) defines a `.cacheCommonInfo` function.
+
+which is returned by the top-most `.cacheCommonInfo,Panel-method` signature
+
 
 This function is called for each panel in memory when the app is initialized.
-It allows the app to efficienly compute a single time common information that only depends on the input `se` object and will be frequently reused during the runtime of the app.
+It allows the app to efficienly compute a single time common information that only depends on the input `se` object, and may be frequently reused during the runtime of the app.
+The information is cached in the `se` object itself, 
 
 For instance, the `RedDimPlot` panel type caches the available reduced dimension names available in the `se` object.
 
