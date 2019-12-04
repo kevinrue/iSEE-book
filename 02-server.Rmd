@@ -3,6 +3,10 @@
 ## Reactive objects
 
 <!-- TODO
+A general description of the purpose of reactive values in rObjects would probably be enough.
+I don't think developers need details about each individual value.
+
+Some examples values manually collected from iSEE-main.R:
 - rerender
 - rerendered
 - paste0(mode, id)
