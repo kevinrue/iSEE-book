@@ -6,21 +6,21 @@ The types of panels available to compose an `r Biocpkg("iSEE")` app are defined 
 
 <!-- TODO Replace the bullet list below by a figure, like a filesystem tree. -->
 
-- Panel
-  - DotPlot
-    - ColumnDotPlot
-      - RedDimPlot
-      - ColDataPlot
-      - FeatAssayPlot
-    - RowDotPlot
-      - RowDataPlot
-      - SampAssayPlot
-  - Table
-    - RowTable
-      - RowStatTable
-    - ColumnTable
-      - ColStatTable
-  - HeatMapPlot
+- `Panel`
+  - `DotPlot`
+    - `ColumnDotPlot`
+      - `RedDimPlot`
+      - `ColDataPlot`
+      - `FeatAssayPlot`
+    - `RowDotPlot`
+      - `RowDataPlot`
+      - `SampAssayPlot`
+  - `Table`
+    - `RowTable`
+      - `RowStatTable`
+    - `ColumnTable`
+      - `ColStatTable`
+  - `HeatMapPlot`
 
 ## The Panel class
 
