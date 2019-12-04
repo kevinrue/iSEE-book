@@ -83,11 +83,14 @@
 <li class="chapter" data-level="1.10" data-path="panel-classes.html"><a href="panel-classes.html#heatmapplot-class"><i class="fa fa-check"></i><b>1.10</b> The HeatMapPlot panel class</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="server.html"><a href="server.html"><i class="fa fa-check"></i><b>2</b> The iSEE server</a><ul>
-<li class="chapter" data-level="2.1" data-path="server.html"><a href="server.html#the-app-memory"><i class="fa fa-check"></i><b>2.1</b> The app memory</a></li>
-<li class="chapter" data-level="2.2" data-path="server.html"><a href="server.html#the-panel-api"><i class="fa fa-check"></i><b>2.2</b> The panel API</a><ul>
-<li class="chapter" data-level="2.2.1" data-path="server.html"><a href="server.html#cachecommoninfo"><i class="fa fa-check"></i><b>2.2.1</b> .cacheCommonInfo</a></li>
-<li class="chapter" data-level="2.2.2" data-path="server.html"><a href="server.html#refineparameters"><i class="fa fa-check"></i><b>2.2.2</b> .refineParameters</a></li>
+<li class="chapter" data-level="2.1" data-path="server.html"><a href="server.html#robjects"><i class="fa fa-check"></i><b>2.1</b> Reactive objects</a></li>
+<li class="chapter" data-level="2.2" data-path="server.html"><a href="server.html#persistent-non-reactive-objects"><i class="fa fa-check"></i><b>2.2</b> Persistent (non-reactive) objects</a></li>
+<li class="chapter" data-level="2.3" data-path="server.html"><a href="server.html#memory"><i class="fa fa-check"></i><b>2.3</b> The app memory</a></li>
+<li class="chapter" data-level="2.4" data-path="server.html"><a href="server.html#panel-api"><i class="fa fa-check"></i><b>2.4</b> The panel API</a><ul>
+<li class="chapter" data-level="2.4.1" data-path="server.html"><a href="server.html#cachecommoninfo"><i class="fa fa-check"></i><b>2.4.1</b> .cacheCommonInfo</a></li>
+<li class="chapter" data-level="2.4.2" data-path="server.html"><a href="server.html#refineparameters"><i class="fa fa-check"></i><b>2.4.2</b> .refineParameters</a></li>
 </ul></li>
+<li class="chapter" data-level="2.5" data-path="server.html"><a href="server.html#initialization-of-the-app-server"><i class="fa fa-check"></i><b>2.5</b> Initialization of the app server</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
@@ -112,14 +115,47 @@
             <section class="normal" id="section-">
 <div id="server" class="section level1">
 <h1><span class="header-section-number">Chapter 2</span> The iSEE server</h1>
-<div id="the-app-memory" class="section level2">
-<h2><span class="header-section-number">2.1</span> The app memory</h2>
+<div id="robjects" class="section level2">
+<h2><span class="header-section-number">2.1</span> Reactive objects</h2>
+<!-- TODO
+A general description of the purpose of reactive values in rObjects would probably be enough.
+I don't think developers need details about each individual value.
+
+Some examples values manually collected from iSEE-main.R:
+- rerender
+- rerendered
+- paste0(mode, id)
+- paste0(mode, id, "_", .panelLinkInfo)
+- paste0(mode, id, "_", .panelGeneralInfo)
+- paste0(mode, id, "_", .selectMultiSaved)
+- paste0(mode, id, "_repopulated")
+- paste0(mode, id, "_reactivated")
+- paste0(mode, id, "_resaved")
+-->
+</div>
+<div id="persistent-non-reactive-objects" class="section level2">
+<h2><span class="header-section-number">2.2</span> Persistent (non-reactive) objects</h2>
+<!-- TODO
+A description of the purpose of pObjects.
+In particular, memory and coordinates are key to highlight, although they will be described in further details in dedicated sections.
+
+Some examples:
+- memory
+- counter
+- commands
+- coordinates
+- cached_info
+- .voiceActivePanel
+-->
+</div>
+<div id="memory" class="section level2">
+<h2><span class="header-section-number">2.3</span> The app memory</h2>
 <p>The app <code>memory</code> is a list of instances created from available panel classes, which defines the order in which individual panels are displayed in the GUI.</p>
 </div>
-<div id="the-panel-api" class="section level2">
-<h2><span class="header-section-number">2.2</span> The panel API</h2>
+<div id="panel-api" class="section level2">
+<h2><span class="header-section-number">2.4</span> The panel API</h2>
 <div id="cachecommoninfo" class="section level3">
-<h3><span class="header-section-number">2.2.1</span> .cacheCommonInfo</h3>
+<h3><span class="header-section-number">2.4.1</span> .cacheCommonInfo</h3>
 <p>Each individual panel (e.g., <em>RedDimPlot</em>) and family of panels (e.g., <em>ColDotPlot</em>) defines a <code>.cacheCommonInfo</code> function.</p>
 <p>This function is called for each panel instance in memory when the app is initialized.
 It allows the app to efficienly compute a single time common information that only depends on the input <code>se</code> object, and may be frequently reused during the runtime of the app.</p>
@@ -127,15 +163,49 @@ It allows the app to efficienly compute a single time common information that on
 <p>The top-most signature - for the <code>Panel</code> class - returns the <code>se</code> object that contains all the cached information.</p>
 </div>
 <div id="refineparameters" class="section level3">
-<h3><span class="header-section-number">2.2.2</span> .refineParameters</h3>
+<h3><span class="header-section-number">2.4.2</span> .refineParameters</h3>
 <p>Each panel defines a <code>.refineParameters</code> function.</p>
 <p>This function is called for each panel instance in memory when the app is initialized, and also when a new panel is added to the GUI.
 It inspects the parameters of a given panel instance, and replaces invalid parameters with sensible values for a given <code>se</code> object.</p>
 <p>Following the hierarchy of panel types, each call to the signature takes an instance <code>x</code> and the <code>se</code> object, and first calls <code>callNextMethod()</code> to invoke the next parent signature, to refine generic parameters before processing specific ones.</p>
 <p>The called signature ultimately returns the updated instance panel <code>x</code>, or <code>NULL</code> if the panel instance is not available for this app.</p>
+</div>
+</div>
+<div id="initialization-of-the-app-server" class="section level2">
+<h2><span class="header-section-number">2.5</span> Initialization of the app server</h2>
+<p>The app server is initialized as soon as a valid <code>se</code> object is provided.
+This can be either in the call to <code>iSEE(se)</code> or using the Shiny file upload button in apps that were launched without providing the <code>se</code> arguments, e.g., <code>iSEE()</code>.</p>
+<p>The <code>initialize_server</code> function takes the <code>se</code> object and the list holding reactive values used to trigger re-rendering of the GUI, as described <a href="server.html#robjects">above</a>.</p>
+<p>The very first step invokes the function <code>.sanitize_SE_input</code> on the <code>se</code> object.
+This function coerces the <code>se</code> to <code>SingleCellExperiment</code>, flatten nested DataFrames, add row and column names, and remove other non-atomic fields.
+In addition, it also sanitizes the <code>SingleCellExperiment</code> object by moving internal fields into the column- or row-level metadata, making them visible in the <em>Column statistics table</em> and <em>Row statistics table</em> panels, respectively. The function returns both the sanitized <code>se</code> object that will be used by the app, and the list of R commands that will be displayed in the code tracker for users.</p>
+<p>Next, the server invokes the <code>checkColormapCompatibility</code> function.
+This function takes the <code>se</code> object and the optioanl <code>colormap</code> provided to <code>iSEE()</code>, and carries out a number of compatibility checks between the two objects.
+The function collects a character vector of issue messages that are displayed - if any - as warning messages in GUI during initialization.</p>
+<!-- TODO: something about setting up memory, once the current TEST code is replaced. -->
+<p>Next, the <code>.cacheCommonInfo</code> and <code>.refineParameters</code> are successively invoked on each panel instance initialized in the app memory.
+As described in a separate section <a href="server.html#panel-api">above</a>, the first function precomputes and caches information specific to the <code>se</code> object and frequently used throughout the runtime of the app.
+The second function ensures that each panel instance is initialized with valid parameters; it replaces any invalid parameters with sensible values for a given <code>se</code> object.</p>
+<!-- TODO: something, once we deal with user-supplied panel IDs -->
+<p>Next, persistent (non-reactive) objects are initialized:</p>
+<ul>
+<li>the app <code>memory</code> (see this <a href="server.html#memory">section</a>)</li>
+<li>the count of panels of each type, used to assign increasing ID to new panel instances</li>
+<li>the list of commands to display in the code tracker for each panel instance</li>
+<li>the list of data point coordinates selectable in each panel instance<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a></li>
+<li>a list of miscellaneous cached information<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a></li>
+</ul>
+<!-- TODO: something about rObjects -->
+<!-- TODO: something about the various kinds of observers -->
 
 </div>
 </div>
+<div class="footnotes">
+<hr />
+<ol start="1">
+<li id="fn1"><p>Data points downsampled for rendering speed performance remain selectable, even though they are not visible in the plot.<a href="server.html#fnref1" class="footnote-back">↩</a></p></li>
+<li id="fn2"><p>The plot that contain the legend keys of <em>Heatmap</em> panels is currently cached as miscellaneous information retrieved separately when rendering the GUI.<a href="server.html#fnref2" class="footnote-back">↩</a></p></li>
+</ol>
 </div>
             </section>
 

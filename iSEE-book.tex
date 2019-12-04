@@ -274,13 +274,19 @@ This type of panel introduces parameters specific to panels where the output is 
 \hypertarget{server}{%
 \chapter{The iSEE server}\label{server}}
 
-\hypertarget{the-app-memory}{%
-\section{The app memory}\label{the-app-memory}}
+\hypertarget{robjects}{%
+\section{Reactive objects}\label{robjects}}
+
+\hypertarget{persistent-non-reactive-objects}{%
+\section{Persistent (non-reactive) objects}\label{persistent-non-reactive-objects}}
+
+\hypertarget{memory}{%
+\section{The app memory}\label{memory}}
 
 The app \texttt{memory} is a list of instances created from available panel classes, which defines the order in which individual panels are displayed in the GUI.
 
-\hypertarget{the-panel-api}{%
-\section{The panel API}\label{the-panel-api}}
+\hypertarget{panel-api}{%
+\section{The panel API}\label{panel-api}}
 
 \hypertarget{cachecommoninfo}{%
 \subsection{.cacheCommonInfo}\label{cachecommoninfo}}
@@ -305,6 +311,42 @@ It inspects the parameters of a given panel instance, and replaces invalid param
 Following the hierarchy of panel types, each call to the signature takes an instance \texttt{x} and the \texttt{se} object, and first calls \texttt{callNextMethod()} to invoke the next parent signature, to refine generic parameters before processing specific ones.
 
 The called signature ultimately returns the updated instance panel \texttt{x}, or \texttt{NULL} if the panel instance is not available for this app.
+
+\hypertarget{initialization-of-the-app-server}{%
+\section{Initialization of the app server}\label{initialization-of-the-app-server}}
+
+The app server is initialized as soon as a valid \texttt{se} object is provided.
+This can be either in the call to \texttt{iSEE(se)} or using the Shiny file upload button in apps that were launched without providing the \texttt{se} arguments, e.g., \texttt{iSEE()}.
+
+The \texttt{initialize\_server} function takes the \texttt{se} object and the list holding reactive values used to trigger re-rendering of the GUI, as described \protect\hyperlink{robjects}{above}.
+
+The very first step invokes the function \texttt{.sanitize\_SE\_input} on the \texttt{se} object.
+This function coerces the \texttt{se} to \texttt{SingleCellExperiment}, flatten nested DataFrames, add row and column names, and remove other non-atomic fields.
+In addition, it also sanitizes the \texttt{SingleCellExperiment} object by moving internal fields into the column- or row-level metadata, making them visible in the \emph{Column statistics table} and \emph{Row statistics table} panels, respectively. The function returns both the sanitized \texttt{se} object that will be used by the app, and the list of R commands that will be displayed in the code tracker for users.
+
+Next, the server invokes the \texttt{checkColormapCompatibility} function.
+This function takes the \texttt{se} object and the optioanl \texttt{colormap} provided to \texttt{iSEE()}, and carries out a number of compatibility checks between the two objects.
+The function collects a character vector of issue messages that are displayed - if any - as warning messages in GUI during initialization.
+
+Next, the \texttt{.cacheCommonInfo} and \texttt{.refineParameters} are successively invoked on each panel instance initialized in the app memory.
+As described in a separate section \protect\hyperlink{panel-api}{above}, the first function precomputes and caches information specific to the \texttt{se} object and frequently used throughout the runtime of the app.
+The second function ensures that each panel instance is initialized with valid parameters; it replaces any invalid parameters with sensible values for a given \texttt{se} object.
+
+Next, persistent (non-reactive) objects are initialized:
+
+\begin{itemize}
+\tightlist
+\item
+  the app \texttt{memory} (see this \protect\hyperlink{memory}{section})
+\item
+  the count of panels of each type, used to assign increasing ID to new panel instances
+\item
+  the list of commands to display in the code tracker for each panel instance
+\item
+  the list of data point coordinates selectable in each panel instance\footnote{Data points downsampled for rendering speed performance remain selectable, even though they are not visible in the plot.}
+\item
+  a list of miscellaneous cached information\footnote{The plot that contain the legend keys of \emph{Heatmap} panels is currently cached as miscellaneous information retrieved separately when rendering the GUI.}
+\end{itemize}
 
 \bibliography{book.bib,packages.bib}
 
