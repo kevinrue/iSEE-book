@@ -27,7 +27,7 @@ The types of panels available to compose an `r Biocpkg("iSEE")` app are defined 
 ### The Panel class
 
 The top-most class is called `Panel`.
-It defines the core properties common to any panel - existing or future - that may be displayed in the interface.
+It is a virtual class that defines the core properties common to any panel - existing or future - that may be displayed in the interface.
 
 |   |   |
 | - | - |
@@ -39,11 +39,65 @@ It defines the core properties common to any panel - existing or future - that m
 | `SelectMultiType` | Keyword indicating the method to deal with multiple incoming selections of data points. |
 | `SelectMultiSaved` | Integer index indicating a single data point selection to use, among multiple incoming selections. |
 
-The `Panel` class is directly derived into three subtypes:
+### The DotPlot and Table panel families
+
+The `Panel` virtual class is directly derived into two major virtual sub-classes:
 
 - DotPlot
 - Table
-- HeatMapPlot
+
+Those classes introduce properties that are specific to distinct subsets of panel types.
+
+The `DotPlot` class introduce parameters specific to panels where the output is a `ggplot` object and each row in the data-frame is represented as a point in a plot.
+
+The `Table` class introduce parameters specific to panels where the main output is a data-frame directly displayed as a table in the GUI.
+
+In addition, the `HeatMapPlot` class defines a special panel class that directly extends the `Panel` class, as it introduces a set of parameters distinct from both the `DotPlot` and `Table` panel families.
+This panel type is described in further details in a separate section [below](#heatmapplot-class).
+
+<!-- TODO: properties introduced by the DotPlot class -->
+
+<!-- TODO: properties introduced by the Table class -->
+
+### The ColumnDotPlot and RowDotPlot panel families
+
+<!-- TODO: properties introduced by the ColumnDotPlot class -->
+
+<!-- TODO: properties introduced by the RowDotPlot class -->
+
+### Built-in ColumnDotPlot panel classes
+
+<!-- TODO: properties introduced by the RedDimPlot class -->
+
+<!-- TODO: properties introduced by the ColDataPlot class -->
+
+<!-- TODO: properties introduced by the FeatAssayPlot class -->
+
+### Built-in RowDotPlot panel classes
+
+<!-- TODO: properties introduced by the RowDataPlot class -->
+
+<!-- TODO: properties introduced by the SampAssayPlot class -->
+
+### The ColumnTable and RowTable panel families
+
+<!-- TODO: properties introduced by the ColumnTable class -->
+
+<!-- TODO: properties introduced by the RowTable class -->
+
+### Built-in ColumnTable panel classes
+
+<!-- TODO: properties introduced by the RowStatTable class -->
+
+### Built-in RowTable panel classes
+
+<!-- TODO: properties introduced by the ColStatTable class -->
+
+### The HeatMapPlot panel class {#heatmapplot-class}
+
+This type of panel introduces parameters specific to panels where the output is a heat map, with each row representing a feature and each column representing a sample in the `se` object.
+
+<!-- TODO: properties introduced by the HeatMapPlot class -->
 
 ## The app memory
 
@@ -55,14 +109,11 @@ The app `memory` is a list of instances of those classes, which keeps track of t
 
 Each individual panel (e.g., _RedDimPlot_) and family of panels (e.g., _ColDotPlot_) defines a `.cacheCommonInfo` function.
 
-which is returned by the top-most `.cacheCommonInfo,Panel-method` signature
-
-
 This function is called for each panel in memory when the app is initialized.
 It allows the app to efficienly compute a single time common information that only depends on the input `se` object, and may be frequently reused during the runtime of the app.
-The information is cached in the `se` object itself, 
 
-For instance, the `RedDimPlot` panel type caches the available reduced dimension names available in the `se` object.
+Following the hierarchy of panel types, each call to the signature caches the information in the `se` object itself, before calling `callNextMethod()` to invoke the parent signature.
+The top-most signature - for the `Panel` class, returns the `se` object that contains all the cached information.
 
 ### .refineParameters
 
