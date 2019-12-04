@@ -287,16 +287,24 @@ The app \texttt{memory} is a list of instances of those classes, which keeps tra
 
 Each individual panel (e.g., \emph{RedDimPlot}) and family of panels (e.g., \emph{ColDotPlot}) defines a \texttt{.cacheCommonInfo} function.
 
-This function is called for each panel in memory when the app is initialized.
+This function is called for each panel instance in memory when the app is initialized.
 It allows the app to efficienly compute a single time common information that only depends on the input \texttt{se} object, and may be frequently reused during the runtime of the app.
 
-Following the hierarchy of panel types, each call to the signature caches the information in the \texttt{se} object itself, before calling \texttt{callNextMethod()} to invoke the parent signature.
+Following the hierarchy of panel types, each call to the signature takes a panel instance \texttt{x} and the \texttt{se} object, and caches the computed information in the \texttt{se} object itself, before calling \texttt{callNextMethod()} to invoke the next parent signature.
+
 The top-most signature - for the \texttt{Panel} class - returns the \texttt{se} object that contains all the cached information.
 
 \hypertarget{refineparameters}{%
 \subsection{.refineParameters}\label{refineparameters}}
 
 Each panel defines a \texttt{.refineParameters} function.
+
+This function is called for each panel instance in memory when the app is initialized, and also when a new panel is added to the GUI.
+It inspects the parameters of a given panel instance, and replaces invalid parameters with sensible values for a given \texttt{se} object.
+
+Following the hierarchy of panel types, each call to the signature takes an instance \texttt{x} and the \texttt{se} object, and first calls \texttt{callNextMethod()} to invoke the next parent signature, to refine generic parameters before processing specific ones.
+
+The called signature ultimately returns the updated instance panel \texttt{x}, or \texttt{NULL} if the panel instance is not available for this app.
 
 \bibliography{book.bib,packages.bib}
 

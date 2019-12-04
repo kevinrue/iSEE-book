@@ -121,14 +121,18 @@
 <div id="cachecommoninfo" class="section level3">
 <h3><span class="header-section-number">2.2.1</span> .cacheCommonInfo</h3>
 <p>Each individual panel (e.g., <em>RedDimPlot</em>) and family of panels (e.g., <em>ColDotPlot</em>) defines a <code>.cacheCommonInfo</code> function.</p>
-<p>This function is called for each panel in memory when the app is initialized.
+<p>This function is called for each panel instance in memory when the app is initialized.
 It allows the app to efficienly compute a single time common information that only depends on the input <code>se</code> object, and may be frequently reused during the runtime of the app.</p>
-<p>Following the hierarchy of panel types, each call to the signature caches the information in the <code>se</code> object itself, before calling <code>callNextMethod()</code> to invoke the parent signature.
-The top-most signature - for the <code>Panel</code> class - returns the <code>se</code> object that contains all the cached information.</p>
+<p>Following the hierarchy of panel types, each call to the signature takes a panel instance <code>x</code> and the <code>se</code> object, and caches the computed information in the <code>se</code> object itself, before calling <code>callNextMethod()</code> to invoke the next parent signature.</p>
+<p>The top-most signature - for the <code>Panel</code> class - returns the <code>se</code> object that contains all the cached information.</p>
 </div>
 <div id="refineparameters" class="section level3">
 <h3><span class="header-section-number">2.2.2</span> .refineParameters</h3>
 <p>Each panel defines a <code>.refineParameters</code> function.</p>
+<p>This function is called for each panel instance in memory when the app is initialized, and also when a new panel is added to the GUI.
+It inspects the parameters of a given panel instance, and replaces invalid parameters with sensible values for a given <code>se</code> object.</p>
+<p>Following the hierarchy of panel types, each call to the signature takes an instance <code>x</code> and the <code>se</code> object, and first calls <code>callNextMethod()</code> to invoke the next parent signature, to refine generic parameters before processing specific ones.</p>
+<p>The called signature ultimately returns the updated instance panel <code>x</code>, or <code>NULL</code> if the panel instance is not available for this app.</p>
 
 </div>
 </div>
