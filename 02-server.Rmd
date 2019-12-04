@@ -21,4 +21,9 @@ The top-most signature - for the `Panel` class - returns the `se` object that co
 
 Each panel defines a `.refineParameters` function.
 
-This function is called for each panel instance in memory when the app is initialized, and when a new panel is added to the GUI.
+This function is called for each panel instance in memory when the app is initialized, and also when a new panel is added to the GUI.
+It inspects the parameters of a given panel instance, and replaces invalid parameters with sensible values for a given `se` object.
+
+Following the hierarchy of panel types, each call to the signature takes an instance `x` and the `se` object, and first calls `callNextMethod()` to invoke the next parent signature, to refine generic parameters before processing specific ones.
+
+The called signature ultimately returns the updated instance panel `x`, or `NULL` if the panel instance is not available for this app.
