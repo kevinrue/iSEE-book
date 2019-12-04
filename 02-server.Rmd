@@ -1,5 +1,30 @@
 # The iSEE server {#server}
 
+## Reactive objects
+
+<!-- TODO
+- rerender
+- rerendered
+- paste0(mode, id)
+- paste0(mode, id, "_", .panelLinkInfo)
+- paste0(mode, id, "_", .panelGeneralInfo)
+- paste0(mode, id, "_", .selectMultiSaved)
+- paste0(mode, id, "_repopulated")
+- paste0(mode, id, "_reactivated")
+- paste0(mode, id, "_resaved")
+-->
+
+## Persistent (non-reactive) objects
+
+<!-- TODO
+- memory
+- counter
+- commands
+- coordinates
+- cached_info
+- .voiceActivePanel
+-->
+
 ## The app memory
 
 The app `memory` is a list of instances created from available panel classes, which defines the order in which individual panels are displayed in the GUI.
@@ -27,3 +52,11 @@ It inspects the parameters of a given panel instance, and replaces invalid param
 Following the hierarchy of panel types, each call to the signature takes an instance `x` and the `se` object, and first calls `callNextMethod()` to invoke the next parent signature, to refine generic parameters before processing specific ones.
 
 The called signature ultimately returns the updated instance panel `x`, or `NULL` if the panel instance is not available for this app.
+
+## Initialization of the app server
+
+<!-- TODO
+Just reiterate the overall succession of calls to functions setting up the app
+- .cacheCommonInfo
+- .cacheCommonInfo
+-->
