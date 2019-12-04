@@ -10,7 +10,7 @@ The app `memory` is a list of instances of those classes, which keeps track of t
 
 Each individual panel (e.g., _RedDimPlot_) and family of panels (e.g., _ColDotPlot_) defines a `.cacheCommonInfo` function.
 
-This function is called for each instance of panel in memory when the app is initialized.
+This function is called for each panel instance in memory when the app is initialized.
 It allows the app to efficienly compute a single time common information that only depends on the input `se` object, and may be frequently reused during the runtime of the app.
 
 Following the hierarchy of panel types, each call to the signature takes a panel instance `x` and the `se` object, and caches the computed information in the `se` object itself, before calling `callNextMethod()` to invoke the next parent signature.
@@ -20,3 +20,5 @@ The top-most signature - for the `Panel` class - returns the `se` object that co
 ### .refineParameters
 
 Each panel defines a `.refineParameters` function.
+
+This function is called for each panel instance in memory when the app is initialized, and when a new panel is added to the GUI.
