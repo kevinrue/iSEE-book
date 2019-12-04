@@ -2,7 +2,7 @@
 
 ## The app memory
 
-The app `memory` is a list of instances of those classes, which keeps track of the order in which individual panels are displayed in the GUI.
+The app `memory` is a list of instances created from available panel classes, which defines the order in which individual panels are displayed in the GUI.
 
 ## The panel API
 
