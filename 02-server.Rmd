@@ -1,6 +1,6 @@
 # The iSEE server {#server}
 
-## Reactive objects
+## Reactive objects {#robjects}
 
 <!-- TODO
 A general description of the purpose of reactive values in rObjects would probably be enough.
@@ -21,6 +21,10 @@ Some examples values manually collected from iSEE-main.R:
 ## Persistent (non-reactive) objects
 
 <!-- TODO
+A description of the purpose of pObjects.
+In particular, memory and coordinates are key to highlight, although they will be described in further details in dedicated sections.
+
+Some examples:
 - memory
 - counter
 - commands
@@ -29,11 +33,11 @@ Some examples values manually collected from iSEE-main.R:
 - .voiceActivePanel
 -->
 
-## The app memory
+## The app memory {#memory}
 
 The app `memory` is a list of instances created from available panel classes, which defines the order in which individual panels are displayed in the GUI.
 
-## The panel API
+## The panel API {#panel-api}
 
 ### .cacheCommonInfo
 
@@ -59,8 +63,35 @@ The called signature ultimately returns the updated instance panel `x`, or `NULL
 
 ## Initialization of the app server
 
-<!-- TODO
-Just reiterate the overall succession of calls to functions setting up the app
-- .cacheCommonInfo
-- .cacheCommonInfo
--->
+The app server is initialized as soon as a valid `se` object is provided.
+This can be either in the call to `iSEE(se)` or using the Shiny file upload button in apps that were launched without providing the `se` arguments, e.g., `iSEE()`.
+
+The `initialize_server` function takes the `se` object and the list holding reactive values used to trigger re-rendering of the GUI, as described [above](#robjects).
+
+The very first step invokes the function `.sanitize_SE_input` on the `se` object.
+This function coerces the `se` to `SingleCellExperiment`, flatten nested DataFrames, add row and column names, and remove other non-atomic fields.
+In addition, it also sanitizes the `SingleCellExperiment` object by moving internal fields into the column- or row-level metadata, making them visible in the _Column statistics table_ and _Row statistics table_ panels, respectively. The function returns both the sanitized `se` object that will be used by the app, and the list of R commands that will be displayed in the code tracker for users.
+
+Next, the server invokes the `checkColormapCompatibility` function.
+This function takes the `se` object and the optioanl `colormap` provided to `iSEE()`, and carries out a number of compatibility checks between the two objects.
+The function collects a character vector of issue messages that are displayed - if any - as warning messages in GUI during initialization.
+
+<!-- TODO: something about setting up memory, once the current TEST code is replaced. -->
+
+Next, the `.cacheCommonInfo` and `.refineParameters` are successively invoked on each panel instance initialized in the app memory.
+As described in a separate section [above](#panel-api), the first function precomputes and caches information specific to the `se` object and frequently used throughout the runtime of the app.
+The second function ensures that each panel instance is initialized with valid parameters; it replaces any invalid parameters with sensible values for a given `se` object.
+
+<!-- TODO: something, once we deal with user-supplied panel IDs -->
+
+Next, persistent (non-reactive) objects are initialized:
+
+- the app `memory` (see this [section](#memory))
+- the count of panels of each type, used to assign increasing ID to new panel instances
+- the list of commands to display in the code tracker for each panel instance
+- the list of data point coordinates selectable in each panel instance^[Data points downsampled for rendering speed performance remain selectable, even though they are not visible in the plot.]
+- a list of miscellaneous cached information^[The plot that contain the legend keys of _Heatmap_ panels is currently cached as miscellaneous information retrieved separately when rendering the GUI.]
+
+<!-- TODO: something about rObjects -->
+
+<!-- TODO: something about the various kinds of observers -->
