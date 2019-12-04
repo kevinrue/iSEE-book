@@ -14,7 +14,7 @@ This function is called for each panel in memory when the app is initialized.
 It allows the app to efficienly compute a single time common information that only depends on the input `se` object, and may be frequently reused during the runtime of the app.
 
 Following the hierarchy of panel types, each call to the signature caches the information in the `se` object itself, before calling `callNextMethod()` to invoke the parent signature.
-The top-most signature - for the `Panel` class, returns the `se` object that contains all the cached information.
+The top-most signature - for the `Panel` class - returns the `se` object that contains all the cached information.
 
 ### .refineParameters
 
