@@ -52,7 +52,7 @@ The top-most signature - for the `Panel` class - returns the `se` object that co
 
 ### .refineParameters
 
-Each panel defines a `.refineParameters` function.
+Each individual panel (e.g., _RedDimPlot_) and family of panels (e.g., _ColDotPlot_) defines a `.refineParameters` function.
 
 This function is called for each panel instance in memory when the app is initialized, and also when a new panel is added to the GUI.
 It inspects the parameters of a given panel instance, and replaces invalid parameters with sensible values for a given `se` object.
