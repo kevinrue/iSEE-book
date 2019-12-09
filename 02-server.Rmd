@@ -71,7 +71,7 @@ This can be either in the call to `iSEE(se)` or using the Shiny file upload butt
 The `initialize_server` function takes the `se` object and the list holding reactive values used to trigger re-rendering of the GUI, as described [above](#robjects).
 
 The very first step invokes the function `.sanitize_SE_input` on the `se` object.
-This function coerces the `se` to `SingleCellExperiment`, flatten nested DataFrames, add row and column names, and remove other non-atomic fields.
+This function coerces the `se` to `SingleCellExperiment`, flattens nested DataFrames, adds row and column names, and removes other non-atomic fields.
 In addition, it also sanitizes the `SingleCellExperiment` object by moving internal fields into the column- or row-level metadata, making them visible in the _Column statistics table_ and _Row statistics table_ panels, respectively. The function returns both the sanitized `se` object that will be used by the app, and the list of R commands that will be displayed in the code tracker for users.
 
 Next, the server invokes the `checkColormapCompatibility` function.
