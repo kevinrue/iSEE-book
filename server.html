@@ -181,7 +181,7 @@ It inspects the parameters of a given panel instance, and replaces invalid param
 This can be either in the call to <code>iSEE(se)</code> or using the Shiny file upload button in apps that were launched without providing the <code>se</code> arguments, e.g., <code>iSEE()</code>.</p>
 <p>The <code>initialize_server</code> function takes the <code>se</code> object and the list holding reactive values used to trigger re-rendering of the GUI, as described <a href="server.html#robjects">above</a>.</p>
 <p>The very first step invokes the function <code>.sanitize_SE_input</code> on the <code>se</code> object.
-This function coerces the <code>se</code> to <code>SingleCellExperiment</code>, flatten nested DataFrames, add row and column names, and remove other non-atomic fields.
+This function coerces the <code>se</code> to <code>SingleCellExperiment</code>, flattens nested DataFrames, adds row and column names, and removes other non-atomic fields.
 In addition, it also sanitizes the <code>SingleCellExperiment</code> object by moving internal fields into the column- or row-level metadata, making them visible in the <em>Column statistics table</em> and <em>Row statistics table</em> panels, respectively. The function returns both the sanitized <code>se</code> object that will be used by the app, and the list of R commands that will be displayed in the code tracker for users.</p>
 <p>Next, the server invokes the <code>checkColormapCompatibility</code> function.
 This function takes the <code>se</code> object and the optioanl <code>colormap</code> provided to <code>iSEE()</code>, and carries out a number of compatibility checks between the two objects.
