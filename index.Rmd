@@ -1,5 +1,5 @@
 --- 
-title: "Extending iSEE"
+title: "Extending _iSEE_"
 author: Kevin Rue-Albrecht, Federico Marini, Charlotte Soneson, and Aaron Lun
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
