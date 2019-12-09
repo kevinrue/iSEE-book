@@ -1,4 +1,4 @@
-# The iSEE server {#server}
+# The app server {#server}
 
 ## Reactive objects {#robjects}
 
