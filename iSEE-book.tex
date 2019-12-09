@@ -234,9 +234,9 @@ The \texttt{Panel} virtual class is directly derived into two major virtual sub-
 \begin{itemize}
 \tightlist
 \item
-  DotPlot
+  \texttt{DotPlot}
 \item
-  Table
+  \texttt{Table}
 \end{itemize}
 
 Those classes introduce properties that are specific to distinct subsets of panel types.
@@ -272,7 +272,7 @@ This panel type is described in further details in a separate section \protect\h
 This type of panel introduces parameters specific to panels where the output is a heat map, with each row representing a feature and each column representing a sample in the \texttt{se} object.
 
 \hypertarget{server}{%
-\chapter{The iSEE server}\label{server}}
+\chapter{The app server}\label{server}}
 
 \hypertarget{robjects}{%
 \section{Reactive objects}\label{robjects}}
@@ -291,7 +291,7 @@ The app \texttt{memory} is a list of instances created from available panel clas
 \hypertarget{cachecommoninfo}{%
 \subsection{.cacheCommonInfo}\label{cachecommoninfo}}
 
-Each individual panel (e.g., \emph{RedDimPlot}) and family of panels (e.g., \emph{ColDotPlot}) defines a \texttt{.cacheCommonInfo} function.
+Each individual panel type (e.g., \emph{Reduced dimension plot}) and family of panel types (e.g., \emph{Column dot plot}) defines a \texttt{.cacheCommonInfo} function.
 
 This function is called for each panel instance in memory when the app is initialized.
 It allows the app to efficienly compute a single time common information that only depends on the input \texttt{se} object, and may be frequently reused during the runtime of the app.
