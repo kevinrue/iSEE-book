@@ -162,8 +162,9 @@ Some examples:
 <p>Each individual panel type (e.g., <em>Reduced dimension plot</em>) and family of panel types (e.g., <em>Column dot plot</em>) defines a <code>.cacheCommonInfo</code> function.</p>
 <p>This function is called for each panel instance in memory when the app is initialized.
 It allows the app to efficienly compute a single time common information that only depends on the input <code>se</code> object, and may be frequently reused during the runtime of the app.</p>
-<p>Following the hierarchy of panel types, each call to the signature takes a panel instance <code>x</code> and the <code>se</code> object, and caches the computed information in the <code>se</code> object itself, before calling <code>callNextMethod()</code> to invoke the next parent signature.</p>
+<p>Following the hierarchy of panel types, each call to the signature takes a panel instance <code>x</code> and the <code>se</code> object, and caches common information relevant to all instances of that panel type in the <code>se</code> object itself, before calling <code>callNextMethod()</code> to invoke the next parent signature.</p>
 <p>The top-most signature - for the <code>Panel</code> class - returns the <code>se</code> object that contains all the cached information.</p>
+<p>Note that this function only populates the cache for the first panel of each type; it is a no-op if the common cache has already been initialized.</p>
 </div>
 <div id="refineparameters" class="section level3">
 <h3><span class="header-section-number">2.4.2</span> .refineParameters</h3>
