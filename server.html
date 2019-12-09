@@ -168,7 +168,7 @@ It allows the app to efficienly compute a single time common information that on
 </div>
 <div id="refineparameters" class="section level3">
 <h3><span class="header-section-number">2.4.2</span> .refineParameters</h3>
-<p>Each individual panel (e.g., <em>RedDimPlot</em>) and family of panels (e.g., <em>ColDotPlot</em>) defines a <code>.refineParameters</code> function.</p>
+<p>Each individual panel type (e.g., <em>Reduced dimension plot</em>) and family of panel types (e.g., <em>Column dot plot</em>) defines a <code>.refineParameters</code> function.</p>
 <p>This function is called for each panel instance in memory when the app is initialized, and also when a new panel is added to the GUI.
 It inspects the parameters of a given panel instance, and replaces invalid parameters with sensible values for a given <code>se</code> object.</p>
 <p>Following the hierarchy of panel types, each call to the signature takes an instance <code>x</code> and the <code>se</code> object, and first calls <code>callNextMethod()</code> to invoke the next parent signature, to refine generic parameters before processing specific ones.</p>
