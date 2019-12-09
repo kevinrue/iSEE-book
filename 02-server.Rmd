@@ -46,9 +46,11 @@ Each individual panel type (e.g., _Reduced dimension plot_) and family of panel 
 This function is called for each panel instance in memory when the app is initialized.
 It allows the app to efficienly compute a single time common information that only depends on the input `se` object, and may be frequently reused during the runtime of the app.
 
-Following the hierarchy of panel types, each call to the signature takes a panel instance `x` and the `se` object, and caches the computed information in the `se` object itself, before calling `callNextMethod()` to invoke the next parent signature.
+Following the hierarchy of panel types, each call to the signature takes a panel instance `x` and the `se` object, and caches common information relevant to all instances of that panel type in the `se` object itself, before calling `callNextMethod()` to invoke the next parent signature.
 
 The top-most signature - for the `Panel` class - returns the `se` object that contains all the cached information.
+
+Note that this function only populates the cache for the first panel of each type; it is a no-op if the common cache has already been initialized.
 
 ### .refineParameters
 
