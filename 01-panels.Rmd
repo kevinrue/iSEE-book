@@ -41,8 +41,8 @@ It is a virtual class that defines the core properties common to any panel - exi
 
 The `Panel` virtual class is directly derived into two major virtual sub-classes:
 
-- DotPlot
-- Table
+- `DotPlot`
+- `Table`
 
 Those classes introduce properties that are specific to distinct subsets of panel types.
 
