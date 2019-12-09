@@ -32,7 +32,7 @@
   
   
 <link rel="prev" href="panel-classes.html"/>
-<link rel="next" href="references.html"/>
+<link rel="next" href="the-plotting-api.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -91,6 +91,9 @@
 <li class="chapter" data-level="2.4.2" data-path="server.html"><a href="server.html#refineparameters"><i class="fa fa-check"></i><b>2.4.2</b> .refineParameters</a></li>
 </ul></li>
 <li class="chapter" data-level="2.5" data-path="server.html"><a href="server.html#initialization-of-the-app-server"><i class="fa fa-check"></i><b>2.5</b> Initialization of the app server</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="the-plotting-api.html"><a href="the-plotting-api.html"><i class="fa fa-check"></i><b>3</b> The plotting API</a><ul>
+<li class="chapter" data-level="3.1" data-path="the-plotting-api.html"><a href="the-plotting-api.html#getplottingfunction"><i class="fa fa-check"></i><b>3.1</b> .getPlottingFunction</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
@@ -164,7 +167,7 @@ It allows the app to efficienly compute a single time common information that on
 </div>
 <div id="refineparameters" class="section level3">
 <h3><span class="header-section-number">2.4.2</span> .refineParameters</h3>
-<p>Each panel defines a <code>.refineParameters</code> function.</p>
+<p>Each individual panel (e.g., <em>RedDimPlot</em>) and family of panels (e.g., <em>ColDotPlot</em>) defines a <code>.refineParameters</code> function.</p>
 <p>This function is called for each panel instance in memory when the app is initialized, and also when a new panel is added to the GUI.
 It inspects the parameters of a given panel instance, and replaces invalid parameters with sensible values for a given <code>se</code> object.</p>
 <p>Following the hierarchy of panel types, each call to the signature takes an instance <code>x</code> and the <code>se</code> object, and first calls <code>callNextMethod()</code> to invoke the next parent signature, to refine generic parameters before processing specific ones.</p>
@@ -213,7 +216,7 @@ The second function ensures that each panel instance is initialized with valid p
         </div>
       </div>
 <a href="panel-classes.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="the-plotting-api.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
