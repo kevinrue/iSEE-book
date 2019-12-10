@@ -187,7 +187,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw">library</span>(iSEE)</a></code></pre></div>
 <div id="create-a-new-s4-class" class="section level2">
 <h2><span class="header-section-number">4.1</span> Create a new S4 class</h2>
-<p>In the chapter <a href="panels.html#panels">Panel classes</a>, we saw how each type of panel is defined as an S4 class, organised in a hierarchy that allows new panel classes to inherit sets of properties from parent classes.</p>
+<p>In the chapter <a href="panels.html#panels">Panel classes</a>, we saw how each type of panel is defined as an S4 class, organised in a hierarchy that allows new panel classes to inherit sets of the properties and functionality from parent classes.</p>
 <p>Therefore, developing a new panel starts with the creation of a new class.</p>
 <p>The choice of a parent class for the new panel depends on the properties that we want that new panel to have.
 For instance, let us say that we want to define a new panel that has all the functionality of the <em>Reduced dimension plot</em> panel type, but summarizes data into a layer of hexagonal bins instead of showing each individual data point.
