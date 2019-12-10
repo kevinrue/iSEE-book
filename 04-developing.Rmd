@@ -38,5 +38,3 @@ override the plotting function
 <!-- TODO: override the XY data logic -->
 
 <!-- TODO: override the plot logic (again, see above) -->
-
- creation of a subclass, adding a UI, adding an observer, adding the XY data logic, adding the plot logic. I
