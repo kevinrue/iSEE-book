@@ -34,6 +34,46 @@
             pdfborder={0 0 0},
             breaklinks=true}
 \urlstyle{same}  % don't use monospace font for urls
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
 \usepackage{longtable,booktabs}
 % Fix footnotes in tables (requires footnote package)
 \IfFileExists{footnote.sty}{\usepackage{footnote}\makesavenoteenv{longtable}}{}
@@ -93,7 +133,7 @@
 
 \title{Extending \emph{iSEE}}
 \author{Kevin Rue-Albrecht, Federico Marini, Charlotte Soneson, and Aaron Lun}
-\date{2019-12-09}
+\date{2019-12-10}
 
 \begin{document}
 \maketitle
@@ -107,10 +147,10 @@
 \addcontentsline{toc}{chapter}{Preface}
 
 The \href{https://bioconductor.org/}{Bioconductor} \emph{\href{https://bioconductor.org/packages/3.11/iSEE}{iSEE}} package provides functions for creating an interactive graphical user interface (GUI) using the \href{https://rstudio.com/}{RStudio} \emph{\href{https://CRAN.R-project.org/package=Shiny}{Shiny}} package for exploring data stored in \emph{\href{https://bioconductor.org/packages/3.11/SummarizedExperiment}{SummarizedExperiment}} objects, including row- and column-level metadata \citep{rue2018isee}.
-In this book we describe how to create web-applications that leverage built-in panels and develop new ones.
+In this book we describe how to create web-applications that leverage builtin panels and develop new ones.
 
-\hypertarget{panel-classes}{%
-\chapter{Panel classes}\label{panel-classes}}
+\hypertarget{panels}{%
+\chapter{Panel classes}\label{panels}}
 
 \hypertarget{overview}{%
 \section{Overview}\label{overview}}
@@ -120,17 +160,17 @@ The types of panels available to compose an \emph{\href{https://bioconductor.org
 \begin{itemize}
 \tightlist
 \item
-  \texttt{Panel}
+  \texttt{Panel}*
 
   \begin{itemize}
   \tightlist
   \item
-    \texttt{DotPlot}
+    \texttt{DotPlot}*
 
     \begin{itemize}
     \tightlist
     \item
-      \texttt{ColumnDotPlot}
+      \texttt{ColumnDotPlot}*
 
       \begin{itemize}
       \tightlist
@@ -142,7 +182,7 @@ The types of panels available to compose an \emph{\href{https://bioconductor.org
         \texttt{FeatAssayPlot}
       \end{itemize}
     \item
-      \texttt{RowDotPlot}
+      \texttt{RowDotPlot}*
 
       \begin{itemize}
       \tightlist
@@ -153,12 +193,12 @@ The types of panels available to compose an \emph{\href{https://bioconductor.org
       \end{itemize}
     \end{itemize}
   \item
-    \texttt{Table}
+    \texttt{Table}*
 
     \begin{itemize}
     \tightlist
     \item
-      \texttt{RowTable}
+      \texttt{RowTable}*
 
       \begin{itemize}
       \tightlist
@@ -166,7 +206,7 @@ The types of panels available to compose an \emph{\href{https://bioconductor.org
         \texttt{RowStatTable}
       \end{itemize}
     \item
-      \texttt{ColumnTable}
+      \texttt{ColumnTable}*
 
       \begin{itemize}
       \tightlist
@@ -178,6 +218,11 @@ The types of panels available to compose an \emph{\href{https://bioconductor.org
     \texttt{HeatMapPlot}
   \end{itemize}
 \end{itemize}
+
+Some of those classes are ``virtual'' (indicated by *), meaning that they cannot be directly instanciated as panels in the GUI.
+Instead, virtual panel classes define families of panels that share groups of properties.
+Virtual classes are meant to be used as the parent of one or more concrete classes.
+In contrast, concrete classes must define fully-functional panels that can be embedded in a GUI, interact with other panels, receive and process data, and generate an output such as a plot or a table, accompanied by a code chunk to display in the code tracker for reproducibility.
 
 \hypertarget{the-panel-class}{%
 \section{The Panel class}\label{the-panel-class}}
@@ -350,8 +395,8 @@ Next, persistent (non-reactive) objects are initialized:
   a list of miscellaneous cached information\footnote{The plot that contain the legend keys of \emph{Heatmap} panels is currently cached as miscellaneous information retrieved separately when rendering the GUI.}
 \end{itemize}
 
-\hypertarget{the-plotting-api}{%
-\chapter{The plotting API}\label{the-plotting-api}}
+\hypertarget{plotting}{%
+\chapter{The plotting API}\label{plotting}}
 
 \hypertarget{getplottingfunction}{%
 \section{.getPlottingFunction}\label{getplottingfunction}}
@@ -378,6 +423,36 @@ For \texttt{Table} panels, the output is a \texttt{datatable}.
 
 For the \texttt{HeatMap} panel, the function does not return any value.
 Instead it sets relevant elements in the \texttt{output} object of the Shiny session.
+
+\hypertarget{developing}{%
+\chapter{Developing new panels}\label{developing}}
+
+First things first, we need to load the \emph{\href{https://bioconductor.org/packages/3.11/iSEE}{iSEE}} package for this chapter.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(iSEE)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{create-a-new-s4-class}{%
+\section{Create a new S4 class}\label{create-a-new-s4-class}}
+
+In the chapter \protect\hyperlink{panels}{Panel classes}, we saw how each type of panel is defined as an S4 class, organised in a hierarchy that allows new panel classes to inherit sets of properties from parent classes.
+
+Therefore, developing a new panel starts with the creation of a new class.
+
+The choice of a parent class for the new panel depends on the properties that we want that new panel to have.
+For instance, let us say that we want to define a new panel that has all the functionality of the \emph{Reduced dimension plot} panel type, but summarizes data into a layer of hexagonal bins instead of showing each individual data point.
+To do so, we declare our new class with a new unique name, \emph{e.g.} \texttt{RedDimHexbinPlot}, that contains the builtin panel class \texttt{RedDimPlot}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{setClass}\NormalTok{(}\StringTok{"RedDimHexbinPlot"}\NormalTok{, }\DataTypeTok{contains=}\StringTok{"RedDimPlot"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+creation of a subclass, adding a UI, adding an observer, adding the XY data logic, adding the plot logic. I
 
 \bibliography{book.bib,packages.bib}
 

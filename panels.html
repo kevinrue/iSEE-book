@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>References | Extending iSEE</title>
+  <title>Chapter 1 Panel classes | Extending iSEE</title>
   <meta name="description" content="This book describes how to use the Bioconductor iSEE package to create web-applications for exploring data stored in SummarizedExperiment objects." />
   <meta name="generator" content="bookdown 0.16 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="References | Extending iSEE" />
+  <meta property="og:title" content="Chapter 1 Panel classes | Extending iSEE" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="References | Extending iSEE" />
+  <meta name="twitter:title" content="Chapter 1 Panel classes | Extending iSEE" />
   
   <meta name="twitter:description" content="This book describes how to use the Bioconductor iSEE package to create web-applications for exploring data stored in SummarizedExperiment objects." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="developing.html"/>
-
+<link rel="prev" href="index.html"/>
+<link rel="next" href="server.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -181,29 +181,147 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="references" class="section level1 unnumbered">
-<h1>References</h1>
+<div id="panels" class="section level1">
+<h1><span class="header-section-number">Chapter 1</span> Panel classes</h1>
+<div id="overview" class="section level2">
+<h2><span class="header-section-number">1.1</span> Overview</h2>
+<p>The types of panels available to compose an <em><a href="https://bioconductor.org/packages/3.11/iSEE">iSEE</a></em> app are defined as a hierarchy of S4 classes.</p>
+<!-- TODO Replace the bullet list below by a figure, like a filesystem tree. -->
+<ul>
+<li><code>Panel</code><sup>*</sup>
+<ul>
+<li><code>DotPlot</code><sup>*</sup>
+<ul>
+<li><code>ColumnDotPlot</code><sup>*</sup>
+<ul>
+<li><code>RedDimPlot</code></li>
+<li><code>ColDataPlot</code></li>
+<li><code>FeatAssayPlot</code></li>
+</ul></li>
+<li><code>RowDotPlot</code><sup>*</sup>
+<ul>
+<li><code>RowDataPlot</code></li>
+<li><code>SampAssayPlot</code></li>
+</ul></li>
+</ul></li>
+<li><code>Table</code><sup>*</sup>
+<ul>
+<li><code>RowTable</code><sup>*</sup>
+<ul>
+<li><code>RowStatTable</code></li>
+</ul></li>
+<li><code>ColumnTable</code><sup>*</sup>
+<ul>
+<li><code>ColStatTable</code></li>
+</ul></li>
+</ul></li>
+<li><code>HeatMapPlot</code></li>
+</ul></li>
+</ul>
+<p>Some of those classes are “virtual” (indicated by <sup>*</sup>), meaning that they cannot be directly instanciated as panels in the GUI.
+Instead, virtual panel classes define families of panels that share groups of properties.
+Virtual classes are meant to be used as the parent of one or more concrete classes.
+In contrast, concrete classes must define fully-functional panels that can be embedded in a GUI, interact with other panels, receive and process data, and generate an output such as a plot or a table, accompanied by a code chunk to display in the code tracker for reproducibility.</p>
+</div>
+<div id="the-panel-class" class="section level2">
+<h2><span class="header-section-number">1.2</span> The Panel class</h2>
+<p>The top-most class is called <code>Panel</code>.
+It is a virtual class that defines the core properties common to any panel - existing or future - that may be displayed in the interface.</p>
+<table>
+<colgroup>
+<col width="50%" />
+<col width="50%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><code>PanelId</code></td>
+<td>Integer index indicating the i<sup>th</sup> panel of a given type.</td>
+</tr>
+<tr class="even">
+<td><code>PanelHeight</code></td>
+<td>Height of the panel, in pixels.</td>
+</tr>
+<tr class="odd">
+<td><code>PanelWidth</code></td>
+<td>Width of the panel, an integer value indicating the number of columns to use, from 1 to 12.</td>
+</tr>
+<tr class="even">
+<td><code>SelectBoxOpen</code></td>
+<td>Logical value indicating if the <em>Selection parameters</em> box of the panel is open when the app starts.</td>
+</tr>
+<tr class="odd">
+<td><code>SelectByPlot</code></td>
+<td>Encoded name of the panel from which to receive a selection of data points.</td>
+</tr>
+<tr class="even">
+<td><code>SelectMultiType</code></td>
+<td>Keyword indicating the method to deal with multiple incoming selections of data points.</td>
+</tr>
+<tr class="odd">
+<td><code>SelectMultiSaved</code></td>
+<td>Integer index indicating a single data point selection to use, among multiple incoming selections.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="the-dotplot-and-table-panel-families" class="section level2">
+<h2><span class="header-section-number">1.3</span> The DotPlot and Table panel families</h2>
+<p>The <code>Panel</code> virtual class is directly derived into two major virtual sub-classes:</p>
+<ul>
+<li><code>DotPlot</code></li>
+<li><code>Table</code></li>
+</ul>
+<p>Those classes introduce properties that are specific to distinct subsets of panel types.</p>
+<p>The <code>DotPlot</code> class introduce parameters specific to panels where the output is a <code>ggplot</code> object and each row in the data-frame is represented as a point in a plot.</p>
+<p>The <code>Table</code> class introduce parameters specific to panels where the main output is a data-frame directly displayed as a table in the GUI.</p>
+<p>In addition, the <code>HeatMapPlot</code> class defines a special panel class that directly extends the <code>Panel</code> class, as it introduces a set of parameters distinct from both the <code>DotPlot</code> and <code>Table</code> panel families.
+This panel type is described in further details in a separate section <a href="panels.html#heatmapplot-class">below</a>.</p>
+<!-- TODO: properties introduced by the DotPlot class -->
+<!-- TODO: properties introduced by the Table class -->
+</div>
+<div id="the-columndotplot-and-rowdotplot-panel-families" class="section level2">
+<h2><span class="header-section-number">1.4</span> The ColumnDotPlot and RowDotPlot panel families</h2>
+<!-- TODO: properties introduced by the ColumnDotPlot class -->
+<!-- TODO: properties introduced by the RowDotPlot class -->
+</div>
+<div id="built-in-columndotplot-panel-classes" class="section level2">
+<h2><span class="header-section-number">1.5</span> Built-in ColumnDotPlot panel classes</h2>
+<!-- TODO: properties introduced by the RedDimPlot class -->
+<!-- TODO: properties introduced by the ColDataPlot class -->
+<!-- TODO: properties introduced by the FeatAssayPlot class -->
+</div>
+<div id="built-in-rowdotplot-panel-classes" class="section level2">
+<h2><span class="header-section-number">1.6</span> Built-in RowDotPlot panel classes</h2>
+<!-- TODO: properties introduced by the RowDataPlot class -->
+<!-- TODO: properties introduced by the SampAssayPlot class -->
+</div>
+<div id="the-columntable-and-rowtable-panel-families" class="section level2">
+<h2><span class="header-section-number">1.7</span> The ColumnTable and RowTable panel families</h2>
+<!-- TODO: properties introduced by the ColumnTable class -->
+<!-- TODO: properties introduced by the RowTable class -->
+</div>
+<div id="built-in-columntable-panel-classes" class="section level2">
+<h2><span class="header-section-number">1.8</span> Built-in ColumnTable panel classes</h2>
+<!-- TODO: properties introduced by the RowStatTable class -->
+</div>
+<div id="built-in-rowtable-panel-classes" class="section level2">
+<h2><span class="header-section-number">1.9</span> Built-in RowTable panel classes</h2>
+<!-- TODO: properties introduced by the ColStatTable class -->
+</div>
+<div id="heatmapplot-class" class="section level2">
+<h2><span class="header-section-number">1.10</span> The HeatMapPlot panel class</h2>
+<p>This type of panel introduces parameters specific to panels where the output is a heat map, with each row representing a feature and each column representing a sample in the <code>se</code> object.</p>
+<!-- TODO: properties introduced by the HeatMapPlot class -->
 
-<div id="refs" class="references">
-<div>
-<p>Rue-Albrecht, K., F. Marini, C. Soneson, and A. T. L. Lun. 2018. “ISEE: Interactive Summarizedexperiment Explorer.” Journal Article. <em>F1000Res</em> 7: 741. <a href="https://doi.org/10.12688/f1000research.14966.1">https://doi.org/10.12688/f1000research.14966.1</a>.</p>
 </div>
 </div>
-</div>
-
-
-
-
-
-
-
             </section>
 
           </div>
         </div>
       </div>
-<a href="developing.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-
+<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="server.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
