@@ -1,4 +1,4 @@
-# Panel classes
+# Panel classes {#panels}
 
 ## Overview
 

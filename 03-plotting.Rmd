@@ -1,4 +1,4 @@
-# The plotting API
+# The plotting API {#plotting}
 
 ## .getPlottingFunction
 
