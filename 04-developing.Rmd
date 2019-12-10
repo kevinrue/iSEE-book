@@ -1,5 +1,12 @@
 # Developing new panels {#developing}
 
+First things first, we need to load the `r Biocpkg("iSEE")` package for this chapter.
+
+```{r, message=FALSE}
+library(iSEE)
+```
+
+
 ## Create a new S4 class
 
 In the chapter [Panel classes](#panels), we saw how each type of panel is defined as an S4 class, organised in a hierarchy that allows new panel classes to inherit sets of properties from parent classes.
