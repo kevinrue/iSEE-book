@@ -1,0 +1,35 @@
+# Developing new panels {#developing}
+
+## Create a new S4 class
+
+In the chapter [Panel classes](#panels), we saw how each type of panel is defined as an S4 class, organised in a hierarchy that allows new panel classes to inherit sets of properties from parent classes.
+
+Therefore, developing a new panel starts with the creation of a new class.
+
+The choice of a parent class for the new panel depends on the properties that we want that new panel to have.
+For instance, let us say that we want to define a new panel that has all the functionality of the _Reduced dimension plot_ panel type, but summarizes data into a layer of hexagonal bins instead of showing each individual data point.
+To do so, we declare our new class with a new unique name, _e.g._ `RedDimHexbinPlot`, that contains the builtin panel class `RedDimPlot`.
+
+```{r}
+setClass("RedDimHexbinPlot", contains="RedDimPlot")
+```
+
+<!-- TODO:
+override the .getEncodedName and .getFullName methods
+potentially, at that point users could already launch a GUI to see the result
+-->
+
+<!-- TODO:
+second fastest visual result:
+override the plotting function
+-->
+
+<!-- TODO: add a UI (preferably that affects XY) -->
+
+<!-- TODO: add an observer -->
+
+<!-- TODO: override the XY data logic -->
+
+<!-- TODO: override the plot logic (again, see above) -->
+
+ creation of a subclass, adding a UI, adding an observer, adding the XY data logic, adding the plot logic. I
