@@ -133,7 +133,7 @@
 
 \title{Extending \emph{iSEE}}
 \author{Kevin Rue-Albrecht, Federico Marini, Charlotte Soneson, and Aaron Lun}
-\date{2019-12-10}
+\date{2019-12-12}
 
 \begin{document}
 \maketitle
@@ -441,6 +441,8 @@ First things first, we need to load the \emph{\href{https://bioconductor.org/pac
 In the chapter \protect\hyperlink{panels}{Panel classes}, we saw how each type of panel is defined as an S4 class, organised in a hierarchy that allows new panel classes to inherit sets of the properties and functionality from parent classes.
 
 Therefore, developing a new panel starts with the creation of a new class.
+While it is possible to create a new panel class from scratch, this is an advanced use case described in a separate section.
+Instead, new panels classes can be much more rapidly derived from a parent panel class, using the inheritance relationships between classes to reuse properties and functionality defined in the parent class.
 
 The choice of a parent class for the new panel depends on the properties that we want that new panel to have.
 For instance, let us say that we want to define a new panel that has all the functionality of the \emph{Reduced dimension plot} panel type, but summarizes data into a layer of hexagonal bins instead of showing each individual data point.

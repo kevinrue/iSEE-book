@@ -24,7 +24,7 @@
 <meta name="author" content="Kevin Rue-Albrecht, Federico Marini, Charlotte Soneson, and Aaron Lun" />
 
 
-<meta name="date" content="2019-12-10" />
+<meta name="date" content="2019-12-12" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -69,7 +69,7 @@ a.sourceLine { text-indent: -1em; padding-left: 1em; }
 pre.numberSource a.sourceLine
   { position: relative; left: -4em; }
 pre.numberSource a.sourceLine::before
-  { content: attr(title);
+  { content: attr(data-line-number);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
     border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
@@ -184,15 +184,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="developing" class="section level1">
 <h1><span class="header-section-number">Chapter 4</span> Developing new panels</h1>
 <p>First things first, we need to load the <em><a href="https://bioconductor.org/packages/3.11/iSEE">iSEE</a></em> package for this chapter.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw">library</span>(iSEE)</a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">library</span>(iSEE)</a></code></pre></div>
 <div id="create-a-new-s4-class" class="section level2">
 <h2><span class="header-section-number">4.1</span> Create a new S4 class</h2>
 <p>In the chapter <a href="panels.html#panels">Panel classes</a>, we saw how each type of panel is defined as an S4 class, organised in a hierarchy that allows new panel classes to inherit sets of the properties and functionality from parent classes.</p>
-<p>Therefore, developing a new panel starts with the creation of a new class.</p>
+<p>Therefore, developing a new panel starts with the creation of a new class.
+While it is possible to create a new panel class from scratch, this is an advanced use case described in a separate section. <!-- TODO: cross-reference when done. -->
+Instead, new panels classes can be much more rapidly derived from a parent panel class, using the inheritance relationships between classes to reuse properties and functionality defined in the parent class.</p>
 <p>The choice of a parent class for the new panel depends on the properties that we want that new panel to have.
 For instance, let us say that we want to define a new panel that has all the functionality of the <em>Reduced dimension plot</em> panel type, but summarizes data into a layer of hexagonal bins instead of showing each individual data point.</p>
 <p>To start, we declare our new class with a new unique name, <em>e.g.</em> <code>RedDimHexbinPlot</code>, that contains the builtin panel class <code>RedDimPlot</code>.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="kw">setClass</span>(<span class="st">&quot;RedDimHexbinPlot&quot;</span>, <span class="dt">contains=</span><span class="st">&quot;RedDimPlot&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">setClass</span>(<span class="st">&quot;RedDimHexbinPlot&quot;</span>, <span class="dt">contains=</span><span class="st">&quot;RedDimPlot&quot;</span>)</a></code></pre></div>
 <!-- TODO:
 override the .getEncodedName and .getFullName methods
 potentially, at that point users could already launch a GUI to see the result
