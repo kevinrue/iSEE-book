@@ -24,6 +24,7 @@ The types of panels available to compose an `r Biocpkg("iSEE")` app are defined 
 
 Some of those classes are "virtual" (indicated by <sup>*</sup>), meaning that they cannot be directly instanciated as panels in the GUI.
 Instead, virtual panel classes define families of panels that share groups of properties.
+
 Virtual classes are meant to be used as the parent of one or more concrete classes.
 In contrast, concrete classes must define fully-functional panels that can be embedded in a GUI, interact with other panels, receive and process data, and generate an output such as a plot or a table, accompanied by a code chunk to display in the code tracker for reproducibility.
 
