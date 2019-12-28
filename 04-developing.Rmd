@@ -6,6 +6,19 @@ First things first, we need to load the `r Biocpkg("iSEE")` package for this cha
 library(iSEE)
 ```
 
+# The panel API
+
+Fully functional panel class must implement - or inherit from their parent class - the full set of methods that composes the API allowing panels to interact and communicate with the reactive infrastructure of `r Biocpkg("iSEE")` applications.
+
+- a validity method, defined using `setValidity2`.
+- `.fullName`, used to generate a unique full name uniquely identifying each panel instance in the GUI.
+- `.cacheCommonInfo`, computing and caching static information about a `SummarizedExperiment` object regularly used by other API methods.
+- `initialize`, creating a new panel instance with panel settings initialized with empty default values
+- `.refineParameters`, replacing invalid panel settings with appropriate values.
+- `.defineInterface`, used to define panel-specific Shiny widgets receiving user inputs in the GUI.
+- `.createObservers`, used to define reactive functions that update internal reactive objects following user interactions.
+- `.getCommandsDataXY`, used to generate commands and labels related to the x-axis and y-axis of panel classes producing a plot output.
+
 ## Create a new S4 class
 
 In the chapter [Panel classes](#panels), we saw how each type of panel is defined as an S4 class, organised in a hierarchy that allows new panel classes to inherit sets of the properties and functionality from parent classes.
