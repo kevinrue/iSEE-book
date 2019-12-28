@@ -108,7 +108,7 @@ setMethod(".createObservers", "DynRedDimPlot",
             return(NULL)
         }
         pObjects$memory[[plot_name]][["Type"]] <- input[[type_field]]
-        .refreshPanelOutput(plot_name, pObjects, rObjects, clear=TRUE)
+        .requestCleanUpdate(plot_name, pObjects, rObjects)
     })
 
     num_field <- paste0(plot_name, "_NGenes")
@@ -118,14 +118,14 @@ setMethod(".createObservers", "DynRedDimPlot",
             return(NULL)
         }
         pObjects$memory[[plot_name]][["NGenes"]] <- input[[num_field]]
-        .refreshPanelOutput(plot_name, pObjects, rObjects, clear=TRUE)
+        .requestCleanUpdate(plot_name, pObjects, rObjects)
     })
 })
 ```
 
 Both the `NGenes` and `Type` parameters are what we consider to be "protected" parameters, 
 as changing them will alter the nature of the displayed plot.
-By marking them as such, we instruct `iSEE()` to destroy existing brushes and lassos when these parameters are changed,
+By using `.requestCleanUpdate()`, we instruct `iSEE()` to destroy existing brushes and lassos when these parameters are changed,
 as brushes/lassos made on the previous plot do not make sense when the coordinates are recomputed.
 
 ## Making the plot
