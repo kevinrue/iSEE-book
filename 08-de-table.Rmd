@@ -1,0 +1,167 @@
+# Case study II
+
+## Overview
+
+In this case study, we will create a panel class to dynamically compute differential expression (DE) statistics between the active sample-level selection and the other saved selections from a transmitting panel.
+
+## Class basics
+
+First, we define the basics of our new `Panel` class.
+As our new class will be showing each gene as a row, we inherit from the `RowTable` virtual class.
+This automatically gives us access to all the functionality promised in the contract,
+including interface elements and observers to respond to multiple selections.
+We also add a slot specifying the log-fold change threshold to use in the null hypothesis.
+
+```{r}
+library(iSEE)
+setClass("DGETable", contains="RowTable", slots=c(LogFC="numeric"))
+```
+
+Any new slots should come with validity methods, as shown below.
+
+```{r}
+library(S4Vectors)
+setValidity2("DGETable", function(object) {
+    msg <- character(0)
+
+    if (length(val <- object[["LogFC"]])!=1L || val < 0) {
+        msg <- c(msg, "'NGenes' must be a non-negative number")
+    }
+    if (length(msg)) {
+        return(msg)
+    }
+    TRUE
+})
+```
+
+It is also worthwhile specializing the `initialize()` method to provide a default for new parameters.
+We hard-code the `SelectColType` setting as we want to obtain all multiple selections from the transmitting panel,
+in order to be able to perform pairwise DE analyses between the various active and saved selections.
+(By comparison, the default of `"Active"` will only transmit the current active selection.)
+
+```{r}
+setMethod("initialize", "DGETable", 
+    function(.Object, LogFC=0, ...) 
+{
+    callNextMethod(.Object, LogFC=LogFC, SelectColType="Union", ...)
+})
+```
+
+## Setting up the interface
+
+The most basic requirement is to define some methods that describe our new panel in the `iSEE()` interface.
+This includes defining the full name and desired default color for display purposes:
+
+```{r}
+setMethod(".fullName", "DGETable", function(x) "Differential expression table")
+
+setMethod(".panelColor", "DGETable", function(x) "#AAFF00")
+```
+
+We also add interface elements to change the result type and the number of genes.
+This is most easily done by specializing the `.defineDataInterface` method:
+
+```{r}
+library(shiny)
+setMethod(".defineDataInterface", "DGETable", function(x, se, select_info) {
+    plot_name <- .getEncodedName(x)
+    list(
+        numericInput(paste0(plot_name, "_LogFC"), label="Log-FC threshold",
+            min=0, value=x[["LogFC"]])
+    )
+})
+```
+
+As we discussed before, we `paste0` the name of our panel to the name of any parameter to ensure that the ID is unique to this instance of our panel.
+
+## Creating the observers
+
+We specialize `.createObservers` to define some observers to respond to changes in our new interface elements.
+Note the use of `callNextMethod()` to ensure that observers of the parent class are also created;
+this automatically ensures that we can respond to changes in parameters provided by `RowTable`.
+
+```{r}
+setMethod(".createObservers", "DGETable", 
+    function(x, se, input, session, pObjects, rObjects) 
+{
+    callNextMethod()
+
+    plot_name <- .getEncodedName(x)
+
+    num_field <- paste0(plot_name, "_LogFC")
+    observeEvent(input[[num_field]], {
+        previous <- pObjects$memory[[plot_name]][["LogFC"]]
+        if (identical(previous, input[[num_field]])) {
+            return(NULL)
+        }
+        pObjects$memory[[plot_name]][["LogFC"]] <- input[[num_field]]
+        .requestUpdate(plot_name, rObjects)
+    })
+})
+```
+
+The distinction between protected and unprotected parameters is less important for `Table`s;
+as long as the types of the columns do not change between renderings, any column or global selections (i.e., search terms) are usually still sensible.
+
+## Making the table
+
+When working with a `RowTable` subclass, the easiest way to change plotting content to override the `.generateTable` method.
+This is expected to generate a `data.frame` in the evaluation environment, returning the commands required to do so.
+In this case, we want to perform one-sided $t$-tests between the active selection and any number of saved selections.
+We will use the `findMarkers()` function from `r BiocStyle::Biocpkg("scran")` to compute the desired statistics.
+This performs all pairwise comparisons, so is not as efficient as could be, but it will suffice for this demonstration.
+
+```{r}
+setMethod(".generateTable", "DGETable", function(x, envir) {
+    empty <- "tab <- data.frame(Top=integer(0), p.value=numeric(0), FDR=numeric(0));"
+
+    if (!exists("col_selected", envir, inherits=FALSE) || 
+        length(envir$col_selected)<2L || 
+        !"active" %in% names(envir$col_selected)) 
+    {
+        commands <- empty
+    } else {
+        commands <- c(".chosen <- unlist(col_selected);",
+            ".grouping <- rep(names(col_selected), lengths(col_selected));",
+            sprintf(".de.stats <- scran::findMarkers(logcounts(se)[,.chosen], 
+    .grouping, direction='up', lfc=%s)", x[["LogFC"]]),
+            "tab <- as.data.frame(.de.stats[['active']]);"
+        )
+    }
+       
+    eval(parse(text=commands), envir=envir)
+
+    list(commands=commands, contents=envir$tab)
+})
+```
+
+Readers may notice that we prefix internal variables with `.` in our commands.
+This ensures that they do not clash with global variables created by `iSEE()` itself
+(which is not an issue when running the app, but makes things difficult when the code is reported for tracking purposes).
+
+## In action
+
+Let's put our new panel to the test.
+We set up an example using our favorite dataset, creating a `SingleCellExperiment` object with some precomputed dimensionality reduction results.
+
+```{r}
+library(scRNAseq)
+sce <- ReprocessedAllenData(assays="tophat_counts")
+
+library(scater)
+sce <- logNormCounts(sce, exprs_values="tophat_counts")
+sce <- runPCA(sce, ncomponents=4)
+sce <- runTSNE(sce)
+```
+
+The plan is to create a (fixed) reduced dimension plot that will transmit to our DGE table.
+Setting up the iSEE instance is as easy as:
+
+```{r}
+rdp <- RedDimPlot(PanelId=1L, SelectBoxOpen=TRUE)
+dget <- new("DGETable", SelectColSource="RedDimPlot1")
+app <- iSEE(sce, initial=list(rdp, dget))
+```
+
+Brushing (or lassoing) at any location and saving the selection will trigger dynamic recompution of results in our `DGETable`.
+We can repeat this with any number of saved selections.
