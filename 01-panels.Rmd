@@ -33,6 +33,8 @@ In contrast, concrete classes must define fully-functional panels that can be em
 The top-most class is called `Panel`.
 It is a virtual class that defines the core properties common to any panel - existing or future - that may be displayed in the interface.
 
+<!-- TODO: Replace the table below by a link to `help("Panel-class")` -->
+
 |   |   |
 | - | - |
 | `PanelId` | Integer index indicating the i^th^ panel of a given type. |
@@ -102,4 +104,3 @@ This panel type is described in further details in a separate section [below](#h
 This type of panel introduces parameters specific to panels where the output is a heat map, with each row representing a feature and each column representing a sample in the `se` object.
 
 <!-- TODO: properties introduced by the HeatMapPlot class -->
-
