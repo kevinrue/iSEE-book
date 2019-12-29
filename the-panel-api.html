@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 3 The plotting API | Extending iSEE</title>
+  <title>Chapter 5 The panel API | Extending iSEE</title>
   <meta name="description" content="This book describes how to use the Bioconductor iSEE package to create web-applications for exploring data stored in SummarizedExperiment objects." />
   <meta name="generator" content="bookdown 0.16 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 3 The plotting API | Extending iSEE" />
+  <meta property="og:title" content="Chapter 5 The panel API | Extending iSEE" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 3 The plotting API | Extending iSEE" />
+  <meta name="twitter:title" content="Chapter 5 The panel API | Extending iSEE" />
   
   <meta name="twitter:description" content="This book describes how to use the Bioconductor iSEE package to create web-applications for exploring data stored in SummarizedExperiment objects." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="server.html"/>
-<link rel="next" href="developing.html"/>
+<link rel="prev" href="developing.html"/>
+<link rel="next" href="references.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -199,22 +199,41 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="plotting" class="section level1">
-<h1><span class="header-section-number">Chapter 3</span> The plotting API</h1>
-<div id="getplottingfunction" class="section level2">
-<h2><span class="header-section-number">3.1</span> .getPlottingFunction</h2>
-<p>Each panel type available for use in the GUI defines a <code>.getPlottingFunction</code>.</p>
-<p>This function is called within <code>.createRenderedOutput</code>, which is triggered by observers when the value of the panel input widgets are changed by users, or when a new panel is added to the GUI.</p>
-<p>The <code>.getPlottingFunction</code> function inspects the parameters for a given panel instance, and uses the app <code>memory</code> of all active panels and parameters, the coordinates of data points in each plot panel, the <code>se</code> object, and the <code>colormap</code> to generate all the information necessary to render the outputs of this panel and those that depend on it.</p>
-<p>For <code>DotPlot</code> panels, the output is a list that includes:</p>
+<div id="the-panel-api" class="section level1">
+<h1><span class="header-section-number">Chapter 5</span> The panel API</h1>
+<p>Fully functional panel class must implement - or inherit from their parent class - the full set of methods that composes the API allowing panels to interact and communicate with the reactive infrastructure of <em><a href="https://bioconductor.org/packages/3.11/iSEE">iSEE</a></em> applications.</p>
 <ul>
-<li>the list of commands to display in the code tracker</li>
-<li>the coordinates of data points in the plot</li>
-<li>the <code>ggplot</code> object</li>
+<li>a validity method, defined using <code>setValidity2</code>.</li>
+<li><code>.fullName</code>, used to generate a unique full name uniquely identifying each panel instance in the GUI.</li>
+<li><code>.cacheCommonInfo</code>, computing and caching static information about a <code>SummarizedExperiment</code> object regularly used by other API methods.</li>
+<li><code>initialize</code>, creating a new panel instance with panel settings initialized with empty default values</li>
+<li><code>.refineParameters</code>, replacing invalid panel settings with appropriate values.</li>
+<li><code>.defineInterface</code>, used to define panel-specific Shiny widgets receiving user inputs in the GUI.</li>
+<li><code>.createObservers</code>, used to define reactive functions that update internal reactive objects following user interactions.</li>
+<li><code>.getCommandsDataXY</code>, used to generate commands and labels related to the x-axis and y-axis of panel classes producing a plot output.</li>
 </ul>
-<p>For <code>Table</code> panels, the output is a <code>datatable</code>.</p>
-<p>For the <code>HeatMap</code> panel, the function does not return any value.
-Instead it sets relevant elements in the <code>output</code> object of the Shiny session.</p>
+<div id="create-a-new-s4-class" class="section level2">
+<h2><span class="header-section-number">5.1</span> Create a new S4 class</h2>
+<p>In the chapter <a href="panels.html#panels">Panel classes</a>, we saw how each type of panel is defined as an S4 class, organised in a hierarchy that allows new panel classes to inherit sets of the properties and functionality from parent classes.</p>
+<p>Therefore, developing a new panel starts with the creation of a new class.
+While it is possible to create a new panel class from scratch, this is an advanced use case described in a separate section. <!-- TODO: cross-reference when done. -->
+Instead, new panels classes can be much more rapidly derived from a parent panel class, using the inheritance relationships between classes to reuse properties and functionality defined in the parent class.</p>
+<p>The choice of a parent class for the new panel depends on the properties that we want that new panel to have.
+For instance, let us say that we want to define a new panel that has all the functionality of the <em>Reduced dimension plot</em> panel type, but summarizes data into a layer of hexagonal bins instead of showing each individual data point.</p>
+<p>To start, we declare our new class with a new unique name, <em>e.g.</em> <code>RedDimHexbinPlot</code>, that contains the builtin panel class <code>RedDimPlot</code>.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="kw">setClass</span>(<span class="st">&quot;RedDimHexbinPlot&quot;</span>, <span class="dt">contains=</span><span class="st">&quot;RedDimPlot&quot;</span>)</a></code></pre></div>
+<!-- TODO:
+override the .getEncodedName and .getFullName methods
+potentially, at that point users could already launch a GUI to see the result
+-->
+<!-- TODO:
+second fastest visual result:
+override the plotting function
+-->
+<!-- TODO: add a UI (preferably that affects XY) -->
+<!-- TODO: add an observer -->
+<!-- TODO: override the XY data logic -->
+<!-- TODO: override the plot logic (again, see above) -->
 
 </div>
 </div>
@@ -223,8 +242,8 @@ Instead it sets relevant elements in the <code>output</code> object of the Shiny
           </div>
         </div>
       </div>
-<a href="server.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="developing.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="developing.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
