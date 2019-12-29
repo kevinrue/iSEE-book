@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 1 Panel classes | Extending iSEE</title>
+  <title>Chapter 2 The panel API | Extending iSEE</title>
   <meta name="description" content="This book describes how to use the Bioconductor iSEE package to create web-applications for exploring data stored in SummarizedExperiment objects." />
   <meta name="generator" content="bookdown 0.16 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 1 Panel classes | Extending iSEE" />
+  <meta property="og:title" content="Chapter 2 The panel API | Extending iSEE" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 1 Panel classes | Extending iSEE" />
+  <meta name="twitter:title" content="Chapter 2 The panel API | Extending iSEE" />
   
   <meta name="twitter:description" content="This book describes how to use the Bioconductor iSEE package to create web-applications for exploring data stored in SummarizedExperiment objects." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="index.html"/>
-<link rel="next" href="api.html"/>
+<link rel="prev" href="panels.html"/>
+<link rel="next" href="plotting.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -201,102 +201,24 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="panels" class="section level1">
-<h1><span class="header-section-number">Chapter 1</span> Panel classes</h1>
-<div id="overview" class="section level2">
-<h2><span class="header-section-number">1.1</span> Overview</h2>
-<p>The types of panels available to compose an <em><a href="https://bioconductor.org/packages/3.11/iSEE">iSEE</a></em> app are defined as a hierarchy of S4 classes.</p>
-<!-- TODO Replace the bullet list below by a figure, like a filesystem tree. -->
-<ul>
-<li><code>Panel</code><sup>*</sup>
-<ul>
-<li><code>DotPlot</code><sup>*</sup>
-<ul>
-<li><code>ColumnDotPlot</code><sup>*</sup>
-<ul>
-<li><code>RedDimPlot</code></li>
-<li><code>ColDataPlot</code></li>
-<li><code>FeatAssayPlot</code></li>
-</ul></li>
-<li><code>RowDotPlot</code><sup>*</sup>
-<ul>
-<li><code>RowDataPlot</code></li>
-<li><code>SampAssayPlot</code></li>
-</ul></li>
-</ul></li>
-<li><code>Table</code><sup>*</sup>
-<ul>
-<li><code>RowTable</code><sup>*</sup>
-<ul>
-<li><code>RowStatTable</code></li>
-</ul></li>
-<li><code>ColumnTable</code><sup>*</sup>
-<ul>
-<li><code>ColStatTable</code></li>
-</ul></li>
-</ul></li>
-<li><code>HeatMapPlot</code></li>
-</ul></li>
-</ul>
-<p>Some of those classes are “virtual” (indicated by <sup>*</sup>), meaning that they cannot be directly instanciated as panels in the GUI.
-Instead, virtual panel classes define families of panels that share groups of properties.</p>
-<p>Virtual classes are meant to be used as the parent of one or more concrete classes.
-In contrast, concrete classes must define fully-functional panels that can be embedded in a GUI, interact with other panels, receive and process data, and generate an output such as a plot or a table, accompanied by a code chunk to display in the code tracker for reproducibility.</p>
+<div id="api" class="section level1">
+<h1><span class="header-section-number">Chapter 2</span> The panel API</h1>
+<div id="cachecommoninfo" class="section level2">
+<h2><span class="header-section-number">2.1</span> .cacheCommonInfo</h2>
+<p>Each individual panel type (e.g., <em>Reduced dimension plot</em>) and family of panel types (e.g., <em>Column dot plot</em>) defines a <code>.cacheCommonInfo</code> function.</p>
+<p>This function is called for each panel instance in memory when the app is initialized.
+It allows the app to efficiently compute a single time common information that only depends on the input <code>se</code> object, and may be frequently reused during the runtime of an app.</p>
+<p>Following the hierarchy of panel types, each call to the signature takes a panel instance <code>x</code> and the <code>se</code> object, and caches common information relevant to all instances of that panel type in the <code>se</code> object itself, before calling <code>callNextMethod()</code> to invoke the next parent signature.</p>
+<p>The top-most signature - for the <code>Panel</code> class - returns the <code>se</code> object that contains all the cached information.</p>
+<p>Note that this function only populates the cache for the first panel of each type; it is a no-op if the common cache has already been initialized.</p>
 </div>
-<div id="the-panel-class" class="section level2">
-<h2><span class="header-section-number">1.2</span> The Panel class</h2>
-<p>The top-most class is called <code>Panel</code>.
-It is a virtual class that defines the core properties common to any panel - existing or future - that may be displayed in the interface.</p>
-<p>Refer to <code>help("Panel-class")</code> for more information about the slots and methods provided by this core class.</p>
-</div>
-<div id="the-dotplot-and-table-panel-families" class="section level2">
-<h2><span class="header-section-number">1.3</span> The DotPlot and Table panel families</h2>
-<p>The <code>Panel</code> virtual class is directly derived into two major virtual sub-classes:</p>
-<ul>
-<li><code>DotPlot</code></li>
-<li><code>Table</code></li>
-</ul>
-<p>Those classes introduce properties that are specific to distinct subsets of panel types.</p>
-<p>The <code>DotPlot</code> class introduces parameters specific to panels where the output is a <code>ggplot</code> object and each row in the data-frame is represented as a point in a plot.</p>
-<p>The <code>Table</code> class introduces parameters specific to panels where the main output is a data-frame directly displayed as a table in the GUI.</p>
-<p>In addition, the <code>HeatMapPlot</code> class defines a special concrete panel class that directly extends the <code>Panel</code> class, as it introduces a set of parameters distinct from both the <code>DotPlot</code> and <code>Table</code> panel families.
-This panel type is described in further details in a separate section <a href="panels.html#heatmapplot-class">below</a>.</p>
-<!-- TODO: properties introduced by the DotPlot class -->
-<!-- TODO: properties introduced by the Table class -->
-</div>
-<div id="the-columndotplot-and-rowdotplot-panel-families" class="section level2">
-<h2><span class="header-section-number">1.4</span> The ColumnDotPlot and RowDotPlot panel families</h2>
-<!-- TODO: properties introduced by the ColumnDotPlot class -->
-<!-- TODO: properties introduced by the RowDotPlot class -->
-</div>
-<div id="built-in-columndotplot-panel-classes" class="section level2">
-<h2><span class="header-section-number">1.5</span> Built-in ColumnDotPlot panel classes</h2>
-<!-- TODO: properties introduced by the RedDimPlot class -->
-<!-- TODO: properties introduced by the ColDataPlot class -->
-<!-- TODO: properties introduced by the FeatAssayPlot class -->
-</div>
-<div id="built-in-rowdotplot-panel-classes" class="section level2">
-<h2><span class="header-section-number">1.6</span> Built-in RowDotPlot panel classes</h2>
-<!-- TODO: properties introduced by the RowDataPlot class -->
-<!-- TODO: properties introduced by the SampAssayPlot class -->
-</div>
-<div id="the-columntable-and-rowtable-panel-families" class="section level2">
-<h2><span class="header-section-number">1.7</span> The ColumnTable and RowTable panel families</h2>
-<!-- TODO: properties introduced by the ColumnTable class -->
-<!-- TODO: properties introduced by the RowTable class -->
-</div>
-<div id="built-in-columntable-panel-classes" class="section level2">
-<h2><span class="header-section-number">1.8</span> Built-in ColumnTable panel classes</h2>
-<!-- TODO: properties introduced by the RowStatTable class -->
-</div>
-<div id="built-in-rowtable-panel-classes" class="section level2">
-<h2><span class="header-section-number">1.9</span> Built-in RowTable panel classes</h2>
-<!-- TODO: properties introduced by the ColStatTable class -->
-</div>
-<div id="heatmapplot-class" class="section level2">
-<h2><span class="header-section-number">1.10</span> The HeatMapPlot panel class</h2>
-<p>This type of panel introduces parameters specific to panels where the output is a heat map, with each row representing a feature and each column representing a sample in the <code>se</code> object.</p>
-<!-- TODO: properties introduced by the HeatMapPlot class -->
+<div id="refineparameters" class="section level2">
+<h2><span class="header-section-number">2.2</span> .refineParameters</h2>
+<p>Each individual panel type (e.g., <em>Reduced dimension plot</em>) and family of panel types (e.g., <em>Column dot plot</em>) defines a <code>.refineParameters</code> function.</p>
+<p>This function is called for each panel instance in memory when the app is initialized, and also when a new panel is added to the GUI.
+It inspects the parameters of a given panel instance, and replaces invalid parameters with sensible values for a given <code>se</code> object.</p>
+<p>Following the hierarchy of panel types, each call to the signature takes an instance <code>x</code> and the <code>se</code> object, and first calls <code>callNextMethod()</code> to invoke the next parent signature, to refine generic parameters before processing specific ones.</p>
+<p>The called signature ultimately returns the updated instance panel <code>x</code>, or <code>NULL</code> if the panel instance is not available for this app.</p>
 
 </div>
 </div>
@@ -305,8 +227,8 @@ This panel type is described in further details in a separate section <a href="p
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="api.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="panels.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="plotting.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

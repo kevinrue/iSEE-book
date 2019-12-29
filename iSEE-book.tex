@@ -257,6 +257,64 @@ This panel type is described in further details in a separate section \protect\h
 
 This type of panel introduces parameters specific to panels where the output is a heat map, with each row representing a feature and each column representing a sample in the \texttt{se} object.
 
+\hypertarget{api}{%
+\chapter{The panel API}\label{api}}
+
+\hypertarget{cachecommoninfo}{%
+\section{.cacheCommonInfo}\label{cachecommoninfo}}
+
+Each individual panel type (e.g., \emph{Reduced dimension plot}) and family of panel types (e.g., \emph{Column dot plot}) defines a \texttt{.cacheCommonInfo} function.
+
+This function is called for each panel instance in memory when the app is initialized.
+It allows the app to efficiently compute a single time common information that only depends on the input \texttt{se} object, and may be frequently reused during the runtime of an app.
+
+Following the hierarchy of panel types, each call to the signature takes a panel instance \texttt{x} and the \texttt{se} object, and caches common information relevant to all instances of that panel type in the \texttt{se} object itself, before calling \texttt{callNextMethod()} to invoke the next parent signature.
+
+The top-most signature - for the \texttt{Panel} class - returns the \texttt{se} object that contains all the cached information.
+
+Note that this function only populates the cache for the first panel of each type; it is a no-op if the common cache has already been initialized.
+
+\hypertarget{refineparameters}{%
+\section{.refineParameters}\label{refineparameters}}
+
+Each individual panel type (e.g., \emph{Reduced dimension plot}) and family of panel types (e.g., \emph{Column dot plot}) defines a \texttt{.refineParameters} function.
+
+This function is called for each panel instance in memory when the app is initialized, and also when a new panel is added to the GUI.
+It inspects the parameters of a given panel instance, and replaces invalid parameters with sensible values for a given \texttt{se} object.
+
+Following the hierarchy of panel types, each call to the signature takes an instance \texttt{x} and the \texttt{se} object, and first calls \texttt{callNextMethod()} to invoke the next parent signature, to refine generic parameters before processing specific ones.
+
+The called signature ultimately returns the updated instance panel \texttt{x}, or \texttt{NULL} if the panel instance is not available for this app.
+
+\hypertarget{plotting}{%
+\chapter{The plotting API}\label{plotting}}
+
+\hypertarget{getplottingfunction}{%
+\section{.getPlottingFunction}\label{getplottingfunction}}
+
+Each panel type available for use in the GUI defines a \texttt{.getPlottingFunction}.
+
+This function is called within \texttt{.createRenderedOutput}, which is triggered by observers when the value of the panel input widgets are changed by users, or when a new panel is added to the GUI.
+
+The \texttt{.getPlottingFunction} function inspects the parameters for a given panel instance, and uses the app \texttt{memory} of all active panels and parameters, the coordinates of data points in each plot panel, the \texttt{se} object, and the \texttt{colormap} to generate all the information necessary to render the outputs of this panel and those that depend on it.
+
+For \texttt{DotPlot} panels, the output is a list that includes:
+
+\begin{itemize}
+\tightlist
+\item
+  the list of commands to display in the code tracker
+\item
+  the coordinates of data points in the plot
+\item
+  the \texttt{ggplot} object
+\end{itemize}
+
+For \texttt{Table} panels, the output is a \texttt{datatable}.
+
+For the \texttt{HeatMap} panel, the function does not return any value.
+Instead it sets relevant elements in the \texttt{output} object of the Shiny session.
+
 \hypertarget{server}{%
 \chapter{The app server}\label{server}}
 
@@ -270,35 +328,6 @@ This type of panel introduces parameters specific to panels where the output is 
 \section{The app memory}\label{memory}}
 
 The app \texttt{memory} is a list of instances created from available panel classes, which defines the order in which individual panels are displayed in the GUI.
-
-\hypertarget{panel-api}{%
-\section{The panel API}\label{panel-api}}
-
-\hypertarget{cachecommoninfo}{%
-\subsection{.cacheCommonInfo}\label{cachecommoninfo}}
-
-Each individual panel type (e.g., \emph{Reduced dimension plot}) and family of panel types (e.g., \emph{Column dot plot}) defines a \texttt{.cacheCommonInfo} function.
-
-This function is called for each panel instance in memory when the app is initialized.
-It allows the app to efficienly compute a single time common information that only depends on the input \texttt{se} object, and may be frequently reused during the runtime of the app.
-
-Following the hierarchy of panel types, each call to the signature takes a panel instance \texttt{x} and the \texttt{se} object, and caches common information relevant to all instances of that panel type in the \texttt{se} object itself, before calling \texttt{callNextMethod()} to invoke the next parent signature.
-
-The top-most signature - for the \texttt{Panel} class - returns the \texttt{se} object that contains all the cached information.
-
-Note that this function only populates the cache for the first panel of each type; it is a no-op if the common cache has already been initialized.
-
-\hypertarget{refineparameters}{%
-\subsection{.refineParameters}\label{refineparameters}}
-
-Each individual panel type (e.g., \emph{Reduced dimension plot}) and family of panel types (e.g., \emph{Column dot plot}) defines a \texttt{.refineParameters} function.
-
-This function is called for each panel instance in memory when the app is initialized, and also when a new panel is added to the GUI.
-It inspects the parameters of a given panel instance, and replaces invalid parameters with sensible values for a given \texttt{se} object.
-
-Following the hierarchy of panel types, each call to the signature takes an instance \texttt{x} and the \texttt{se} object, and first calls \texttt{callNextMethod()} to invoke the next parent signature, to refine generic parameters before processing specific ones.
-
-The called signature ultimately returns the updated instance panel \texttt{x}, or \texttt{NULL} if the panel instance is not available for this app.
 
 \hypertarget{initialization-of-the-app-server}{%
 \section{Initialization of the app server}\label{initialization-of-the-app-server}}
@@ -335,35 +364,6 @@ Next, persistent (non-reactive) objects are initialized:
 \item
   a list of miscellaneous cached information\footnote{The plot that contain the legend keys of \emph{Heatmap} panels is currently cached as miscellaneous information retrieved separately when rendering the GUI.}
 \end{itemize}
-
-\hypertarget{plotting}{%
-\chapter{The plotting API}\label{plotting}}
-
-\hypertarget{getplottingfunction}{%
-\section{.getPlottingFunction}\label{getplottingfunction}}
-
-Each panel type available for use in the GUI defines a \texttt{.getPlottingFunction}.
-
-This function is called within \texttt{.createRenderedOutput}, which is triggered by observers when the value of the panel input widgets are changed by users, or when a new panel is added to the GUI.
-
-The \texttt{.getPlottingFunction} function inspects the parameters for a given panel instance, and uses the app \texttt{memory} of all active panels and parameters, the coordinates of data points in each plot panel, the \texttt{se} object, and the \texttt{colormap} to generate all the information necessary to render the outputs of this panel and those that depend on it.
-
-For \texttt{DotPlot} panels, the output is a list that includes:
-
-\begin{itemize}
-\tightlist
-\item
-  the list of commands to display in the code tracker
-\item
-  the coordinates of data points in the plot
-\item
-  the \texttt{ggplot} object
-\end{itemize}
-
-For \texttt{Table} panels, the output is a \texttt{datatable}.
-
-For the \texttt{HeatMap} panel, the function does not return any value.
-Instead it sets relevant elements in the \texttt{output} object of the Shiny session.
 
 \hypertarget{developing}{%
 \chapter{Developing new panels}\label{developing}}
@@ -445,7 +445,7 @@ We call that new class \texttt{RedDimHexPlot}.
 \end{Shaded}
 
 \hypertarget{add-a-constructor-function}{%
-\chapter{Add a constructor function}\label{add-a-constructor-function}}
+\section{Add a constructor function}\label{add-a-constructor-function}}
 
 At this point, it is possible to create instances of the new panel class already.
 To facilitate this, new panels should provide a constructor function - named identically to the class - to accept arbitrary arguments controlling the initialization of new panel instances created by the \texttt{new} function.
@@ -482,7 +482,7 @@ However, that would not be very exciting as instances of this new panel class wo
 \end{Shaded}
 
 \hypertarget{set-the-panel-name-in-the-gui}{%
-\chapter{Set the panel name in the GUI}\label{set-the-panel-name-in-the-gui}}
+\section{Set the panel name in the GUI}\label{set-the-panel-name-in-the-gui}}
 
 The panel class that we created so far also inherited the name of the parent panel class.
 In other words, instances of both classes are indistinguishable from each other in the GUI.
@@ -499,7 +499,7 @@ To clearly distinguish the new panel class in the GUI, we overwrite this method 
 With that, running \texttt{app} again now highlights how panels of the new class now display a different title from the parent class.
 
 \hypertarget{define-the-commands-generating-a-plot-output}{%
-\chapter{Define the commands generating a plot output}\label{define-the-commands-generating-a-plot-output}}
+\section{Define the commands generating a plot output}\label{define-the-commands-generating-a-plot-output}}
 
 Importantly, the API separates the generation of commands processing data from \texttt{sce} into a data-frame, from the generation of commands producing a \texttt{ggplot} object using the processed data-frame.
 If a new \texttt{DotPlot} panel class is meant to process data in the same way as its parent panel, only to display in a different way, it is then possible to overwrite only the \texttt{.generateDotPlot} method.
