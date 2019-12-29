@@ -24,7 +24,7 @@
 <meta name="author" content="Kevin Rue-Albrecht, Federico Marini, Charlotte Soneson, and Aaron Lun" />
 
 
-<meta name="date" content="2019-12-29" />
+<meta name="date" content="2019-12-30" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -247,43 +247,7 @@ In contrast, concrete classes must define fully-functional panels that can be em
 <h2><span class="header-section-number">1.2</span> The Panel class</h2>
 <p>The top-most class is called <code>Panel</code>.
 It is a virtual class that defines the core properties common to any panel - existing or future - that may be displayed in the interface.</p>
-<!-- TODO: Replace the table below by a link to `help("Panel-class")` -->
-<table>
-<colgroup>
-<col width="50%" />
-<col width="50%" />
-</colgroup>
-<tbody>
-<tr class="odd">
-<td><code>PanelId</code></td>
-<td>Integer index indicating the i<sup>th</sup> panel of a given type.</td>
-</tr>
-<tr class="even">
-<td><code>PanelHeight</code></td>
-<td>Height of the panel, in pixels.</td>
-</tr>
-<tr class="odd">
-<td><code>PanelWidth</code></td>
-<td>Width of the panel, an integer value indicating the number of columns to use, from 1 to 12.</td>
-</tr>
-<tr class="even">
-<td><code>SelectBoxOpen</code></td>
-<td>Logical value indicating if the <em>Selection parameters</em> box of the panel is open when the app starts.</td>
-</tr>
-<tr class="odd">
-<td><code>SelectByPlot</code></td>
-<td>Encoded name of the panel from which to receive a selection of data points.</td>
-</tr>
-<tr class="even">
-<td><code>SelectMultiType</code></td>
-<td>Keyword indicating the method to deal with multiple incoming selections of data points.</td>
-</tr>
-<tr class="odd">
-<td><code>SelectMultiSaved</code></td>
-<td>Integer index indicating a single data point selection to use, among multiple incoming selections.</td>
-</tr>
-</tbody>
-</table>
+<p>Refer to <code>help("Panel-class")</code> for more information about the slots and methods provided by this core class.</p>
 </div>
 <div id="the-dotplot-and-table-panel-families" class="section level2">
 <h2><span class="header-section-number">1.3</span> The DotPlot and Table panel families</h2>
@@ -293,9 +257,9 @@ It is a virtual class that defines the core properties common to any panel - exi
 <li><code>Table</code></li>
 </ul>
 <p>Those classes introduce properties that are specific to distinct subsets of panel types.</p>
-<p>The <code>DotPlot</code> class introduce parameters specific to panels where the output is a <code>ggplot</code> object and each row in the data-frame is represented as a point in a plot.</p>
-<p>The <code>Table</code> class introduce parameters specific to panels where the main output is a data-frame directly displayed as a table in the GUI.</p>
-<p>In addition, the <code>HeatMapPlot</code> class defines a special panel class that directly extends the <code>Panel</code> class, as it introduces a set of parameters distinct from both the <code>DotPlot</code> and <code>Table</code> panel families.
+<p>The <code>DotPlot</code> class introduces parameters specific to panels where the output is a <code>ggplot</code> object and each row in the data-frame is represented as a point in a plot.</p>
+<p>The <code>Table</code> class introduces parameters specific to panels where the main output is a data-frame directly displayed as a table in the GUI.</p>
+<p>In addition, the <code>HeatMapPlot</code> class defines a special concrete panel class that directly extends the <code>Panel</code> class, as it introduces a set of parameters distinct from both the <code>DotPlot</code> and <code>Table</code> panel families.
 This panel type is described in further details in a separate section <a href="panels.html#heatmapplot-class">below</a>.</p>
 <!-- TODO: properties introduced by the DotPlot class -->
 <!-- TODO: properties introduced by the Table class -->

@@ -111,7 +111,7 @@
 
 \title{Extending \emph{iSEE}}
 \author{Kevin Rue-Albrecht, Federico Marini, Charlotte Soneson, and Aaron Lun}
-\date{2019-12-29}
+\date{2019-12-30}
 
 \begin{document}
 \maketitle
@@ -210,46 +210,7 @@ In contrast, concrete classes must define fully-functional panels that can be em
 The top-most class is called \texttt{Panel}.
 It is a virtual class that defines the core properties common to any panel - existing or future - that may be displayed in the interface.
 
-\begin{longtable}[]{@{}ll@{}}
-\toprule
-\endhead
-\begin{minipage}[t]{0.47\columnwidth}\raggedright
-\texttt{PanelId}\strut
-\end{minipage} & \begin{minipage}[t]{0.47\columnwidth}\raggedright
-Integer index indicating the i\textsuperscript{th} panel of a given type.\strut
-\end{minipage}\tabularnewline
-\begin{minipage}[t]{0.47\columnwidth}\raggedright
-\texttt{PanelHeight}\strut
-\end{minipage} & \begin{minipage}[t]{0.47\columnwidth}\raggedright
-Height of the panel, in pixels.\strut
-\end{minipage}\tabularnewline
-\begin{minipage}[t]{0.47\columnwidth}\raggedright
-\texttt{PanelWidth}\strut
-\end{minipage} & \begin{minipage}[t]{0.47\columnwidth}\raggedright
-Width of the panel, an integer value indicating the number of columns to use, from 1 to 12.\strut
-\end{minipage}\tabularnewline
-\begin{minipage}[t]{0.47\columnwidth}\raggedright
-\texttt{SelectBoxOpen}\strut
-\end{minipage} & \begin{minipage}[t]{0.47\columnwidth}\raggedright
-Logical value indicating if the \emph{Selection parameters} box of the panel is open when the app starts.\strut
-\end{minipage}\tabularnewline
-\begin{minipage}[t]{0.47\columnwidth}\raggedright
-\texttt{SelectByPlot}\strut
-\end{minipage} & \begin{minipage}[t]{0.47\columnwidth}\raggedright
-Encoded name of the panel from which to receive a selection of data points.\strut
-\end{minipage}\tabularnewline
-\begin{minipage}[t]{0.47\columnwidth}\raggedright
-\texttt{SelectMultiType}\strut
-\end{minipage} & \begin{minipage}[t]{0.47\columnwidth}\raggedright
-Keyword indicating the method to deal with multiple incoming selections of data points.\strut
-\end{minipage}\tabularnewline
-\begin{minipage}[t]{0.47\columnwidth}\raggedright
-\texttt{SelectMultiSaved}\strut
-\end{minipage} & \begin{minipage}[t]{0.47\columnwidth}\raggedright
-Integer index indicating a single data point selection to use, among multiple incoming selections.\strut
-\end{minipage}\tabularnewline
-\bottomrule
-\end{longtable}
+Refer to \texttt{help("Panel-class")} for more information about the slots and methods provided by this core class.
 
 \hypertarget{the-dotplot-and-table-panel-families}{%
 \section{The DotPlot and Table panel families}\label{the-dotplot-and-table-panel-families}}
@@ -266,11 +227,11 @@ The \texttt{Panel} virtual class is directly derived into two major virtual sub-
 
 Those classes introduce properties that are specific to distinct subsets of panel types.
 
-The \texttt{DotPlot} class introduce parameters specific to panels where the output is a \texttt{ggplot} object and each row in the data-frame is represented as a point in a plot.
+The \texttt{DotPlot} class introduces parameters specific to panels where the output is a \texttt{ggplot} object and each row in the data-frame is represented as a point in a plot.
 
-The \texttt{Table} class introduce parameters specific to panels where the main output is a data-frame directly displayed as a table in the GUI.
+The \texttt{Table} class introduces parameters specific to panels where the main output is a data-frame directly displayed as a table in the GUI.
 
-In addition, the \texttt{HeatMapPlot} class defines a special panel class that directly extends the \texttt{Panel} class, as it introduces a set of parameters distinct from both the \texttt{DotPlot} and \texttt{Table} panel families.
+In addition, the \texttt{HeatMapPlot} class defines a special concrete panel class that directly extends the \texttt{Panel} class, as it introduces a set of parameters distinct from both the \texttt{DotPlot} and \texttt{Table} panel families.
 This panel type is described in further details in a separate section \protect\hyperlink{heatmapplot-class}{below}.
 
 \hypertarget{the-columndotplot-and-rowdotplot-panel-families}{%
