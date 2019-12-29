@@ -41,7 +41,7 @@ We call that new class `RedDimHexPlot`.
 setClass("RedDimHexPlot", contains="RedDimPlot")
 ```
 
-# Add a constructor function
+## Add a constructor function
 
 At this point, it is possible to create instances of the new panel class already.
 To facilitate this, new panels should provide a constructor function - named identically to the class - to accept arbitrary arguments controlling the initialization of new panel instances created by the `new` function.
@@ -71,7 +71,7 @@ initial <- list(RedDimHexPlot1, RedDimPlot1)
 app <- iSEE(sce, initial = initial)
 ```
 
-# Set the panel name in the GUI
+## Set the panel name in the GUI
 
 The panel class that we created so far also inherited the name of the parent panel class.
 In other words, instances of both classes are indistinguishable from each other in the GUI.
@@ -85,7 +85,7 @@ setMethod(".fullName", "RedDimHexPlot", function(x) "Reduced dimension hexagonal
 
 With that, running `app` again now highlights how panels of the new class now display a different title from the parent class.
 
-# Define the commands generating a plot output
+## Define the commands generating a plot output
 
 Importantly, the API separates the generation of commands processing data from `sce` into a data-frame, from the generation of commands producing a `ggplot` object using the processed data-frame.
 If a new `DotPlot` panel class is meant to process data in the same way as its parent panel, only to display in a different way, it is then possible to overwrite only the `.generateDotPlot` method.
