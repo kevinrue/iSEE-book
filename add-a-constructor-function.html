@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 3 The plotting API | Extending iSEE</title>
+  <title>Chapter 5 Add a constructor function | Extending iSEE</title>
   <meta name="description" content="This book describes how to use the Bioconductor iSEE package to create web-applications for exploring data stored in SummarizedExperiment objects." />
   <meta name="generator" content="bookdown 0.16 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 3 The plotting API | Extending iSEE" />
+  <meta property="og:title" content="Chapter 5 Add a constructor function | Extending iSEE" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 3 The plotting API | Extending iSEE" />
+  <meta name="twitter:title" content="Chapter 5 Add a constructor function | Extending iSEE" />
   
   <meta name="twitter:description" content="This book describes how to use the Bioconductor iSEE package to create web-applications for exploring data stored in SummarizedExperiment objects." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="server.html"/>
-<link rel="next" href="developing.html"/>
+<link rel="prev" href="developing.html"/>
+<link rel="next" href="set-the-panel-name-in-the-gui.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -201,32 +201,31 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="plotting" class="section level1">
-<h1><span class="header-section-number">Chapter 3</span> The plotting API</h1>
-<div id="getplottingfunction" class="section level2">
-<h2><span class="header-section-number">3.1</span> .getPlottingFunction</h2>
-<p>Each panel type available for use in the GUI defines a <code>.getPlottingFunction</code>.</p>
-<p>This function is called within <code>.createRenderedOutput</code>, which is triggered by observers when the value of the panel input widgets are changed by users, or when a new panel is added to the GUI.</p>
-<p>The <code>.getPlottingFunction</code> function inspects the parameters for a given panel instance, and uses the app <code>memory</code> of all active panels and parameters, the coordinates of data points in each plot panel, the <code>se</code> object, and the <code>colormap</code> to generate all the information necessary to render the outputs of this panel and those that depend on it.</p>
-<p>For <code>DotPlot</code> panels, the output is a list that includes:</p>
-<ul>
-<li>the list of commands to display in the code tracker</li>
-<li>the coordinates of data points in the plot</li>
-<li>the <code>ggplot</code> object</li>
-</ul>
-<p>For <code>Table</code> panels, the output is a <code>datatable</code>.</p>
-<p>For the <code>HeatMap</code> panel, the function does not return any value.
-Instead it sets relevant elements in the <code>output</code> object of the Shiny session.</p>
-
-</div>
+<div id="add-a-constructor-function" class="section level1">
+<h1><span class="header-section-number">Chapter 5</span> Add a constructor function</h1>
+<p>At this point, it is possible to create instances of the new panel class already.
+To facilitate this, new panels should provide a constructor function - named identically to the class - to accept arbitrary arguments controlling the initialization of new panel instances created by the <code>new</code> function.</p>
+<p>Here, we define a simple constructor function that passes all incoming arguments to the <code>new</code> function <em>as is</em>.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1">RedDimHexPlot &lt;-<span class="st"> </span><span class="cf">function</span>(...) {</a>
+<a class="sourceLine" id="cb14-2" title="2">    <span class="kw">new</span>(<span class="st">&quot;RedDimHexPlot&quot;</span>, ...)</a>
+<a class="sourceLine" id="cb14-3" title="3">}</a></code></pre></div>
+<p>At this point, we can already use instances of this new panel class in <em><a href="https://bioconductor.org/packages/3.11/iSEE">iSEE</a></em> apps.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1">RedDimHexPlot1 &lt;-<span class="st"> </span><span class="kw">RedDimHexPlot</span>()</a>
+<a class="sourceLine" id="cb15-2" title="2">initial &lt;-<span class="st"> </span><span class="kw">list</span>(RedDimHexPlot1)</a>
+<a class="sourceLine" id="cb15-3" title="3">app &lt;-<span class="st"> </span><span class="kw">iSEE</span>(sce, <span class="dt">initial =</span> initial)</a></code></pre></div>
+<p>However, that would not be very exciting as instances of this new panel class would behave exactly like the those of the <code>RedDimPlot</code> class.</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" title="1">RedDimPlot1 &lt;-<span class="st"> </span><span class="kw">RedDimPlot</span>()</a>
+<a class="sourceLine" id="cb16-2" title="2">RedDimHexPlot1 &lt;-<span class="st"> </span><span class="kw">new</span>(<span class="st">&quot;RedDimHexPlot&quot;</span>)</a>
+<a class="sourceLine" id="cb16-3" title="3">initial &lt;-<span class="st"> </span><span class="kw">list</span>(RedDimHexPlot1, RedDimPlot1)</a>
+<a class="sourceLine" id="cb16-4" title="4">app &lt;-<span class="st"> </span><span class="kw">iSEE</span>(sce, <span class="dt">initial =</span> initial)</a></code></pre></div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="server.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="developing.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="developing.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="set-the-panel-name-in-the-gui.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

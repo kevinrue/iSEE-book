@@ -407,7 +407,8 @@ Instead it sets relevant elements in the \texttt{output} object of the Shiny ses
 \hypertarget{developing}{%
 \chapter{Developing new panels}\label{developing}}
 
-First things first, we need to load the \emph{\href{https://bioconductor.org/packages/3.11/iSEE}{iSEE}} package for this chapter.
+First, we need to load the \emph{\href{https://bioconductor.org/packages/3.11/iSEE}{iSEE}} package for this chapter.
+This action imports all the builtin panel class definitions, including the virtual class \texttt{Panel} that is the base class for any \emph{\href{https://bioconductor.org/packages/3.11/iSEE}{iSEE}} panel class.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -415,50 +416,172 @@ First things first, we need to load the \emph{\href{https://bioconductor.org/pac
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{the-panel-api}{%
-\chapter{The panel API}\label{the-panel-api}}
+We also set up an example using our favorite dataset, creating a \texttt{SingleCellExperiment} object with some precomputed dimensionality reduction results.
 
-Fully functional panel class must implement - or inherit from their parent class - the full set of methods that composes the API allowing panels to interact and communicate with the reactive infrastructure of \emph{\href{https://bioconductor.org/packages/3.11/iSEE}{iSEE}} applications.
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(scRNAseq)}
+\NormalTok{sce <-}\StringTok{ }\KeywordTok{ReprocessedAllenData}\NormalTok{(}\DataTypeTok{assays=}\StringTok{"tophat_counts"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
 
-\begin{itemize}
-\tightlist
-\item
-  a validity method, defined using \texttt{setValidity2}.
-\item
-  \texttt{.fullName}, used to generate a unique full name uniquely identifying each panel instance in the GUI.
-\item
-  \texttt{.cacheCommonInfo}, computing and caching static information about a \texttt{SummarizedExperiment} object regularly used by other API methods.
-\item
-  \texttt{initialize}, creating a new panel instance with panel settings initialized with empty default values
-\item
-  \texttt{.refineParameters}, replacing invalid panel settings with appropriate values.
-\item
-  \texttt{.defineInterface}, used to define panel-specific Shiny widgets receiving user inputs in the GUI.
-\item
-  \texttt{.createObservers}, used to define reactive functions that update internal reactive objects following user interactions.
-\item
-  \texttt{.getCommandsDataXY}, used to generate commands and labels related to the x-axis and y-axis of panel classes producing a plot output.
-\end{itemize}
+\begin{verbatim}
+## snapshotDate(): 2019-12-27
+\end{verbatim}
+
+\begin{verbatim}
+## see ?scRNAseq and browseVignettes('scRNAseq') for documentation
+\end{verbatim}
+
+\begin{verbatim}
+## loading from cache
+\end{verbatim}
+
+\begin{verbatim}
+## see ?scRNAseq and browseVignettes('scRNAseq') for documentation
+\end{verbatim}
+
+\begin{verbatim}
+## loading from cache
+\end{verbatim}
+
+\begin{verbatim}
+## see ?scRNAseq and browseVignettes('scRNAseq') for documentation
+\end{verbatim}
+
+\begin{verbatim}
+## loading from cache
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(scater)}
+\NormalTok{sce <-}\StringTok{ }\KeywordTok{logNormCounts}\NormalTok{(sce, }\DataTypeTok{exprs_values=}\StringTok{"tophat_counts"}\NormalTok{)}
+\NormalTok{sce <-}\StringTok{ }\KeywordTok{runPCA}\NormalTok{(sce, }\DataTypeTok{ncomponents=}\DecValTok{4}\NormalTok{)}
+\NormalTok{sce <-}\StringTok{ }\KeywordTok{runTSNE}\NormalTok{(sce)}
+\end{Highlighting}
+\end{Shaded}
 
 \hypertarget{create-a-new-s4-class}{%
 \section{Create a new S4 class}\label{create-a-new-s4-class}}
 
 In the chapter \protect\hyperlink{panels}{Panel classes}, we saw how each type of panel is defined as an S4 class, organised in a hierarchy that allows new panel classes to inherit sets of the properties and functionality from parent classes.
 
-Therefore, developing a new panel starts with the creation of a new class.
-While it is possible to create a new panel class from scratch, this is an advanced use case described in a separate section.
-Instead, new panels classes can be much more rapidly derived from a parent panel class, using the inheritance relationships between classes to reuse properties and functionality defined in the parent class.
+Then, developing a new panel type starts with the creation of a new class that inherits from the \texttt{Panel} class.
+
+While it is possible to create a new panel class that directly inherits from the top-most virtual \texttt{Panel} class, this is the most advanced use case that we will describe in a later section.
+
+Instead, new concrete panels classes can be rapidly derived from other concrete parent panel classes, using the inheritance relationships between classes to reuse properties and functionality defined in all of the parent classes.
 
 The choice of a parent class for the new panel depends on the properties that we want that new panel to have.
-For instance, let us say that we want to define a new panel that has all the functionality of the \emph{Reduced dimension plot} panel type, but summarizes data into a layer of hexagonal bins instead of showing each individual data point.
-
-To start, we declare our new class with a new unique name, \emph{e.g.} \texttt{RedDimHexbinPlot}, that contains the builtin panel class \texttt{RedDimPlot}.
+For instance, to create a panel that inherits all the functionality of the \emph{Reduced dimension plot} panel type, we simply define a new class that extends the \texttt{RedDimPlot} class.
+We call that new class \texttt{RedDimHexPlot}.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{setClass}\NormalTok{(}\StringTok{"RedDimHexbinPlot"}\NormalTok{, }\DataTypeTok{contains=}\StringTok{"RedDimPlot"}\NormalTok{)}
+\KeywordTok{setClass}\NormalTok{(}\StringTok{"RedDimHexPlot"}\NormalTok{, }\DataTypeTok{contains=}\StringTok{"RedDimPlot"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
+
+\hypertarget{add-a-constructor-function}{%
+\chapter{Add a constructor function}\label{add-a-constructor-function}}
+
+At this point, it is possible to create instances of the new panel class already.
+To facilitate this, new panels should provide a constructor function - named identically to the class - to accept arbitrary arguments controlling the initialization of new panel instances created by the \texttt{new} function.
+
+Here, we define a simple constructor function that passes all incoming arguments to the \texttt{new} function \emph{as is}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{RedDimHexPlot <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{(...) \{}
+    \KeywordTok{new}\NormalTok{(}\StringTok{"RedDimHexPlot"}\NormalTok{, ...)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+At this point, we can already use instances of this new panel class in \emph{\href{https://bioconductor.org/packages/3.11/iSEE}{iSEE}} apps.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{RedDimHexPlot1 <-}\StringTok{ }\KeywordTok{RedDimHexPlot}\NormalTok{()}
+\NormalTok{initial <-}\StringTok{ }\KeywordTok{list}\NormalTok{(RedDimHexPlot1)}
+\NormalTok{app <-}\StringTok{ }\KeywordTok{iSEE}\NormalTok{(sce, }\DataTypeTok{initial =}\NormalTok{ initial)}
+\end{Highlighting}
+\end{Shaded}
+
+However, that would not be very exciting as instances of this new panel class would behave exactly like the those of the \texttt{RedDimPlot} class.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{RedDimPlot1 <-}\StringTok{ }\KeywordTok{RedDimPlot}\NormalTok{()}
+\NormalTok{RedDimHexPlot1 <-}\StringTok{ }\KeywordTok{new}\NormalTok{(}\StringTok{"RedDimHexPlot"}\NormalTok{)}
+\NormalTok{initial <-}\StringTok{ }\KeywordTok{list}\NormalTok{(RedDimHexPlot1, RedDimPlot1)}
+\NormalTok{app <-}\StringTok{ }\KeywordTok{iSEE}\NormalTok{(sce, }\DataTypeTok{initial =}\NormalTok{ initial)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{set-the-panel-name-in-the-gui}{%
+\chapter{Set the panel name in the GUI}\label{set-the-panel-name-in-the-gui}}
+
+The panel class that we created so far also inherited the name of the parent panel class.
+In other words, instances of both classes are indistinguishable from each other in the GUI.
+
+The name of each panel displayed in the GUI is defined by the \texttt{.fullName} method.
+To clearly distinguish the new panel class in the GUI, we overwrite this method to display a name different from the parent class.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{setMethod}\NormalTok{(}\StringTok{".fullName"}\NormalTok{, }\StringTok{"RedDimHexPlot"}\NormalTok{, }\ControlFlowTok{function}\NormalTok{(x) }\StringTok{"Reduced dimension hexagonal plot"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+With that, running \texttt{app} again now highlights how panels of the new class now display a different title from the parent class.
+
+\hypertarget{define-the-commands-generating-a-plot-output}{%
+\chapter{Define the commands generating a plot output}\label{define-the-commands-generating-a-plot-output}}
+
+Importantly, the API separates the generation of commands processing data from \texttt{sce} into a data-frame, from the generation of commands producing a \texttt{ggplot} object using the processed data-frame.
+If a new \texttt{DotPlot} panel class is meant to process data in the same way as its parent panel, only to display in a different way, it is then possible to overwrite only the \texttt{.generateDotPlot} method.
+
+Importantly, the \texttt{.generateDotPlot} method requires two key arguments: \texttt{labels} provides the plot labels for each of the aesthetics in the plot data, and \texttt{envir} provides the environment in which the plotting commands are to be evaluated to produce the \texttt{ggplot} object.
+
+In particular, \texttt{.generateDotPlot} can rely on certain environment variables promised by the contract.
+Above all, those include \texttt{plot.data}, the data-frame that contains one row per data point to display.
+Using those environment variables, \texttt{.generateDotPlot} can make decisions altering the plotting commands and the resulting \texttt{ggplot} object.
+
+We invite readers to refer to the \textbf{``Generating the ggplot object''} section of \texttt{help(".generateDotPlot")} for more information.
+
+As an example, we overwrite the \texttt{.generateDotPlot} function for the new \texttt{RedDimHexPlot} class to simply show the number of data point in the plotting area as a heatmap dividing the plane into regular hexagons.
+Notably, the function can immediately rely on the \texttt{plot.data} data-frame that is computed by methods defined for the parent class \texttt{RedDimPlot}.
+We also use the precomputed aesthetic \texttt{labels} associated with each column of \texttt{plot.data}, while setting a fixed \texttt{"Count"} label for the \texttt{fill} aesthetic associated with the count of observation in each hexagonal bin.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{setMethod}\NormalTok{(}\StringTok{".generateDotPlot"}\NormalTok{, }\StringTok{"RedDimHexPlot"}\NormalTok{, }\ControlFlowTok{function}\NormalTok{(x, labels, envir) \{}
+    \KeywordTok{print}\NormalTok{(labels)}
+    \KeywordTok{stopifnot}\NormalTok{(}\KeywordTok{require}\NormalTok{(ggplot2))}
+    
+\NormalTok{    plot_cmds <-}\StringTok{ }\KeywordTok{list}\NormalTok{()}
+\NormalTok{    plot_cmds[[}\StringTok{"ggplot"}\NormalTok{]] <-}\StringTok{ "ggplot() +"}
+    
+    \CommentTok{# Adding hexbins to the plot.}
+\NormalTok{    plot_cmds[[}\StringTok{"hex"}\NormalTok{]] <-}\StringTok{ "geom_hex(aes(X, Y), plot.data) +"}
+\NormalTok{    plot_cmds[[}\StringTok{"labs"}\NormalTok{]] <-}\StringTok{ "labs(fill='Count') +"}
+\NormalTok{    plot_cmds[[}\StringTok{"labs"}\NormalTok{]] <-}\StringTok{ }\KeywordTok{sprintf}\NormalTok{(}
+        \StringTok{"labs(x='%s', y='%s', title='%s', fill='%s') +"}\NormalTok{,}
+\NormalTok{        labels}\OperatorTok{$}\NormalTok{X, labels}\OperatorTok{$}\NormalTok{Y, labels}\OperatorTok{$}\NormalTok{title, }\StringTok{"Count"}
+\NormalTok{        )}
+\NormalTok{    plot_cmds[[}\StringTok{"theme_base"}\NormalTok{]] <-}\StringTok{ "theme_bw() +"}
+\NormalTok{    plot_cmds[[}\StringTok{"theme_legend"}\NormalTok{]] <-}\StringTok{ "theme(legend.position = 'bottom')"}
+    
+\NormalTok{    gg_plot <-}\StringTok{ }\KeywordTok{eval}\NormalTok{(}\KeywordTok{parse}\NormalTok{(}\DataTypeTok{text=}\NormalTok{plot_cmds), envir)}
+    
+    \KeywordTok{list}\NormalTok{(}\DataTypeTok{plot=}\NormalTok{gg_plot, }\DataTypeTok{commands=}\NormalTok{plot_cmds)}
+\NormalTok{\})}
+\end{Highlighting}
+\end{Shaded}
+
+Running \texttt{app} again highlights how the \texttt{RedDimHexPlot} panel fills each hexagonal bin with a color indicating the number of data points present in the corresponding area in the \texttt{RedDimPlot} panel.
 
 \hypertarget{case-study-i}{%
 \chapter{Case study I}\label{case-study-i}}
@@ -731,51 +854,7 @@ having old brushes or lassos hanging around would be of no benefit at best, and 
 \section{In action}\label{in-action}}
 
 Let's put our new panel to the test.
-We set up an example using our favorite dataset, creating a \texttt{SingleCellExperiment} object with some precomputed dimensionality reduction results.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{library}\NormalTok{(scRNAseq)}
-\NormalTok{sce <-}\StringTok{ }\KeywordTok{ReprocessedAllenData}\NormalTok{(}\DataTypeTok{assays=}\StringTok{"tophat_counts"}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## snapshotDate(): 2019-12-27
-\end{verbatim}
-
-\begin{verbatim}
-## see ?scRNAseq and browseVignettes('scRNAseq') for documentation
-\end{verbatim}
-
-\begin{verbatim}
-## loading from cache
-\end{verbatim}
-
-\begin{verbatim}
-## see ?scRNAseq and browseVignettes('scRNAseq') for documentation
-\end{verbatim}
-
-\begin{verbatim}
-## loading from cache
-\end{verbatim}
-
-\begin{verbatim}
-## see ?scRNAseq and browseVignettes('scRNAseq') for documentation
-\end{verbatim}
-
-\begin{verbatim}
-## loading from cache
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{library}\NormalTok{(scater)}
-\NormalTok{sce <-}\StringTok{ }\KeywordTok{logNormCounts}\NormalTok{(sce, }\DataTypeTok{exprs_values=}\StringTok{"tophat_counts"}\NormalTok{)}
-\NormalTok{sce <-}\StringTok{ }\KeywordTok{runPCA}\NormalTok{(sce, }\DataTypeTok{ncomponents=}\DecValTok{4}\NormalTok{)}
-\NormalTok{sce <-}\StringTok{ }\KeywordTok{runTSNE}\NormalTok{(sce)}
-\end{Highlighting}
-\end{Shaded}
+We use the \texttt{sce} object, preprocessed in a \protect\hyperlink{developing}{previous chapter}, including some precomputed dimensionality reduction results.
 
 The plan is to create a (fixed) reduced dimension plot that will transmit to our dynamic reduced dimension plot.
 Setting up the iSEE instance is as easy as:
@@ -984,51 +1063,7 @@ This ensures that they do not clash with global variables created by \texttt{iSE
 \section{In action}\label{in-action-1}}
 
 Let's put our new panel to the test.
-We set up an example using our favorite dataset, creating a \texttt{SingleCellExperiment} object with some precomputed dimensionality reduction results.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{library}\NormalTok{(scRNAseq)}
-\NormalTok{sce <-}\StringTok{ }\KeywordTok{ReprocessedAllenData}\NormalTok{(}\DataTypeTok{assays=}\StringTok{"tophat_counts"}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## snapshotDate(): 2019-12-27
-\end{verbatim}
-
-\begin{verbatim}
-## see ?scRNAseq and browseVignettes('scRNAseq') for documentation
-\end{verbatim}
-
-\begin{verbatim}
-## loading from cache
-\end{verbatim}
-
-\begin{verbatim}
-## see ?scRNAseq and browseVignettes('scRNAseq') for documentation
-\end{verbatim}
-
-\begin{verbatim}
-## loading from cache
-\end{verbatim}
-
-\begin{verbatim}
-## see ?scRNAseq and browseVignettes('scRNAseq') for documentation
-\end{verbatim}
-
-\begin{verbatim}
-## loading from cache
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{library}\NormalTok{(scater)}
-\NormalTok{sce <-}\StringTok{ }\KeywordTok{logNormCounts}\NormalTok{(sce, }\DataTypeTok{exprs_values=}\StringTok{"tophat_counts"}\NormalTok{)}
-\NormalTok{sce <-}\StringTok{ }\KeywordTok{runPCA}\NormalTok{(sce, }\DataTypeTok{ncomponents=}\DecValTok{4}\NormalTok{)}
-\NormalTok{sce <-}\StringTok{ }\KeywordTok{runTSNE}\NormalTok{(sce)}
-\end{Highlighting}
-\end{Shaded}
+We use the \texttt{sce} object, preprocessed in a \protect\hyperlink{developing}{previous chapter}, including some precomputed dimensionality reduction results.
 
 The plan is to create a (fixed) reduced dimension plot that will transmit to our DGE table.
 Setting up the iSEE instance is as easy as:

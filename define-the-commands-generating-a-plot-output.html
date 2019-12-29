@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 3 The plotting API | Extending iSEE</title>
+  <title>Chapter 7 Define the commands generating a plot output | Extending iSEE</title>
   <meta name="description" content="This book describes how to use the Bioconductor iSEE package to create web-applications for exploring data stored in SummarizedExperiment objects." />
   <meta name="generator" content="bookdown 0.16 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 3 The plotting API | Extending iSEE" />
+  <meta property="og:title" content="Chapter 7 Define the commands generating a plot output | Extending iSEE" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 3 The plotting API | Extending iSEE" />
+  <meta name="twitter:title" content="Chapter 7 Define the commands generating a plot output | Extending iSEE" />
   
   <meta name="twitter:description" content="This book describes how to use the Bioconductor iSEE package to create web-applications for exploring data stored in SummarizedExperiment objects." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="server.html"/>
-<link rel="next" href="developing.html"/>
+<link rel="prev" href="set-the-panel-name-in-the-gui.html"/>
+<link rel="next" href="case-study-i.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -201,32 +201,57 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="plotting" class="section level1">
-<h1><span class="header-section-number">Chapter 3</span> The plotting API</h1>
-<div id="getplottingfunction" class="section level2">
-<h2><span class="header-section-number">3.1</span> .getPlottingFunction</h2>
-<p>Each panel type available for use in the GUI defines a <code>.getPlottingFunction</code>.</p>
-<p>This function is called within <code>.createRenderedOutput</code>, which is triggered by observers when the value of the panel input widgets are changed by users, or when a new panel is added to the GUI.</p>
-<p>The <code>.getPlottingFunction</code> function inspects the parameters for a given panel instance, and uses the app <code>memory</code> of all active panels and parameters, the coordinates of data points in each plot panel, the <code>se</code> object, and the <code>colormap</code> to generate all the information necessary to render the outputs of this panel and those that depend on it.</p>
-<p>For <code>DotPlot</code> panels, the output is a list that includes:</p>
-<ul>
-<li>the list of commands to display in the code tracker</li>
-<li>the coordinates of data points in the plot</li>
-<li>the <code>ggplot</code> object</li>
-</ul>
-<p>For <code>Table</code> panels, the output is a <code>datatable</code>.</p>
-<p>For the <code>HeatMap</code> panel, the function does not return any value.
-Instead it sets relevant elements in the <code>output</code> object of the Shiny session.</p>
+<div id="define-the-commands-generating-a-plot-output" class="section level1">
+<h1><span class="header-section-number">Chapter 7</span> Define the commands generating a plot output</h1>
+<p>Importantly, the API separates the generation of commands processing data from <code>sce</code> into a data-frame, from the generation of commands producing a <code>ggplot</code> object using the processed data-frame.
+If a new <code>DotPlot</code> panel class is meant to process data in the same way as its parent panel, only to display in a different way, it is then possible to overwrite only the <code>.generateDotPlot</code> method.</p>
+<p>Importantly, the <code>.generateDotPlot</code> method requires two key arguments: <code>labels</code> provides the plot labels for each of the aesthetics in the plot data, and <code>envir</code> provides the environment in which the plotting commands are to be evaluated to produce the <code>ggplot</code> object.</p>
+<p>In particular, <code>.generateDotPlot</code> can rely on certain environment variables promised by the contract.
+Above all, those include <code>plot.data</code>, the data-frame that contains one row per data point to display.
+Using those environment variables, <code>.generateDotPlot</code> can make decisions altering the plotting commands and the resulting <code>ggplot</code> object.</p>
+<p>We invite readers to refer to the <strong>“Generating the ggplot object”</strong> section of <code>help(".generateDotPlot")</code> for more information.</p>
+<p>As an example, we overwrite the <code>.generateDotPlot</code> function for the new <code>RedDimHexPlot</code> class to simply show the number of data point in the plotting area as a heatmap dividing the plane into regular hexagons.
+Notably, the function can immediately rely on the <code>plot.data</code> data-frame that is computed by methods defined for the parent class <code>RedDimPlot</code>.
+We also use the precomputed aesthetic <code>labels</code> associated with each column of <code>plot.data</code>, while setting a fixed <code>"Count"</code> label for the <code>fill</code> aesthetic associated with the count of observation in each hexagonal bin.</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" title="1"><span class="kw">setMethod</span>(<span class="st">&quot;.generateDotPlot&quot;</span>, <span class="st">&quot;RedDimHexPlot&quot;</span>, <span class="cf">function</span>(x, labels, envir) {</a>
+<a class="sourceLine" id="cb18-2" title="2">    <span class="kw">print</span>(labels)</a>
+<a class="sourceLine" id="cb18-3" title="3">    <span class="kw">stopifnot</span>(<span class="kw">require</span>(ggplot2))</a>
+<a class="sourceLine" id="cb18-4" title="4">    </a>
+<a class="sourceLine" id="cb18-5" title="5">    plot_cmds &lt;-<span class="st"> </span><span class="kw">list</span>()</a>
+<a class="sourceLine" id="cb18-6" title="6">    plot_cmds[[<span class="st">&quot;ggplot&quot;</span>]] &lt;-<span class="st"> &quot;ggplot() +&quot;</span></a>
+<a class="sourceLine" id="cb18-7" title="7">    </a>
+<a class="sourceLine" id="cb18-8" title="8">    <span class="co"># Adding hexbins to the plot.</span></a>
+<a class="sourceLine" id="cb18-9" title="9">    plot_cmds[[<span class="st">&quot;hex&quot;</span>]] &lt;-<span class="st"> &quot;geom_hex(aes(X, Y), plot.data) +&quot;</span></a>
+<a class="sourceLine" id="cb18-10" title="10">    plot_cmds[[<span class="st">&quot;labs&quot;</span>]] &lt;-<span class="st"> &quot;labs(fill=&#39;Count&#39;) +&quot;</span></a>
+<a class="sourceLine" id="cb18-11" title="11">    plot_cmds[[<span class="st">&quot;labs&quot;</span>]] &lt;-<span class="st"> </span><span class="kw">sprintf</span>(</a>
+<a class="sourceLine" id="cb18-12" title="12">        <span class="st">&quot;labs(x=&#39;%s&#39;, y=&#39;%s&#39;, title=&#39;%s&#39;, fill=&#39;%s&#39;) +&quot;</span>,</a>
+<a class="sourceLine" id="cb18-13" title="13">        labels<span class="op">$</span>X, labels<span class="op">$</span>Y, labels<span class="op">$</span>title, <span class="st">&quot;Count&quot;</span></a>
+<a class="sourceLine" id="cb18-14" title="14">        )</a>
+<a class="sourceLine" id="cb18-15" title="15">    plot_cmds[[<span class="st">&quot;theme_base&quot;</span>]] &lt;-<span class="st"> &quot;theme_bw() +&quot;</span></a>
+<a class="sourceLine" id="cb18-16" title="16">    plot_cmds[[<span class="st">&quot;theme_legend&quot;</span>]] &lt;-<span class="st"> &quot;theme(legend.position = &#39;bottom&#39;)&quot;</span></a>
+<a class="sourceLine" id="cb18-17" title="17">    </a>
+<a class="sourceLine" id="cb18-18" title="18">    gg_plot &lt;-<span class="st"> </span><span class="kw">eval</span>(<span class="kw">parse</span>(<span class="dt">text=</span>plot_cmds), envir)</a>
+<a class="sourceLine" id="cb18-19" title="19">    </a>
+<a class="sourceLine" id="cb18-20" title="20">    <span class="kw">list</span>(<span class="dt">plot=</span>gg_plot, <span class="dt">commands=</span>plot_cmds)</a>
+<a class="sourceLine" id="cb18-21" title="21">})</a></code></pre></div>
+<p>Running <code>app</code> again highlights how the <code>RedDimHexPlot</code> panel fills each hexagonal bin with a color indicating the number of data points present in the corresponding area in the <code>RedDimPlot</code> panel.</p>
+<!-- TODO:
+second fastest visual result:
+override the plotting function
+-->
+<!-- TODO: add a UI (preferably that affects XY) -->
+<!-- TODO: add an observer -->
+<!-- TODO: override the XY data logic -->
+<!-- TODO: override the plot logic (again, see above) -->
 
-</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="server.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="developing.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="set-the-panel-name-in-the-gui.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="case-study-i.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
