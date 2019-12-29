@@ -31,7 +31,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="references.html"/>
+<link rel="prev" href="the-panel-api.html"/>
 <link rel="next" href="case-study-ii.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -161,7 +161,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5" data-path="the-panel-api.html"><a href="the-panel-api.html"><i class="fa fa-check"></i><b>5</b> The panel API</a><ul>
 <li class="chapter" data-level="5.1" data-path="the-panel-api.html"><a href="the-panel-api.html#create-a-new-s4-class"><i class="fa fa-check"></i><b>5.1</b> Create a new S4 class</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="chapter" data-level="6" data-path="case-study-i.html"><a href="case-study-i.html"><i class="fa fa-check"></i><b>6</b> Case study I</a><ul>
 <li class="chapter" data-level="6.1" data-path="case-study-i.html"><a href="case-study-i.html#overview-1"><i class="fa fa-check"></i><b>6.1</b> Overview</a></li>
 <li class="chapter" data-level="6.2" data-path="case-study-i.html"><a href="case-study-i.html#class-basics"><i class="fa fa-check"></i><b>6.2</b> Class basics</a></li>
@@ -179,6 +178,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="7.5" data-path="case-study-ii.html"><a href="case-study-ii.html#making-the-table"><i class="fa fa-check"></i><b>7.5</b> Making the table</a></li>
 <li class="chapter" data-level="7.6" data-path="case-study-ii.html"><a href="case-study-ii.html#in-action-1"><i class="fa fa-check"></i><b>7.6</b> In action</a></li>
 </ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
 
@@ -415,24 +415,23 @@ having old brushes or lassos hanging around would be of no benefit at best, and 
 We set up an example using our favorite dataset, creating a <code>SingleCellExperiment</code> object with some precomputed dimensionality reduction results.</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" title="1"><span class="kw">library</span>(scRNAseq)</a>
 <a class="sourceLine" id="cb12-2" title="2">sce &lt;-<span class="st"> </span><span class="kw">ReprocessedAllenData</span>(<span class="dt">assays=</span><span class="st">&quot;tophat_counts&quot;</span>)</a></code></pre></div>
-<pre><code>## No internet connection using &#39;localHub=TRUE&#39;</code></pre>
-<pre><code>## snapshotDate(): 2019-12-17</code></pre>
+<pre><code>## snapshotDate(): 2019-12-27</code></pre>
 <pre><code>## see ?scRNAseq and browseVignettes(&#39;scRNAseq&#39;) for documentation</code></pre>
 <pre><code>## loading from cache</code></pre>
 <pre><code>## see ?scRNAseq and browseVignettes(&#39;scRNAseq&#39;) for documentation</code></pre>
 <pre><code>## loading from cache</code></pre>
 <pre><code>## see ?scRNAseq and browseVignettes(&#39;scRNAseq&#39;) for documentation</code></pre>
 <pre><code>## loading from cache</code></pre>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" title="1"><span class="kw">library</span>(scater)</a></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" title="1"><span class="kw">library</span>(scater)</a></code></pre></div>
 <pre><code>## Loading required package: ggplot2</code></pre>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" title="1">sce &lt;-<span class="st"> </span><span class="kw">logNormCounts</span>(sce, <span class="dt">exprs_values=</span><span class="st">&quot;tophat_counts&quot;</span>)</a>
-<a class="sourceLine" id="cb23-2" title="2">sce &lt;-<span class="st"> </span><span class="kw">runPCA</span>(sce, <span class="dt">ncomponents=</span><span class="dv">4</span>)</a>
-<a class="sourceLine" id="cb23-3" title="3">sce &lt;-<span class="st"> </span><span class="kw">runTSNE</span>(sce)</a></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" title="1">sce &lt;-<span class="st"> </span><span class="kw">logNormCounts</span>(sce, <span class="dt">exprs_values=</span><span class="st">&quot;tophat_counts&quot;</span>)</a>
+<a class="sourceLine" id="cb22-2" title="2">sce &lt;-<span class="st"> </span><span class="kw">runPCA</span>(sce, <span class="dt">ncomponents=</span><span class="dv">4</span>)</a>
+<a class="sourceLine" id="cb22-3" title="3">sce &lt;-<span class="st"> </span><span class="kw">runTSNE</span>(sce)</a></code></pre></div>
 <p>The plan is to create a (fixed) reduced dimension plot that will transmit to our dynamic reduced dimension plot.
 Setting up the iSEE instance is as easy as:</p>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" title="1">rdp &lt;-<span class="st"> </span><span class="kw">RedDimPlot</span>(<span class="dt">PanelId=</span>1L)</a>
-<a class="sourceLine" id="cb24-2" title="2">drdp &lt;-<span class="st"> </span><span class="kw">new</span>(<span class="st">&quot;DynRedDimPlot&quot;</span>, <span class="dt">SelectColSource=</span><span class="st">&quot;RedDimPlot1&quot;</span>)</a>
-<a class="sourceLine" id="cb24-3" title="3">app &lt;-<span class="st"> </span><span class="kw">iSEE</span>(sce, <span class="dt">initial=</span><span class="kw">list</span>(rdp, drdp))</a></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" title="1">rdp &lt;-<span class="st"> </span><span class="kw">RedDimPlot</span>(<span class="dt">PanelId=</span>1L)</a>
+<a class="sourceLine" id="cb23-2" title="2">drdp &lt;-<span class="st"> </span><span class="kw">new</span>(<span class="st">&quot;DynRedDimPlot&quot;</span>, <span class="dt">SelectColSource=</span><span class="st">&quot;RedDimPlot1&quot;</span>)</a>
+<a class="sourceLine" id="cb23-3" title="3">app &lt;-<span class="st"> </span><span class="kw">iSEE</span>(sce, <span class="dt">initial=</span><span class="kw">list</span>(rdp, drdp))</a></code></pre></div>
 <p>Brushing at any location in the <code>RedDimPlot</code> will trigger dynamically recompution of results in our <code>DynRedDimPlot</code>.</p>
 
 </div>
@@ -442,7 +441,7 @@ Setting up the iSEE instance is as easy as:</p>
           </div>
         </div>
       </div>
-<a href="references.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="the-panel-api.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 <a href="case-study-ii.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
