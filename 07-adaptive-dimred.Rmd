@@ -189,16 +189,10 @@ setMethod(".multiSelectionInvalidated", "DynRedDimPlot", function(x) TRUE)
 ## In action
 
 Let's put our new panel to the test.
-We set up an example using our favorite dataset, creating a `SingleCellExperiment` object with some precomputed dimensionality reduction results.
+We use the `sce` object, preprocessed in a [previous chapter](#developing), including some precomputed dimensionality reduction results.
 
-```{r}
-library(scRNAseq)
-sce <- ReprocessedAllenData(assays="tophat_counts")
-
-library(scater)
-sce <- logNormCounts(sce, exprs_values="tophat_counts")
-sce <- runPCA(sce, ncomponents=4)
-sce <- runTSNE(sce)
+```{r, include=FALSE}
+sce <- readRDS("sce.rds")
 ```
 
 The plan is to create a (fixed) reduced dimension plot that will transmit to our dynamic reduced dimension plot.
