@@ -44,7 +44,7 @@ The app `memory` is a list of instances created from available panel classes, wh
 Each individual panel type (e.g., _Reduced dimension plot_) and family of panel types (e.g., _Column dot plot_) defines a `.cacheCommonInfo` function.
 
 This function is called for each panel instance in memory when the app is initialized.
-It allows the app to efficienly compute a single time common information that only depends on the input `se` object, and may be frequently reused during the runtime of the app.
+It allows the app to efficiently compute a single time common information that only depends on the input `se` object, and may be frequently reused during the runtime of the app.
 
 Following the hierarchy of panel types, each call to the signature takes a panel instance `x` and the `se` object, and caches common information relevant to all instances of that panel type in the `se` object itself, before calling `callNextMethod()` to invoke the next parent signature.
 
