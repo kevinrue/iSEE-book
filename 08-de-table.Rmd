@@ -1,8 +1,9 @@
-# Case study II
+# Dynamic differential expression
 
 ## Overview
 
 In this case study, we will create a panel class to dynamically compute differential expression (DE) statistics between the active sample-level selection and the other saved selections from a transmitting panel.
+We will present the results of this computation in a `DataTable` widget from the `r BiocStyle::CRANpkg("DT")` package, where each row is a gene and each column is a relevant statistic ($p$-value, FDR, log-fold changes, etc.).
 
 ## Class basics
 
@@ -12,7 +13,7 @@ This automatically gives us access to all the functionality promised in the cont
 including interface elements and observers to respond to multiple selections.
 We also add a slot specifying the log-fold change threshold to use in the null hypothesis.
 
-```{r}
+```{r, echo=FALSE}
 library(iSEE)
 setClass("DGETable", contains="RowTable", slots=c(LogFC="numeric"))
 ```
@@ -55,7 +56,7 @@ This includes defining the full name and desired default color for display purpo
 ```{r}
 setMethod(".fullName", "DGETable", function(x) "Differential expression table")
 
-setMethod(".panelColor", "DGETable", function(x) "#AAFF00")
+setMethod(".panelColor", "DGETable", function(x) "#55AA00")
 ```
 
 We also add interface elements to change the result type and the number of genes.
@@ -88,15 +89,9 @@ setMethod(".createObservers", "DGETable",
 
     plot_name <- .getEncodedName(x)
 
-    num_field <- paste0(plot_name, "_LogFC")
-    observeEvent(input[[num_field]], {
-        previous <- pObjects$memory[[plot_name]][["LogFC"]]
-        if (identical(previous, input[[num_field]])) {
-            return(NULL)
-        }
-        pObjects$memory[[plot_name]][["LogFC"]] <- input[[num_field]]
-        .requestUpdate(plot_name, rObjects)
-    })
+    .createUnprotectedParameterObservers(plot_name,
+        fields="LogFC",
+        input=input, pObjects=pObjects, rObjects=rObjects)
 })
 ```
 
@@ -159,7 +154,7 @@ Setting up the iSEE instance is as easy as:
 
 ```{r}
 rdp <- RedDimPlot(PanelId=1L, SelectBoxOpen=TRUE)
-dget <- new("DGETable", SelectColSource="RedDimPlot1")
+dget <- new("DGETable", SelectColSource="RedDimPlot1", PanelWidth=8L)
 app <- iSEE(sce, initial=list(rdp, dget))
 ```
 

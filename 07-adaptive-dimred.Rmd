@@ -1,4 +1,4 @@
-# Case study I 
+# Dynamic reduced dimensions 
 
 ## Overview
 
@@ -12,7 +12,7 @@ As our new class will be showing each sample as a point, we inherit from the `Co
 This automatically gives us access to all the functionality promised in the contract, 
 including interface elements and observers to handle multiple selections and respond to aesthetic parameters.
 
-```{r}
+```{r, echo=FALSE}
 library(iSEE)
 setClass("DynRedDimPlot", contains="ColumnDotPlot",
     slots=c(NGenes="integer", Type="character"))
@@ -72,9 +72,9 @@ setMethod(".defineDataInterface", "DynRedDimPlot", function(x, se, select_info) 
     plot_name <- .getEncodedName(x)
 
     list(
-        selectInput(paste0(plot_name, "_Type"), label="Dimensionality reduction Type",
+        selectInput(paste0(plot_name, "_Type"), label="Type:",
             choices=c("PCA", "TSNE", "UMAP"), selected=x[["Type"]]),
-        numericInput(paste0(plot_name, "_NGenes"), label="Number of genes",
+        numericInput(paste0(plot_name, "_NGenes"), label="Number of HVGs:",
             min=1, value=x[["NGenes"]])
     )
 })
@@ -99,34 +99,17 @@ setMethod(".createObservers", "DynRedDimPlot",
 
     plot_name <- .getEncodedName(x)
 
-    # TODO: expose .define_protected_parameter_observers for developer use, 
-    # which would allow these steps to be a one-liner.
-    type_field <- paste0(plot_name, "_Type")
-    observeEvent(input[[type_field]], {
-        previous <- pObjects$memory[[plot_name]][["Type"]]
-        if (identical(previous, input[[type_field]])) {
-            return(NULL)
-        }
-        pObjects$memory[[plot_name]][["Type"]] <- input[[type_field]]
-        .requestCleanUpdate(plot_name, pObjects, rObjects)
-    })
-
-    num_field <- paste0(plot_name, "_NGenes")
-    observeEvent(input[[num_field]], {
-        previous <- pObjects$memory[[plot_name]][["NGenes"]]
-        if (identical(previous, input[[num_field]])) {
-            return(NULL)
-        }
-        pObjects$memory[[plot_name]][["NGenes"]] <- input[[num_field]]
-        .requestCleanUpdate(plot_name, pObjects, rObjects)
-    })
+    .createProtectedParameterObservers(plot_name,
+        fields=c("Type", "NGenes"),
+        input=input, pObjects=pObjects, rObjects=rObjects)
 })
 ```
 
 Both the `NGenes` and `Type` parameters are what we consider to be "protected" parameters, 
 as changing them will alter the nature of the displayed plot.
-By using `.requestCleanUpdate()`, we instruct `iSEE()` to destroy existing brushes and lassos when these parameters are changed,
-as brushes/lassos made on the previous plot do not make sense when the coordinates are recomputed.
+We use the `.createProtectedParameterObservers()` utility to set up observers for both parameters,
+which will instruct `iSEE()` to destroy existing brushes and lassos when these parameters are changed.
+The idea here is that brushes/lassos made on the previous plot do not make sense when the coordinates are recomputed.
 
 ## Making the plot
 
@@ -166,14 +149,14 @@ setMethod(".generateDotPlotData", "DynRedDimPlot", function(x, envir) {
 
 We use functions from the `r BiocStyle::Biocpkg("scater")` package to do the actual heavy lifting of calculating the dimensionality reduction results.
 The `exists()` call will check whether any column selection is being transmitted to this panel; if not, it will just return a `plot.data` variable that contains all `NA`s such that an empty plot is created.
-If `col_selected` does exist, it contains a list of character vectors specifying the active and saved multiple selections that are being transmitted.
-In this case, we do not care about the distinctin between active/saved selections so we just take the union of all of them.
+If `col_selected` does exist, it will contain a list of character vectors specifying the active and saved multiple selections that are being transmitted.
+For this particular example, we do not care about the distinction between active/saved selections so we just take the union of all of them.
 
 Of course, this is not quite the most efficient way to implement a plotting panel that involves recomputation.
 A better approach would be to cache the x/y coordinates and reuse them if only aesthetic parameters have changed,
 thus avoiding an unnecessary delay from recomputation.
 Doing so requires overriding `.renderOutput()` to take advantage of the cached contents of the plot, 
-so for simplicity, we will not do that here.
+so we will omit that here for simplicity. 
 
 ## Finishing touches
 
@@ -201,8 +184,8 @@ sce <- runPCA(sce, ncomponents=4)
 sce <- runTSNE(sce)
 ```
 
-The plan is to create a (fixed) reduced dimension plot that will transmit to our dynamic reduced dimension plot.
-Setting up the iSEE instance is as easy as:
+The plan is to create a (fixed) reduced dimension plot that will transmit a multiple selection to our dynamic reduced dimension plot.
+This is as easy as:
 
 ```{r}
 rdp <- RedDimPlot(PanelId=1L)
@@ -210,4 +193,4 @@ drdp <- new("DynRedDimPlot", SelectColSource="RedDimPlot1")
 app <- iSEE(sce, initial=list(rdp, drdp))
 ```
 
-Brushing at any location in the `RedDimPlot` will trigger dynamically recompution of results in our `DynRedDimPlot`.
+Brushing at any location in `RedDimPlot1` will then trigger dynamically recompution of results in our `DynRedDimPlot`.
