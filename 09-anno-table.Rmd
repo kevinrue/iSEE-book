@@ -20,7 +20,8 @@ setClass("GeneAnnoTable", contains="RowStatTable",
     slots=c(
         IDColumn="character_OR_NULL", 
         IDType="character",
-        Organism="character"
+        Organism="character",
+        AnnoBoxOpen="logical"
     )
 )
 ```
@@ -43,7 +44,11 @@ setValidity2("GeneAnnoTable", function(object) {
     }
 
     if (!isSingleString(type <- object[["IDType"]]) || !type %in% allowable) {
-        msg <- c(msg, sprintf("'IDType' should be 'ENSEMBL', 'SYMBOL' or 'ENTREZID'"))
+        msg <- c(msg, "'IDType' should be 'ENSEMBL', 'SYMBOL' or 'ENTREZID'")
+    }
+
+    if (length(open <- object[["AnnoBoxOpen"]])!=1L || is.na(open)) {
+        msg <- c(msg, "'AnnoBoxOpen' should be a non-missing logical scalar")
     }
 
     if (length(msg)) {
@@ -56,11 +61,11 @@ setValidity2("GeneAnnoTable", function(object) {
 We then specialize the initialize method to set reasonable defaults for these parameters.
 
 ```{r}
-setMethod("initialize", "GeneAnnoTable", function(.Object, 
-    IDColumn=NULL, Organism="org.Mm.eg.db", IDType="SYMBOL", ...) 
+setMethod("initialize", "GeneAnnoTable", function(.Object, IDColumn=NULL, 
+    Organism="org.Mm.eg.db", IDType="SYMBOL", AnnoBoxOpen=FALSE, ...)
 {
     callNextMethod(.Object, IDColumn=IDColumn, IDType=IDType,
-        Organism=Organism, ...)
+        Organism=Organism, AnnoBoxOpen=AnnoBoxOpen, ...)
 })
 ```
 
@@ -90,29 +95,37 @@ setMethod(".defineOutput", "GeneAnnoTable", function(x, ...) {
 ```
 
 We also set up interface elements for changing the annotation parameters.
-For convenience, we will put these elements in the "Data parameters" box via the `.defineDataInterface()` generic,
-even though they more accurately belong in a separate "Annotation parameters" box.
+We will put these elements in a separate "Annotation parameters" collapsible box,
+which is initialized in an opened or closed state depending on the `AnnoBoxOpen` slot.
 
 ```{r}
-setMethod(".defineDataInterface", "GeneAnnoTable", function(x, se, select_info) {
+setMethod(".defineInterface", "GeneAnnoTable", function(x, se, select_info) {
     panel_name <- .getEncodedName(x)
-    list(
-        callNextMethod(),
-        selectInput(paste0(panel_name, "_IDColumn"),
-            label="ID-containing column:",
-            choices=colnames(rowData(se)), 
-            selected=x[["IDColumn"]]
+    c(
+        list(
+            # TODO: export this.
+            iSEE:::collapseBox(
+                paste0(panel_name, "_AnnoBoxOpen"),
+                title="Annotation parameters",
+                open=x[["AnnoBoxOpen"]],
+                selectInput(paste0(panel_name, "_IDColumn"),
+                    label="ID-containing column:",
+                    choices=colnames(rowData(se)), 
+                    selected=x[["IDColumn"]]
+                ),
+                selectInput(paste0(panel_name, "_IDType"),
+                    label="ID type:",
+                    choices=allowable,
+                    selected=x[["IDType"]]
+                ),
+                selectInput(paste0(panel_name, "_Organism"),
+                    label="Organism",
+                    choices=c("org.Hs.eg.db", "org.Mm.eg.db"),
+                    selected=x[["Organism"]]
+                )
+            )
         ),
-        selectInput(paste0(panel_name, "_IDType"),
-            label="ID type:",
-            choices=allowable,
-            selected=x[["IDType"]]
-        ),
-        selectInput(paste0(panel_name, "_Organism"),
-            label="Organism",
-            choices=c("org.Hs.eg.db", "org.Mm.eg.db"),
-            selected=x[["Organism"]]
-        )
+        callNextMethod()
     ) 
 })
 ```
