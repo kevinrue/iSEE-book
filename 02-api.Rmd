@@ -23,3 +23,22 @@ It inspects the parameters of a given panel instance, and replaces invalid param
 Following the hierarchy of panel types, each call to the signature takes an instance `x` and the `se` object, and first calls `callNextMethod()` to invoke the next parent signature, to refine generic parameters before processing specific ones.
 
 The called signature ultimately returns the updated instance panel `x`, or `NULL` if the panel instance is not available for this app.
+
+## .getPlottingFunction
+
+Each panel type available for use in the GUI defines a `.getPlottingFunction`.
+
+This function is called within `.createRenderedOutput`, which is triggered by observers when the value of the panel input widgets are changed by users, or when a new panel is added to the GUI.
+
+The `.getPlottingFunction` function inspects the parameters for a given panel instance, and uses the app `memory` of all active panels and parameters, the coordinates of data points in each plot panel, the `se` object, and the `colormap` to generate all the information necessary to render the outputs of this panel and those that depend on it.
+
+For `DotPlot` panels, the output is a list that includes:
+
+- the list of commands to display in the code tracker
+- the coordinates of data points in the plot
+- the `ggplot` object
+
+For `Table` panels, the output is a `datatable`.
+
+For the `HeatMap` panel, the function does not return any value.
+Instead it sets relevant elements in the `output` object of the Shiny session.
