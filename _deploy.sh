@@ -2,6 +2,7 @@
 
 # Following the initial set described at: https://bookdown.org/yihui/bookdown/github.html
 
+Rscript -e "rmarkdown::render_site(encoding = 'UTF-8')"
 cd book-output
 git checkout gh-pages
 git pull
