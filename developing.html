@@ -260,7 +260,8 @@ To clearly distinguish the new panel class in the GUI, we overwrite this method 
 <div id="define-the-commands-generating-a-plot-output" class="section level2">
 <h2><span class="header-section-number">4.4</span> Define the commands generating a plot output</h2>
 <p>Importantly, the API separates the generation of commands processing data from <code>sce</code> into a data-frame, from the generation of commands producing a <code>ggplot</code> object using the processed data-frame.
-If a new <code>DotPlot</code> panel class is meant to process data in the same way as its parent panel, only to display in a different way, it is then possible to overwrite only the <code>.generateDotPlot</code> method.</p>
+If a new <code>DotPlot</code> panel class is meant to process data in the same way as its parent panel, only to display in a different way, it is then possible to overwrite only the <code>.generateDotPlot</code> method.
+Meanwhile, the data preprocessing will be implicitly handled by the other API methods inherited from the parent class.</p>
 <p>Importantly, the <code>.generateDotPlot</code> method requires two key arguments: <code>labels</code> provides the plot labels for each of the aesthetics in the plot data, and <code>envir</code> provides the environment in which the plotting commands are to be evaluated to produce the <code>ggplot</code> object.</p>
 <p>In particular, <code>.generateDotPlot</code> can rely on certain environment variables promised by the contract.
 Above all, those include <code>plot.data</code>, the data-frame that contains one row per data point to display.

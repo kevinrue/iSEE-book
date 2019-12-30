@@ -485,6 +485,7 @@ With that, running \texttt{app} again now highlights how panels of the new class
 
 Importantly, the API separates the generation of commands processing data from \texttt{sce} into a data-frame, from the generation of commands producing a \texttt{ggplot} object using the processed data-frame.
 If a new \texttt{DotPlot} panel class is meant to process data in the same way as its parent panel, only to display in a different way, it is then possible to overwrite only the \texttt{.generateDotPlot} method.
+Meanwhile, the data preprocessing will be implicitly handled by the other API methods inherited from the parent class.
 
 Importantly, the \texttt{.generateDotPlot} method requires two key arguments: \texttt{labels} provides the plot labels for each of the aesthetics in the plot data, and \texttt{envir} provides the environment in which the plotting commands are to be evaluated to produce the \texttt{ggplot} object.
 
