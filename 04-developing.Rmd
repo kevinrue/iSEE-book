@@ -1,45 +1,133 @@
 # Developing new panels {#developing}
 
-First things first, we need to load the `r Biocpkg("iSEE")` package for this chapter.
+First, we need to load the `r Biocpkg("iSEE")` package for this chapter.
+This action imports all the builtin panel class definitions, including the virtual class `Panel` that is the base class for any `r Biocpkg("iSEE")` panel class.
 
 ```{r, message=FALSE}
 library(iSEE)
 ```
 
-# The panel API
+We also set up an example using our favorite dataset, creating a `SingleCellExperiment` object with some precomputed dimensionality reduction results.
 
-Fully functional panel class must implement - or inherit from their parent class - the full set of methods that composes the API allowing panels to interact and communicate with the reactive infrastructure of `r Biocpkg("iSEE")` applications.
+```{r}
+library(scRNAseq)
+sce <- ReprocessedAllenData(assays="tophat_counts")
 
-- a validity method, defined using `setValidity2`.
-- `.fullName`, used to generate a unique full name uniquely identifying each panel instance in the GUI.
-- `.cacheCommonInfo`, computing and caching static information about a `SummarizedExperiment` object regularly used by other API methods.
-- `initialize`, creating a new panel instance with panel settings initialized with empty default values
-- `.refineParameters`, replacing invalid panel settings with appropriate values.
-- `.defineInterface`, used to define panel-specific Shiny widgets receiving user inputs in the GUI.
-- `.createObservers`, used to define reactive functions that update internal reactive objects following user interactions.
-- `.getCommandsDataXY`, used to generate commands and labels related to the x-axis and y-axis of panel classes producing a plot output.
+library(scater)
+sce <- logNormCounts(sce, exprs_values="tophat_counts")
+sce <- runPCA(sce, ncomponents=4)
+sce <- runTSNE(sce)
+```
+
+```{r, include=FALSE}
+saveRDS(sce, "sce.rds")
+```
 
 ## Create a new S4 class
 
 In the chapter [Panel classes](#panels), we saw how each type of panel is defined as an S4 class, organised in a hierarchy that allows new panel classes to inherit sets of the properties and functionality from parent classes.
 
-Therefore, developing a new panel starts with the creation of a new class.
-While it is possible to create a new panel class from scratch, this is an advanced use case described in a separate section. <!-- TODO: cross-reference when done. -->
-Instead, new panels classes can be much more rapidly derived from a parent panel class, using the inheritance relationships between classes to reuse properties and functionality defined in the parent class.
+Then, developing a new panel type starts with the creation of a new class that inherits from the `Panel` class.
+
+While it is possible to create a new panel class that directly inherits from the top-most virtual `Panel` class, this is the most advanced use case that we will describe in a later section. <!-- TODO: cross-reference when done. -->
+
+Instead, new concrete panels classes can be rapidly derived from other concrete parent panel classes, using the inheritance relationships between classes to reuse properties and functionality defined in all of the parent classes.
 
 The choice of a parent class for the new panel depends on the properties that we want that new panel to have.
-For instance, let us say that we want to define a new panel that has all the functionality of the _Reduced dimension plot_ panel type, but summarizes data into a layer of hexagonal bins instead of showing each individual data point.
-
-To start, we declare our new class with a new unique name, _e.g._ `RedDimHexbinPlot`, that contains the builtin panel class `RedDimPlot`.
+For instance, to create a panel that inherits all the functionality of the _Reduced dimension plot_ panel type, we simply define a new class that extends the `RedDimPlot` class.
+We call that new class `RedDimHexPlot`.
 
 ```{r}
-setClass("RedDimHexbinPlot", contains="RedDimPlot")
+setClass("RedDimHexPlot", contains="RedDimPlot")
 ```
 
-<!-- TODO:
-override the .getEncodedName and .getFullName methods
-potentially, at that point users could already launch a GUI to see the result
--->
+## Add a constructor function
+
+At this point, it is possible to create instances of the new panel class already.
+To facilitate this, new panels should provide a constructor function - named identically to the class - to accept arbitrary arguments controlling the initialization of new panel instances created by the `new` function.
+
+Here, we define a simple constructor function that passes all incoming arguments to the `new` function _as is_.
+
+```{r}
+RedDimHexPlot <- function(...) {
+    new("RedDimHexPlot", ...)
+}
+```
+
+At this point, we can already use instances of this new panel class in `r Biocpkg("iSEE")` apps.
+
+```{r}
+RedDimHexPlot1 <- RedDimHexPlot()
+initial <- list(RedDimHexPlot1)
+app <- iSEE(sce, initial = initial)
+```
+
+However, that would not be very exciting as instances of this new panel class would behave exactly like the those of the `RedDimPlot` class.
+
+```{r}
+RedDimHexPlot1 <- RedDimHexPlot()
+RedDimPlot1 <- RedDimPlot()
+initial <- list(RedDimHexPlot1, RedDimPlot1)
+app <- iSEE(sce, initial = initial)
+```
+
+## Set the panel name in the GUI
+
+The panel class that we created so far also inherited the name of the parent panel class.
+In other words, instances of both classes are indistinguishable from each other in the GUI.
+
+The name of each panel displayed in the GUI is defined by the `.fullName` method.
+To clearly distinguish the new panel class in the GUI, we overwrite this method to display a name different from the parent class.
+
+```{r}
+setMethod(".fullName", "RedDimHexPlot", function(x) "Reduced dimension hexagonal plot")
+```
+
+With that, running `app` again now highlights how panels of the new class now display a different title from the parent class.
+
+## Define the commands generating a plot output
+
+Importantly, the API separates the generation of commands processing data from `sce` into a data-frame, from the generation of commands producing a `ggplot` object using the processed data-frame.
+If a new `DotPlot` panel class is meant to process data in the same way as its parent panel, only to display in a different way, it is then possible to overwrite only the `.generateDotPlot` method.
+Meanwhile, the data preprocessing will be implicitly handled by the other API methods inherited from the parent class.
+
+Importantly, the `.generateDotPlot` method requires two key arguments: `labels` provides the plot labels for each of the aesthetics in the plot data, and `envir` provides the environment in which the plotting commands are to be evaluated to produce the `ggplot` object.
+
+In particular, `.generateDotPlot` can rely on certain environment variables promised by the contract.
+Above all, those include `plot.data`, the data-frame that contains one row per data point to display.
+Using those environment variables, `.generateDotPlot` can make decisions altering the plotting commands and the resulting `ggplot` object.
+
+We invite readers to refer to the **"Generating the ggplot object"** section of `help(".generateDotPlot")` for more information.
+
+As an example, we overwrite the `.generateDotPlot` function for the new `RedDimHexPlot` class to simply show the number of data point in the plotting area as a heatmap dividing the plane into regular hexagons.
+Notably, the function can immediately rely on the `plot.data` data-frame that is computed by methods defined for the parent class `RedDimPlot`.
+We also use the precomputed aesthetic `labels` associated with each column of `plot.data`, while setting a fixed `"Count"` label for the `fill` aesthetic associated with the count of observation in each hexagonal bin.
+
+```{r}
+setMethod(".generateDotPlot", "RedDimHexPlot", function(x, labels, envir) {
+    print(labels)
+    stopifnot(require(ggplot2))
+    
+    plot_cmds <- list()
+    plot_cmds[["ggplot"]] <- "ggplot() +"
+    
+    # Adding hexbins to the plot.
+    plot_cmds[["hex"]] <- "geom_hex(aes(X, Y), plot.data) +"
+    plot_cmds[["labs"]] <- "labs(fill='Count') +"
+    plot_cmds[["labs"]] <- sprintf(
+        "labs(x='%s', y='%s', title='%s', fill='%s') +",
+        labels$X, labels$Y, labels$title, "Count"
+        )
+    plot_cmds[["theme_base"]] <- "theme_bw() +"
+    plot_cmds[["theme_legend"]] <- "theme(legend.position = 'bottom')"
+    
+    gg_plot <- eval(parse(text=plot_cmds), envir)
+    
+    list(plot=gg_plot, commands=plot_cmds)
+})
+```
+
+Running `app` again highlights how the `RedDimHexPlot` panel fills each hexagonal bin with a color indicating the number of data points present in the corresponding area in the `RedDimPlot` panel.
 
 <!-- TODO:
 second fastest visual result:

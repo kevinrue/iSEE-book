@@ -1,0 +1,39 @@
+# The panel API {#api}
+
+## .cacheCommonInfo
+
+Each individual panel type (e.g., _Reduced dimension plot_) and family of panel types (e.g., _Column dot plot_) defines a `.cacheCommonInfo` function.
+
+This function is called for each panel instance in memory when the app is initialized.
+It allows the app to efficiently compute a single time common information that only depends on the input `se` object, and may be frequently reused during the runtime of an app.
+
+Following the hierarchy of panel types, each call to the signature takes a panel instance `x` and the `se` object, and caches common information relevant to all instances of that panel type in the `se` object itself, before calling `callNextMethod()` to invoke the next parent signature.
+
+The top-most signature - for the `Panel` class - returns the `se` object that contains all the cached information.
+
+Note that this function only populates the cache for the first panel of each type; it is a no-op if the common cache has already been initialized.
+
+## .refineParameters
+
+Each individual panel type (e.g., _Reduced dimension plot_) and family of panel types (e.g., _Column dot plot_) defines a `.refineParameters` function.
+
+This function is called for each panel instance in memory when the app is initialized, and also when a new panel is added to the GUI.
+It inspects the parameters of a given panel instance, and replaces invalid parameters with sensible values for a given `se` object.
+
+Following the hierarchy of panel types, each call to the signature takes an instance `x` and the `se` object, and first calls `callNextMethod()` to invoke the next parent signature, to refine generic parameters before processing specific ones.
+
+The called signature ultimately returns the updated instance panel `x`, or `NULL` if the panel instance is not available for this app.
+
+## .generateDotPlot
+
+Each panel type that derives from the virtual class `DotPlot` must define - or inherits - the `.generateDotPlot` method.
+
+This function is called within `.renderOutput`, which is triggered by observers when the value of the input widgets are changed by users, or when a new panel is added to the GUI.
+
+The `.generateDotPlot` function has access to the parameters for a given panel instance, and uses information available in the panel evaluation environment to generate and evaluate the plotting commands that ultimately produce the `ggplot` object to display in the panel.
+
+Refer to the **"Generating the ggplot object"** section of `help(".generateDotPlot")` for more information.
+
+<!-- TODO: Table panels -->
+
+<!-- TODO: Heatmap panels -->

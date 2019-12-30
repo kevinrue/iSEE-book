@@ -33,15 +33,7 @@ In contrast, concrete classes must define fully-functional panels that can be em
 The top-most class is called `Panel`.
 It is a virtual class that defines the core properties common to any panel - existing or future - that may be displayed in the interface.
 
-|   |   |
-| - | - |
-| `PanelId` | Integer index indicating the i^th^ panel of a given type. |
-| `PanelHeight` | Height of the panel, in pixels. |
-| `PanelWidth` | Width of the panel, an integer value indicating the number of columns to use, from 1 to 12. |
-| `SelectBoxOpen` | Logical value indicating if the _Selection parameters_ box of the panel is open when the app starts. |
-| `SelectByPlot` | Encoded name of the panel from which to receive a selection of data points. |
-| `SelectMultiType` | Keyword indicating the method to deal with multiple incoming selections of data points. |
-| `SelectMultiSaved` | Integer index indicating a single data point selection to use, among multiple incoming selections. |
+Refer to `help("Panel-class")` for more information about the slots and methods provided by this core class.
 
 ## The DotPlot and Table panel families
 
@@ -52,11 +44,11 @@ The `Panel` virtual class is directly derived into two major virtual sub-classes
 
 Those classes introduce properties that are specific to distinct subsets of panel types.
 
-The `DotPlot` class introduce parameters specific to panels where the output is a `ggplot` object and each row in the data-frame is represented as a point in a plot.
+The `DotPlot` class introduces parameters specific to panels where the output is a `ggplot` object and each row in the data-frame is represented as a point in a plot.
 
-The `Table` class introduce parameters specific to panels where the main output is a data-frame directly displayed as a table in the GUI.
+The `Table` class introduces parameters specific to panels where the main output is a data-frame directly displayed as a table in the GUI.
 
-In addition, the `HeatMapPlot` class defines a special panel class that directly extends the `Panel` class, as it introduces a set of parameters distinct from both the `DotPlot` and `Table` panel families.
+In addition, the `HeatMapPlot` class defines a special concrete panel class that directly extends the `Panel` class, as it introduces a set of parameters distinct from both the `DotPlot` and `Table` panel families.
 This panel type is described in further details in a separate section [below](#heatmapplot-class).
 
 <!-- TODO: properties introduced by the DotPlot class -->
@@ -102,4 +94,3 @@ This panel type is described in further details in a separate section [below](#h
 This type of panel introduces parameters specific to panels where the output is a heat map, with each row representing a feature and each column representing a sample in the `se` object.
 
 <!-- TODO: properties introduced by the HeatMapPlot class -->
-
