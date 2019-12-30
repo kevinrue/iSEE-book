@@ -89,6 +89,7 @@ With that, running `app` again now highlights how panels of the new class now di
 
 Importantly, the API separates the generation of commands processing data from `sce` into a data-frame, from the generation of commands producing a `ggplot` object using the processed data-frame.
 If a new `DotPlot` panel class is meant to process data in the same way as its parent panel, only to display in a different way, it is then possible to overwrite only the `.generateDotPlot` method.
+Meanwhile, the data preprocessing will be implicitly handled by the other API methods inherited from the parent class.
 
 Importantly, the `.generateDotPlot` method requires two key arguments: `labels` provides the plot labels for each of the aesthetics in the plot data, and `envir` provides the environment in which the plotting commands are to be evaluated to produce the `ggplot` object.
 
