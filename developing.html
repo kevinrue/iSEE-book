@@ -243,8 +243,8 @@ To facilitate this, new panels should provide a constructor function - named ide
 <a class="sourceLine" id="cb15-2" title="2">initial &lt;-<span class="st"> </span><span class="kw">list</span>(RedDimHexPlot1)</a>
 <a class="sourceLine" id="cb15-3" title="3">app &lt;-<span class="st"> </span><span class="kw">iSEE</span>(sce, <span class="dt">initial =</span> initial)</a></code></pre></div>
 <p>However, that would not be very exciting as instances of this new panel class would behave exactly like the those of the <code>RedDimPlot</code> class.</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" title="1">RedDimPlot1 &lt;-<span class="st"> </span><span class="kw">RedDimPlot</span>()</a>
-<a class="sourceLine" id="cb16-2" title="2">RedDimHexPlot1 &lt;-<span class="st"> </span><span class="kw">new</span>(<span class="st">&quot;RedDimHexPlot&quot;</span>)</a>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" title="1">RedDimHexPlot1 &lt;-<span class="st"> </span><span class="kw">RedDimHexPlot</span>()</a>
+<a class="sourceLine" id="cb16-2" title="2">RedDimPlot1 &lt;-<span class="st"> </span><span class="kw">RedDimPlot</span>()</a>
 <a class="sourceLine" id="cb16-3" title="3">initial &lt;-<span class="st"> </span><span class="kw">list</span>(RedDimHexPlot1, RedDimPlot1)</a>
 <a class="sourceLine" id="cb16-4" title="4">app &lt;-<span class="st"> </span><span class="kw">iSEE</span>(sce, <span class="dt">initial =</span> initial)</a></code></pre></div>
 </div>
