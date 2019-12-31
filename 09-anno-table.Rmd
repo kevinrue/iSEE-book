@@ -103,8 +103,7 @@ setMethod(".defineInterface", "GeneAnnoTable", function(x, se, select_info) {
     panel_name <- .getEncodedName(x)
     c(
         list(
-            # TODO: export this.
-            iSEE:::collapseBox(
+            collapseBox(
                 paste0(panel_name, "_AnnoBoxOpen"),
                 title="Annotation parameters",
                 open=x[["AnnoBoxOpen"]],
@@ -134,7 +133,6 @@ setMethod(".defineInterface", "GeneAnnoTable", function(x, se, select_info) {
 
 We specialize `.createObservers` to define some observers to respond to changes in our new interface elements.
 Note the use of `callNextMethod()` to ensure that observers of the parent class are also created.
-We also create a reactive variable to indicate whether the selection has updated.
 
 ```{r}
 setMethod(".createObservers", "GeneAnnoTable",
@@ -147,18 +145,11 @@ setMethod(".createObservers", "GeneAnnoTable",
     .createUnprotectedParameterObservers(plot_name,
         fields=c("IDColumn", "Organism", "IDType"), 
         input=input, pObjects=pObjects, rObjects=rObjects)
-    
-    # TODO: replace with an in-built event hook for single selections?
-    anno_name <- paste0(plot_name, "_anno_bump")
-    rObjects[[anno_name]] <- 1L
-    observeEvent(input[[paste0(plot_name, "_rows_selected")]], {
-        rObjects[[anno_name]] <- isolate(rObjects[[anno_name]]) + 1L 
-    })
 })
 ```
 
 We need to set up a rendering expression for the annotation element that responds to the selected gene.
-This updates in response to the reactive variable that we defined earlier.
+By using `.trackSingleSelection()`, we ensure that this UI element updates in response to changes in the table selection.
 We add a series of protective measures to avoid the application crashing due to missing organism packages or unmatched IDs.
 
 ```{r}
@@ -167,7 +158,7 @@ setMethod(".renderOutput", "GeneAnnoTable", function(x, se, ..., output, pObject
 
     panel_name <- .getEncodedName(x)
     output[[paste0(panel_name, "_annotation")]] <- renderUI({
-        force(rObjects[[paste0(panel_name, "_anno_bump")]]) 
+        .trackSingleSelection(panel_name, rObjects)
         instance <- pObjects$memory[[panel_name]]
 
         rowdata_col <- instance[["IDColumn"]]
