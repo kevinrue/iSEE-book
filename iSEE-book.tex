@@ -111,7 +111,7 @@
 
 \title{Extending \emph{iSEE}}
 \author{Kevin Rue-Albrecht, Federico Marini, Charlotte Soneson, and Aaron Lun}
-\date{2019-12-30}
+\date{2019-12-31}
 
 \begin{document}
 \maketitle
@@ -527,8 +527,8 @@ We also use the precomputed aesthetic \texttt{labels} associated with each colum
 
 Running \texttt{app} again highlights how the \texttt{RedDimHexPlot} panel fills each hexagonal bin with a color indicating the number of data points present in the corresponding area in the \texttt{RedDimPlot} panel.
 
-\hypertarget{case-study-i}{%
-\chapter{Case study I}\label{case-study-i}}
+\hypertarget{dynamic-reduced-dimensions}{%
+\chapter{Dynamic reduced dimensions}\label{dynamic-reduced-dimensions}}
 
 \hypertarget{overview-1}{%
 \section{Overview}\label{overview-1}}
@@ -543,14 +543,6 @@ First, we define the basics of our new \texttt{Panel} class.
 As our new class will be showing each sample as a point, we inherit from the \texttt{ColumnDotPlot} virtual class.
 This automatically gives us access to all the functionality promised in the contract,
 including interface elements and observers to handle multiple selections and respond to aesthetic parameters.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{library}\NormalTok{(iSEE)}
-\KeywordTok{setClass}\NormalTok{(}\StringTok{"DynRedDimPlot"}\NormalTok{, }\DataTypeTok{contains=}\StringTok{"ColumnDotPlot"}\NormalTok{,}
-    \DataTypeTok{slots=}\KeywordTok{c}\NormalTok{(}\DataTypeTok{NGenes=}\StringTok{"integer"}\NormalTok{, }\DataTypeTok{Type=}\StringTok{"character"}\NormalTok{))}
-\end{Highlighting}
-\end{Shaded}
 
 We add a slot specifying the type of dimensionality reduction result and the number of highly variable genes to use.
 Any new slots should also come with validity methods, as shown below.
@@ -670,9 +662,9 @@ This is most easily done by specializing the \texttt{.defineDataInterface} metho
 \NormalTok{    plot_name <-}\StringTok{ }\KeywordTok{.getEncodedName}\NormalTok{(x)}
 
     \KeywordTok{list}\NormalTok{(}
-        \KeywordTok{selectInput}\NormalTok{(}\KeywordTok{paste0}\NormalTok{(plot_name, }\StringTok{"_Type"}\NormalTok{), }\DataTypeTok{label=}\StringTok{"Dimensionality reduction Type"}\NormalTok{,}
+        \KeywordTok{selectInput}\NormalTok{(}\KeywordTok{paste0}\NormalTok{(plot_name, }\StringTok{"_Type"}\NormalTok{), }\DataTypeTok{label=}\StringTok{"Type:"}\NormalTok{,}
             \DataTypeTok{choices=}\KeywordTok{c}\NormalTok{(}\StringTok{"PCA"}\NormalTok{, }\StringTok{"TSNE"}\NormalTok{, }\StringTok{"UMAP"}\NormalTok{), }\DataTypeTok{selected=}\NormalTok{x[[}\StringTok{"Type"}\NormalTok{]]),}
-        \KeywordTok{numericInput}\NormalTok{(}\KeywordTok{paste0}\NormalTok{(plot_name, }\StringTok{"_NGenes"}\NormalTok{), }\DataTypeTok{label=}\StringTok{"Number of genes"}\NormalTok{,}
+        \KeywordTok{numericInput}\NormalTok{(}\KeywordTok{paste0}\NormalTok{(plot_name, }\StringTok{"_NGenes"}\NormalTok{), }\DataTypeTok{label=}\StringTok{"Number of HVGs:"}\NormalTok{,}
             \DataTypeTok{min=}\DecValTok{1}\NormalTok{, }\DataTypeTok{value=}\NormalTok{x[[}\StringTok{"NGenes"}\NormalTok{]])}
 \NormalTok{    )}
 \NormalTok{\})}
@@ -700,35 +692,18 @@ this automatically ensures that we can respond to changes in parameters provided
 
 \NormalTok{    plot_name <-}\StringTok{ }\KeywordTok{.getEncodedName}\NormalTok{(x)}
 
-    \CommentTok{# }\AlertTok{TODO}\CommentTok{: expose .define_protected_parameter_observers for developer use, }
-    \CommentTok{# which would allow these steps to be a one-liner.}
-\NormalTok{    type_field <-}\StringTok{ }\KeywordTok{paste0}\NormalTok{(plot_name, }\StringTok{"_Type"}\NormalTok{)}
-    \KeywordTok{observeEvent}\NormalTok{(input[[type_field]], \{}
-\NormalTok{        previous <-}\StringTok{ }\NormalTok{pObjects}\OperatorTok{$}\NormalTok{memory[[plot_name]][[}\StringTok{"Type"}\NormalTok{]]}
-        \ControlFlowTok{if}\NormalTok{ (}\KeywordTok{identical}\NormalTok{(previous, input[[type_field]])) \{}
-            \KeywordTok{return}\NormalTok{(}\OtherTok{NULL}\NormalTok{)}
-\NormalTok{        \}}
-\NormalTok{        pObjects}\OperatorTok{$}\NormalTok{memory[[plot_name]][[}\StringTok{"Type"}\NormalTok{]] <-}\StringTok{ }\NormalTok{input[[type_field]]}
-        \KeywordTok{.requestCleanUpdate}\NormalTok{(plot_name, pObjects, rObjects)}
-\NormalTok{    \})}
-
-\NormalTok{    num_field <-}\StringTok{ }\KeywordTok{paste0}\NormalTok{(plot_name, }\StringTok{"_NGenes"}\NormalTok{)}
-    \KeywordTok{observeEvent}\NormalTok{(input[[num_field]], \{}
-\NormalTok{        previous <-}\StringTok{ }\NormalTok{pObjects}\OperatorTok{$}\NormalTok{memory[[plot_name]][[}\StringTok{"NGenes"}\NormalTok{]]}
-        \ControlFlowTok{if}\NormalTok{ (}\KeywordTok{identical}\NormalTok{(previous, input[[num_field]])) \{}
-            \KeywordTok{return}\NormalTok{(}\OtherTok{NULL}\NormalTok{)}
-\NormalTok{        \}}
-\NormalTok{        pObjects}\OperatorTok{$}\NormalTok{memory[[plot_name]][[}\StringTok{"NGenes"}\NormalTok{]] <-}\StringTok{ }\NormalTok{input[[num_field]]}
-        \KeywordTok{.requestCleanUpdate}\NormalTok{(plot_name, pObjects, rObjects)}
-\NormalTok{    \})}
+    \KeywordTok{.createProtectedParameterObservers}\NormalTok{(plot_name,}
+        \DataTypeTok{fields=}\KeywordTok{c}\NormalTok{(}\StringTok{"Type"}\NormalTok{, }\StringTok{"NGenes"}\NormalTok{),}
+        \DataTypeTok{input=}\NormalTok{input, }\DataTypeTok{pObjects=}\NormalTok{pObjects, }\DataTypeTok{rObjects=}\NormalTok{rObjects)}
 \NormalTok{\})}
 \end{Highlighting}
 \end{Shaded}
 
 Both the \texttt{NGenes} and \texttt{Type} parameters are what we consider to be ``protected'' parameters,
 as changing them will alter the nature of the displayed plot.
-By using \texttt{.requestCleanUpdate()}, we instruct \texttt{iSEE()} to destroy existing brushes and lassos when these parameters are changed,
-as brushes/lassos made on the previous plot do not make sense when the coordinates are recomputed.
+We use the \texttt{.createProtectedParameterObservers()} utility to set up observers for both parameters,
+which will instruct \texttt{iSEE()} to destroy existing brushes and lassos when these parameters are changed.
+The idea here is that brushes/lassos made on the previous plot do not make sense when the coordinates are recomputed.
 
 \hypertarget{making-the-plot}{%
 \section{Making the plot}\label{making-the-plot}}
@@ -771,14 +746,14 @@ The easiest way to do this is to create a character vector of commands and call 
 
 We use functions from the \emph{\href{https://bioconductor.org/packages/3.11/scater}{scater}} package to do the actual heavy lifting of calculating the dimensionality reduction results.
 The \texttt{exists()} call will check whether any column selection is being transmitted to this panel; if not, it will just return a \texttt{plot.data} variable that contains all \texttt{NA}s such that an empty plot is created.
-If \texttt{col\_selected} does exist, it contains a list of character vectors specifying the active and saved multiple selections that are being transmitted.
-In this case, we do not care about the distinctin between active/saved selections so we just take the union of all of them.
+If \texttt{col\_selected} does exist, it will contain a list of character vectors specifying the active and saved multiple selections that are being transmitted.
+For this particular example, we do not care about the distinction between active/saved selections so we just take the union of all of them.
 
 Of course, this is not quite the most efficient way to implement a plotting panel that involves recomputation.
 A better approach would be to cache the x/y coordinates and reuse them if only aesthetic parameters have changed,
 thus avoiding an unnecessary delay from recomputation.
 Doing so requires overriding \texttt{.renderOutput()} to take advantage of the cached contents of the plot,
-so for simplicity, we will not do that here.
+so we will omit that here for simplicity.
 
 \hypertarget{finishing-touches}{%
 \section{Finishing touches}\label{finishing-touches}}
@@ -800,8 +775,8 @@ having old brushes or lassos hanging around would be of no benefit at best, and 
 Let's put our new panel to the test.
 We use the \texttt{sce} object, preprocessed in a \protect\hyperlink{developing}{previous chapter}, including some precomputed dimensionality reduction results.
 
-The plan is to create a (fixed) reduced dimension plot that will transmit to our dynamic reduced dimension plot.
-Setting up the iSEE instance is as easy as:
+The plan is to create a (fixed) reduced dimension plot that will transmit a multiple selection to our dynamic reduced dimension plot.
+This is as easy as:
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -811,15 +786,16 @@ Setting up the iSEE instance is as easy as:
 \end{Highlighting}
 \end{Shaded}
 
-Brushing at any location in the \texttt{RedDimPlot} will trigger dynamically recompution of results in our \texttt{DynRedDimPlot}.
+Brushing at any location in \texttt{RedDimPlot1} will then trigger dynamically recompution of results in our \texttt{DynRedDimPlot}.
 
-\hypertarget{case-study-ii}{%
-\chapter{Case study II}\label{case-study-ii}}
+\hypertarget{dynamic-differential-expression}{%
+\chapter{Dynamic differential expression}\label{dynamic-differential-expression}}
 
 \hypertarget{overview-2}{%
 \section{Overview}\label{overview-2}}
 
 In this case study, we will create a panel class to dynamically compute differential expression (DE) statistics between the active sample-level selection and the other saved selections from a transmitting panel.
+We will present the results of this computation in a \texttt{DataTable} widget from the \emph{\href{https://CRAN.R-project.org/package=DT}{DT}} package, where each row is a gene and each column is a relevant statistic (\(p\)-value, FDR, log-fold changes, etc.).
 
 \hypertarget{class-basics-1}{%
 \section{Class basics}\label{class-basics-1}}
@@ -829,13 +805,6 @@ As our new class will be showing each gene as a row, we inherit from the \texttt
 This automatically gives us access to all the functionality promised in the contract,
 including interface elements and observers to respond to multiple selections.
 We also add a slot specifying the log-fold change threshold to use in the null hypothesis.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{library}\NormalTok{(iSEE)}
-\KeywordTok{setClass}\NormalTok{(}\StringTok{"DGETable"}\NormalTok{, }\DataTypeTok{contains=}\StringTok{"RowTable"}\NormalTok{, }\DataTypeTok{slots=}\KeywordTok{c}\NormalTok{(}\DataTypeTok{LogFC=}\StringTok{"numeric"}\NormalTok{))}
-\end{Highlighting}
-\end{Shaded}
 
 Any new slots should come with validity methods, as shown below.
 
@@ -910,7 +879,7 @@ This includes defining the full name and desired default color for display purpo
 \begin{Highlighting}[]
 \KeywordTok{setMethod}\NormalTok{(}\StringTok{".fullName"}\NormalTok{, }\StringTok{"DGETable"}\NormalTok{, }\ControlFlowTok{function}\NormalTok{(x) }\StringTok{"Differential expression table"}\NormalTok{)}
 
-\KeywordTok{setMethod}\NormalTok{(}\StringTok{".panelColor"}\NormalTok{, }\StringTok{"DGETable"}\NormalTok{, }\ControlFlowTok{function}\NormalTok{(x) }\StringTok{"#AAFF00"}\NormalTok{)}
+\KeywordTok{setMethod}\NormalTok{(}\StringTok{".panelColor"}\NormalTok{, }\StringTok{"DGETable"}\NormalTok{, }\ControlFlowTok{function}\NormalTok{(x) }\StringTok{"#55AA00"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -948,15 +917,9 @@ this automatically ensures that we can respond to changes in parameters provided
 
 \NormalTok{    plot_name <-}\StringTok{ }\KeywordTok{.getEncodedName}\NormalTok{(x)}
 
-\NormalTok{    num_field <-}\StringTok{ }\KeywordTok{paste0}\NormalTok{(plot_name, }\StringTok{"_LogFC"}\NormalTok{)}
-    \KeywordTok{observeEvent}\NormalTok{(input[[num_field]], \{}
-\NormalTok{        previous <-}\StringTok{ }\NormalTok{pObjects}\OperatorTok{$}\NormalTok{memory[[plot_name]][[}\StringTok{"LogFC"}\NormalTok{]]}
-        \ControlFlowTok{if}\NormalTok{ (}\KeywordTok{identical}\NormalTok{(previous, input[[num_field]])) \{}
-            \KeywordTok{return}\NormalTok{(}\OtherTok{NULL}\NormalTok{)}
-\NormalTok{        \}}
-\NormalTok{        pObjects}\OperatorTok{$}\NormalTok{memory[[plot_name]][[}\StringTok{"LogFC"}\NormalTok{]] <-}\StringTok{ }\NormalTok{input[[num_field]]}
-        \KeywordTok{.requestUpdate}\NormalTok{(plot_name, rObjects)}
-\NormalTok{    \})}
+    \KeywordTok{.createUnprotectedParameterObservers}\NormalTok{(plot_name,}
+        \DataTypeTok{fields=}\StringTok{"LogFC"}\NormalTok{,}
+        \DataTypeTok{input=}\NormalTok{input, }\DataTypeTok{pObjects=}\NormalTok{pObjects, }\DataTypeTok{rObjects=}\NormalTok{rObjects)}
 \NormalTok{\})}
 \end{Highlighting}
 \end{Shaded}
@@ -1003,6 +966,37 @@ Readers may notice that we prefix internal variables with \texttt{.} in our comm
 This ensures that they do not clash with global variables created by \texttt{iSEE()} itself
 (which is not an issue when running the app, but makes things difficult when the code is reported for tracking purposes).
 
+\hypertarget{finishing-touches-1}{%
+\section{Finishing touches}\label{finishing-touches-1}}
+
+By default, all \texttt{RowTable}s hide their multiple column selection parameter choices.
+This considers the typical use case where \texttt{RowTable}s respond to a selection of rows,
+rather than a selection of columns as in our \texttt{DGETable}.
+Thus, we need to flip this around so that the unresponsive row selection parameters are hidden in the interface
+while the useful column selection parameters are visible.
+
+We do so by specializing the \texttt{.hideInterface()} method,
+which returns \texttt{TRUE} to indicate that a particular interface element should be hidden.
+We do not ``un-hide'' \texttt{SelectColType} and \texttt{SelectColSaved} here;
+our tests are always performed between the active versus saved selection, so there is no effect from choosing the selection type.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{setMethod}\NormalTok{(}\StringTok{".hideInterface"}\NormalTok{, }\StringTok{"DGETable"}\NormalTok{, }\ControlFlowTok{function}\NormalTok{(x, field) \{}
+    \ControlFlowTok{if}\NormalTok{ (field }\OperatorTok{%in%}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"SelectRowSource"}\NormalTok{, }\StringTok{"SelectRowType"}\NormalTok{, }\StringTok{"SelectRowSaved"}\NormalTok{)) \{}
+        \OtherTok{TRUE}
+\NormalTok{    \} }\ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{ (field }\OperatorTok{%in%}\StringTok{ "SelectColSource"}\NormalTok{) \{}
+        \OtherTok{FALSE}
+\NormalTok{    \} }\ControlFlowTok{else}\NormalTok{ \{}
+        \KeywordTok{callNextMethod}\NormalTok{()}
+\NormalTok{    \}}
+\NormalTok{\})}
+\end{Highlighting}
+\end{Shaded}
+
+A more advanced version of this panel class might consider responding to a row selection by only performing the DE analysis on the selected features.
+In such cases, we would not need to hide \texttt{SelectRowSource}, though we will leave that as an exercise for the curious.
+
 \hypertarget{in-action-1}{%
 \section{In action}\label{in-action-1}}
 
@@ -1015,13 +1009,283 @@ Setting up the iSEE instance is as easy as:
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{rdp <-}\StringTok{ }\KeywordTok{RedDimPlot}\NormalTok{(}\DataTypeTok{PanelId=}\NormalTok{1L, }\DataTypeTok{SelectBoxOpen=}\OtherTok{TRUE}\NormalTok{)}
-\NormalTok{dget <-}\StringTok{ }\KeywordTok{new}\NormalTok{(}\StringTok{"DGETable"}\NormalTok{, }\DataTypeTok{SelectColSource=}\StringTok{"RedDimPlot1"}\NormalTok{)}
+\NormalTok{dget <-}\StringTok{ }\KeywordTok{new}\NormalTok{(}\StringTok{"DGETable"}\NormalTok{, }\DataTypeTok{SelectColSource=}\StringTok{"RedDimPlot1"}\NormalTok{, }\DataTypeTok{PanelWidth=}\NormalTok{8L)}
 \NormalTok{app <-}\StringTok{ }\KeywordTok{iSEE}\NormalTok{(sce, }\DataTypeTok{initial=}\KeywordTok{list}\NormalTok{(rdp, dget))}
 \end{Highlighting}
 \end{Shaded}
 
 Brushing (or lassoing) at any location and saving the selection will trigger dynamic recompution of results in our \texttt{DGETable}.
 We can repeat this with any number of saved selections.
+
+\hypertarget{annotated-gene-list}{%
+\chapter{Annotated gene list}\label{annotated-gene-list}}
+
+\hypertarget{overview-3}{%
+\section{Overview}\label{overview-3}}
+
+When given a gene list, we often need to look up the function of the top genes in a search engine.
+This typically involves copy-pasting the gene name or ID into the search box and pressing Enter, which is a pain.
+Instead, we can automate this process in \emph{\href{https://bioconductor.org/packages/3.11/iSEE}{iSEE}} by creating an \textbf{annotated gene table}.
+We demonstrate by showing how we can dynamically look up annotation for each gene in the \texttt{rowData} of a \texttt{SummarizedExperiment}.
+
+\hypertarget{class-basics-2}{%
+\section{Class basics}\label{class-basics-2}}
+
+First, we define the basics of our new \texttt{Panel} class.
+Our new class will be showing the gene-level metadata, so we inherit from the \texttt{RowStatTable} class that does exactly this.
+We add some slots specifying which column of the table contains our gene IDs, the type of ID and the organism database to use.
+
+We specialize the validity method to check that the \texttt{IDColumn} is either a string or \texttt{NULL};
+if the latter, we assume that the ID is stored in the row name.
+We also add some cursory checks for the other parameters.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{allowable <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"ENSEMBL"}\NormalTok{, }\StringTok{"SYMBOL"}\NormalTok{, }\StringTok{"ENTREZID"}\NormalTok{)}
+\KeywordTok{setValidity2}\NormalTok{(}\StringTok{"GeneAnnoTable"}\NormalTok{, }\ControlFlowTok{function}\NormalTok{(object) \{}
+\NormalTok{    msg <-}\StringTok{ }\KeywordTok{character}\NormalTok{(}\DecValTok{0}\NormalTok{)}
+
+    \ControlFlowTok{if}\NormalTok{ (}\OperatorTok{!}\KeywordTok{is.null}\NormalTok{(val <-}\StringTok{ }\NormalTok{object[[}\StringTok{"IDColumn"}\NormalTok{]]) }\OperatorTok{&&}\StringTok{ }\NormalTok{(}\KeywordTok{length}\NormalTok{(val)}\OperatorTok{!=}\NormalTok{1L }\OperatorTok{||}\StringTok{ }\KeywordTok{is.na}\NormalTok{(val))) \{}
+\NormalTok{        msg <-}\StringTok{ }\KeywordTok{c}\NormalTok{(msg, }\StringTok{"'IDColumn must be NULL or a string"}\NormalTok{)}
+\NormalTok{    \}}
+
+    \ControlFlowTok{if}\NormalTok{ (}\OperatorTok{!}\KeywordTok{isSingleString}\NormalTok{(orgdb <-}\StringTok{ }\NormalTok{object[[}\StringTok{"Organism"}\NormalTok{]])) \{}
+\NormalTok{        msg <-}\StringTok{ }\KeywordTok{c}\NormalTok{(msg, }\KeywordTok{sprintf}\NormalTok{(}\StringTok{"'Organism' should be a single string"}\NormalTok{, orgdb))}
+\NormalTok{    \}}
+
+    \ControlFlowTok{if}\NormalTok{ (}\OperatorTok{!}\KeywordTok{isSingleString}\NormalTok{(type <-}\StringTok{ }\NormalTok{object[[}\StringTok{"IDType"}\NormalTok{]]) }\OperatorTok{||}\StringTok{ }\OperatorTok{!}\NormalTok{type }\OperatorTok{%in%}\StringTok{ }\NormalTok{allowable) \{}
+\NormalTok{        msg <-}\StringTok{ }\KeywordTok{c}\NormalTok{(msg, }\StringTok{"'IDType' should be 'ENSEMBL', 'SYMBOL' or 'ENTREZID'"}\NormalTok{)}
+\NormalTok{    \}}
+
+    \ControlFlowTok{if}\NormalTok{ (}\KeywordTok{length}\NormalTok{(open <-}\StringTok{ }\NormalTok{object[[}\StringTok{"AnnoBoxOpen"}\NormalTok{]])}\OperatorTok{!=}\NormalTok{1L }\OperatorTok{||}\StringTok{ }\KeywordTok{is.na}\NormalTok{(open)) \{}
+\NormalTok{        msg <-}\StringTok{ }\KeywordTok{c}\NormalTok{(msg, }\StringTok{"'AnnoBoxOpen' should be a non-missing logical scalar"}\NormalTok{)}
+\NormalTok{    \}}
+
+    \ControlFlowTok{if}\NormalTok{ (}\KeywordTok{length}\NormalTok{(msg)) \{}
+        \KeywordTok{return}\NormalTok{(msg)}
+\NormalTok{    \}}
+    \OtherTok{TRUE}
+\NormalTok{\})}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Class "GeneAnnoTable" [in ".GlobalEnv"]
+## 
+## Slots:
+##                                                                
+## Name:            IDColumn             IDType           Organism
+## Class:  character_OR_NULL          character          character
+##                                                                
+## Name:         AnnoBoxOpen           Selected             Search
+## Class:            logical          character          character
+##                                                                
+## Name:       SearchColumns            PanelId        PanelHeight
+## Class:          character            integer            integer
+##                                                                
+## Name:          PanelWidth      SelectBoxOpen    SelectRowSource
+## Class:            integer            logical          character
+##                                                                
+## Name:     SelectColSource        DataBoxOpen      SelectRowType
+## Class:          character            logical          character
+##                                                                
+## Name:      SelectRowSaved      SelectColType     SelectColSaved
+## Class:            integer          character            integer
+##                          
+## Name:  MultiSelectHistory
+## Class:               list
+## 
+## Extends: 
+## Class "RowStatTable", directly
+## Class "RowTable", by class "RowStatTable", distance 2
+## Class "Table", by class "RowStatTable", distance 3
+## Class "Panel", by class "RowStatTable", distance 4
+\end{verbatim}
+
+We then specialize the initialize method to set reasonable defaults for these parameters.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{setMethod}\NormalTok{(}\StringTok{"initialize"}\NormalTok{, }\StringTok{"GeneAnnoTable"}\NormalTok{, }\ControlFlowTok{function}\NormalTok{(.Object, }\DataTypeTok{IDColumn=}\OtherTok{NULL}\NormalTok{, }
+    \DataTypeTok{Organism=}\StringTok{"org.Mm.eg.db"}\NormalTok{, }\DataTypeTok{IDType=}\StringTok{"SYMBOL"}\NormalTok{, }\DataTypeTok{AnnoBoxOpen=}\OtherTok{FALSE}\NormalTok{, ...)}
+\NormalTok{\{}
+    \KeywordTok{callNextMethod}\NormalTok{(.Object, }\DataTypeTok{IDColumn=}\NormalTok{IDColumn, }\DataTypeTok{IDType=}\NormalTok{IDType,}
+        \DataTypeTok{Organism=}\NormalTok{Organism, }\DataTypeTok{AnnoBoxOpen=}\NormalTok{AnnoBoxOpen, ...)}
+\NormalTok{\})}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{setting-up-the-interface-2}{%
+\section{Setting up the interface}\label{setting-up-the-interface-2}}
+
+We define the full name and desired default color for display purposes:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{setMethod}\NormalTok{(}\StringTok{".fullName"}\NormalTok{, }\StringTok{"GeneAnnoTable"}\NormalTok{, }\ControlFlowTok{function}\NormalTok{(x) }\StringTok{"Annotated gene table"}\NormalTok{)}
+
+\KeywordTok{setMethod}\NormalTok{(}\StringTok{".panelColor"}\NormalTok{, }\StringTok{"GeneAnnoTable"}\NormalTok{, }\ControlFlowTok{function}\NormalTok{(x) }\StringTok{"#AA1122"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+We want to add another UI element for showing the gene-level annotation.
+This is achieved by specializing the \texttt{.defineOutput()} method as shown below;
+note the prefixing by the panel name to ensure that output element IDs from different panels are unique.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{setMethod}\NormalTok{(}\StringTok{".defineOutput"}\NormalTok{, }\StringTok{"GeneAnnoTable"}\NormalTok{, }\ControlFlowTok{function}\NormalTok{(x, ...) \{}
+\NormalTok{    panel_name <-}\StringTok{ }\KeywordTok{.getEncodedName}\NormalTok{(x)}
+    \KeywordTok{tagList}\NormalTok{(}
+        \KeywordTok{callNextMethod}\NormalTok{(), }\CommentTok{# Re-using RowStatTable's definition.}
+        \KeywordTok{uiOutput}\NormalTok{(}\KeywordTok{paste0}\NormalTok{(panel_name, }\StringTok{"_annotation"}\NormalTok{)),}
+        \KeywordTok{hr}\NormalTok{()}
+\NormalTok{    )}
+\NormalTok{\})}
+\end{Highlighting}
+\end{Shaded}
+
+We also set up interface elements for changing the annotation parameters.
+We will put these elements in a separate ``Annotation parameters'' collapsible box,
+which is initialized in an opened or closed state depending on the \texttt{AnnoBoxOpen} slot.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{setMethod}\NormalTok{(}\StringTok{".defineInterface"}\NormalTok{, }\StringTok{"GeneAnnoTable"}\NormalTok{, }\ControlFlowTok{function}\NormalTok{(x, se, select_info) \{}
+\NormalTok{    panel_name <-}\StringTok{ }\KeywordTok{.getEncodedName}\NormalTok{(x)}
+    \KeywordTok{c}\NormalTok{(}
+        \KeywordTok{list}\NormalTok{(}
+            \CommentTok{# }\AlertTok{TODO}\CommentTok{: export this.}
+\NormalTok{            iSEE}\OperatorTok{:::}\KeywordTok{collapseBox}\NormalTok{(}
+                \KeywordTok{paste0}\NormalTok{(panel_name, }\StringTok{"_AnnoBoxOpen"}\NormalTok{),}
+                \DataTypeTok{title=}\StringTok{"Annotation parameters"}\NormalTok{,}
+                \DataTypeTok{open=}\NormalTok{x[[}\StringTok{"AnnoBoxOpen"}\NormalTok{]],}
+                \KeywordTok{selectInput}\NormalTok{(}\KeywordTok{paste0}\NormalTok{(panel_name, }\StringTok{"_IDColumn"}\NormalTok{),}
+                    \DataTypeTok{label=}\StringTok{"ID-containing column:"}\NormalTok{,}
+                    \DataTypeTok{choices=}\KeywordTok{colnames}\NormalTok{(}\KeywordTok{rowData}\NormalTok{(se)), }
+                    \DataTypeTok{selected=}\NormalTok{x[[}\StringTok{"IDColumn"}\NormalTok{]]}
+\NormalTok{                ),}
+                \KeywordTok{selectInput}\NormalTok{(}\KeywordTok{paste0}\NormalTok{(panel_name, }\StringTok{"_IDType"}\NormalTok{),}
+                    \DataTypeTok{label=}\StringTok{"ID type:"}\NormalTok{,}
+                    \DataTypeTok{choices=}\NormalTok{allowable,}
+                    \DataTypeTok{selected=}\NormalTok{x[[}\StringTok{"IDType"}\NormalTok{]]}
+\NormalTok{                ),}
+                \KeywordTok{selectInput}\NormalTok{(}\KeywordTok{paste0}\NormalTok{(panel_name, }\StringTok{"_Organism"}\NormalTok{),}
+                    \DataTypeTok{label=}\StringTok{"Organism"}\NormalTok{,}
+                    \DataTypeTok{choices=}\KeywordTok{c}\NormalTok{(}\StringTok{"org.Hs.eg.db"}\NormalTok{, }\StringTok{"org.Mm.eg.db"}\NormalTok{),}
+                    \DataTypeTok{selected=}\NormalTok{x[[}\StringTok{"Organism"}\NormalTok{]]}
+\NormalTok{                )}
+\NormalTok{            )}
+\NormalTok{        ),}
+        \KeywordTok{callNextMethod}\NormalTok{()}
+\NormalTok{    ) }
+\NormalTok{\})}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{creating-the-observers-2}{%
+\section{Creating the observers}\label{creating-the-observers-2}}
+
+We specialize \texttt{.createObservers} to define some observers to respond to changes in our new interface elements.
+Note the use of \texttt{callNextMethod()} to ensure that observers of the parent class are also created.
+We also create a reactive variable to indicate whether the selection has updated.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{setMethod}\NormalTok{(}\StringTok{".createObservers"}\NormalTok{, }\StringTok{"GeneAnnoTable"}\NormalTok{,}
+    \ControlFlowTok{function}\NormalTok{(x, se, input, session, pObjects, rObjects)}
+\NormalTok{\{}
+    \KeywordTok{callNextMethod}\NormalTok{()}
+
+\NormalTok{    plot_name <-}\StringTok{ }\KeywordTok{.getEncodedName}\NormalTok{(x)}
+
+    \KeywordTok{.createUnprotectedParameterObservers}\NormalTok{(plot_name,}
+        \DataTypeTok{fields=}\KeywordTok{c}\NormalTok{(}\StringTok{"IDColumn"}\NormalTok{, }\StringTok{"Organism"}\NormalTok{, }\StringTok{"IDType"}\NormalTok{), }
+        \DataTypeTok{input=}\NormalTok{input, }\DataTypeTok{pObjects=}\NormalTok{pObjects, }\DataTypeTok{rObjects=}\NormalTok{rObjects)}
+    
+    \CommentTok{# }\AlertTok{TODO}\CommentTok{: replace with an in-built event hook for single selections?}
+\NormalTok{    anno_name <-}\StringTok{ }\KeywordTok{paste0}\NormalTok{(plot_name, }\StringTok{"_anno_bump"}\NormalTok{)}
+\NormalTok{    rObjects[[anno_name]] <-}\StringTok{ }\NormalTok{1L}
+    \KeywordTok{observeEvent}\NormalTok{(input[[}\KeywordTok{paste0}\NormalTok{(plot_name, }\StringTok{"_rows_selected"}\NormalTok{)]], \{}
+\NormalTok{        rObjects[[anno_name]] <-}\StringTok{ }\KeywordTok{isolate}\NormalTok{(rObjects[[anno_name]]) }\OperatorTok{+}\StringTok{ }\NormalTok{1L }
+\NormalTok{    \})}
+\NormalTok{\})}
+\end{Highlighting}
+\end{Shaded}
+
+We need to set up a rendering expression for the annotation element that responds to the selected gene.
+This updates in response to the reactive variable that we defined earlier.
+We add a series of protective measures to avoid the application crashing due to missing organism packages or unmatched IDs.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{setMethod}\NormalTok{(}\StringTok{".renderOutput"}\NormalTok{, }\StringTok{"GeneAnnoTable"}\NormalTok{, }\ControlFlowTok{function}\NormalTok{(x, se, ..., output, pObjects, rObjects) \{}
+    \KeywordTok{callNextMethod}\NormalTok{() }\CommentTok{# Re-using RowStatTable's output rendering.}
+
+\NormalTok{    panel_name <-}\StringTok{ }\KeywordTok{.getEncodedName}\NormalTok{(x)}
+\NormalTok{    output[[}\KeywordTok{paste0}\NormalTok{(panel_name, }\StringTok{"_annotation"}\NormalTok{)]] <-}\StringTok{ }\KeywordTok{renderUI}\NormalTok{(\{}
+        \KeywordTok{force}\NormalTok{(rObjects[[}\KeywordTok{paste0}\NormalTok{(panel_name, }\StringTok{"_anno_bump"}\NormalTok{)]]) }
+\NormalTok{        instance <-}\StringTok{ }\NormalTok{pObjects}\OperatorTok{$}\NormalTok{memory[[panel_name]]}
+
+\NormalTok{        rowdata_col <-}\StringTok{ }\NormalTok{instance[[}\StringTok{"IDColumn"}\NormalTok{]]}
+\NormalTok{        selectedGene <-}\StringTok{ }\NormalTok{instance[[}\StringTok{"Selected"}\NormalTok{]]}
+        \ControlFlowTok{if}\NormalTok{ (}\OperatorTok{!}\KeywordTok{is.null}\NormalTok{(rowdata_col)) \{}
+\NormalTok{            selectedGene <-}\StringTok{ }\KeywordTok{rowData}\NormalTok{(se)[selectedGene,rowdata_col]}
+\NormalTok{        \}}
+
+\NormalTok{        keytype <-}\StringTok{ }\NormalTok{instance[[}\StringTok{"IDType"}\NormalTok{]]}
+\NormalTok{        selgene_entrez <-}\StringTok{ }\OtherTok{NA}
+        \ControlFlowTok{if}\NormalTok{ (keytype}\OperatorTok{!=}\StringTok{"ENTREZID"}\NormalTok{) \{}
+\NormalTok{            ORG <-}\StringTok{ }\NormalTok{instance[[}\StringTok{"Organism"}\NormalTok{]]}
+            \ControlFlowTok{if}\NormalTok{ (}\KeywordTok{require}\NormalTok{(ORG, }\DataTypeTok{character.only=}\OtherTok{TRUE}\NormalTok{, }\DataTypeTok{quietly=}\OtherTok{TRUE}\NormalTok{)) \{}
+\NormalTok{                orgdb <-}\StringTok{ }\KeywordTok{get}\NormalTok{(ORG)}
+\NormalTok{                selgene_entrez <-}\StringTok{ }\KeywordTok{try}\NormalTok{(}\KeywordTok{mapIds}\NormalTok{(orgdb, selectedGene, }\StringTok{"ENTREZID"}\NormalTok{, keytype), }
+                    \DataTypeTok{silent=}\OtherTok{TRUE}\NormalTok{)}
+\NormalTok{            \}}
+\NormalTok{        \} }\ControlFlowTok{else}\NormalTok{ \{}
+\NormalTok{            selgene_entrez <-}\StringTok{ }\NormalTok{selectedGene}
+\NormalTok{        \}}
+
+        \ControlFlowTok{if}\NormalTok{ (}\KeywordTok{is.na}\NormalTok{(selgene_entrez) }\OperatorTok{||}\StringTok{ }\KeywordTok{is}\NormalTok{(selgene_entrez, }\StringTok{"try-error"}\NormalTok{)) \{}
+            \KeywordTok{return}\NormalTok{(}\OtherTok{NULL}\NormalTok{)}
+\NormalTok{        \}}
+
+\NormalTok{        fullinfo <-}\StringTok{ }\NormalTok{rentrez}\OperatorTok{::}\KeywordTok{entrez_summary}\NormalTok{(}\StringTok{"gene"}\NormalTok{, selgene_entrez)}
+\NormalTok{        link_pubmed <-}\StringTok{ }\KeywordTok{paste0}\NormalTok{(}\StringTok{'<a href="http://www.ncbi.nlm.nih.gov/gene/?term='}\NormalTok{,}
+\NormalTok{            selgene_entrez,}
+            \StringTok{'" target="_blank">Click here to see more at the NCBI database</a>'}\NormalTok{)}
+
+\NormalTok{        mycontent <-}\StringTok{ }\KeywordTok{paste0}\NormalTok{(}\StringTok{"<b>"}\NormalTok{,fullinfo}\OperatorTok{$}\NormalTok{name, }\StringTok{"</b><br/><br/>"}\NormalTok{,}
+\NormalTok{            fullinfo}\OperatorTok{$}\NormalTok{description,}\StringTok{"<br/><br/>"}\NormalTok{,}
+            \KeywordTok{ifelse}\NormalTok{(fullinfo}\OperatorTok{$}\NormalTok{summary }\OperatorTok{==}\StringTok{ ""}\NormalTok{,}\StringTok{""}\NormalTok{,}\KeywordTok{paste0}\NormalTok{(fullinfo}\OperatorTok{$}\NormalTok{summary, }\StringTok{"<br/><br/>"}\NormalTok{)),}
+\NormalTok{            link_pubmed)}
+
+        \KeywordTok{HTML}\NormalTok{(mycontent)}
+\NormalTok{    \})}
+\NormalTok{\})}
+\end{Highlighting}
+\end{Shaded}
+
+Observant readers will note that the body of the rendering expression uses \texttt{instance} rather than \texttt{x}.
+This is intentional as it ensures that we are using the parameter settings from the current state of the app.
+If we used \texttt{x}, we would always be using the parameters from the initial state of the app, which is not what we want.
+
+\hypertarget{in-action-2}{%
+\section{In action}\label{in-action-2}}
+
+Let's put our new panel to the test using the \texttt{sce} object, preprocessed in a \protect\hyperlink{developing}{previous chapter}.
+
+Setting up the iSEE instance is as easy as:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{gat <-}\StringTok{ }\KeywordTok{new}\NormalTok{(}\StringTok{"GeneAnnoTable"}\NormalTok{, }\DataTypeTok{PanelWidth=}\NormalTok{8L)}
+\NormalTok{app <-}\StringTok{ }\KeywordTok{iSEE}\NormalTok{(sce, }\DataTypeTok{initial=}\KeywordTok{list}\NormalTok{(gat))}
+\end{Highlighting}
+\end{Shaded}
+
+Clicking on any row will bring up the Entrez annotation (if available) for that feature.
+It is probably best to click on some well-annotated genes as the set of RIKEN transcripts at the front don't have much annotation.
 
 \bibliography{book.bib,packages.bib}
 
