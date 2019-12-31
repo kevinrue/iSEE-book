@@ -134,6 +134,34 @@ Readers may notice that we prefix internal variables with `.` in our commands.
 This ensures that they do not clash with global variables created by `iSEE()` itself
 (which is not an issue when running the app, but makes things difficult when the code is reported for tracking purposes).
 
+## Finishing touches
+
+By default, all `RowTable`s hide their multiple column selection parameter choices.
+This considers the typical use case where `RowTable`s respond to a selection of rows,
+rather than a selection of columns as in our `DGETable`.
+Thus, we need to flip this around so that the unresponsive row selection parameters are hidden in the interface
+while the useful column selection parameters are visible.
+    
+We do so by specializing the `.hideInterface()` method, 
+which returns `TRUE` to indicate that a particular interface element should be hidden.
+We do not "un-hide" `SelectColType` and `SelectColSaved` here;
+our tests are always performed between the active versus saved selection, so there is no effect from choosing the selection type.
+
+```{r}
+setMethod(".hideInterface", "DGETable", function(x, field) {
+    if (field %in% c("SelectRowSource", "SelectRowType", "SelectRowSaved")) {
+        TRUE
+    } else if (field %in% "SelectColSource") {
+        FALSE
+    } else {
+        callNextMethod()
+    }
+})
+```
+
+A more advanced version of this panel class might consider responding to a row selection by only performing the DE analysis on the selected features.
+In such cases, we would not need to hide `SelectRowSource`, though we will leave that as an exercise for the curious.
+
 ## In action
 
 Let's put our new panel to the test.
