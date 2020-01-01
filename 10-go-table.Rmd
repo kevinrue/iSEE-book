@@ -154,7 +154,8 @@ e.g., by subsetting to the gene sets that contain genes in the selected row.
 ## Creating the observers
 
 We specialize `.createObservers` to define some observers to respond to changes in our new interface elements.
-This also involves creating an observer to respond to a change in the selection of a `DataTable` row.
+This also involves creating an observer to respond to a change in the selection of a `DataTable` row,
+calling `.requestActiveSelectionUpdate()` to trigger changes in panels that are receiving the multiple row selection.
 (We set up observers for the search fields as well, as a courtesy to restore them properly upon re-rendering.) 
 Note the use of `callNextMethod()` to ensure that observers of the parent class are also created.
 
@@ -186,12 +187,7 @@ setMethod(".createObservers", "GOTable",
             return(NULL)
         }
         pObjects$memory[[panel_name]][["Selected"]] <- chosen
-
-        # TODO: expose the API for this.
-        iSEE:::.safe_reactive_bump(rObjects, multi_name)
-        iSEE:::.mark_panel_as_modified(panel_name,
-            c(iSEE:::.panelNorender, iSEE:::.panelReactivated),
-            rObjects)
+        .requestActiveSelectionUpdate(panel_name, rObjects, update_output=FALSE)
     }, ignoreNULL=FALSE)
 
     # Observer for the search field:
@@ -279,7 +275,6 @@ We also need to protect against cases where the requested GO term is not found, 
 setMethod(".multiSelectionCommands", "GOTable", function(x, index) {
     orgdb <- x[["Organism"]]
     type <- x[["IDType"]]
-    print(x)
     c(
         sprintf("require(%s);", orgdb),
         sprintf("selected <- tryCatch(select(%s, keys=%s, keytype='GO', 
