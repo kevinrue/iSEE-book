@@ -1,0 +1,90 @@
+# Developing from the base class Panel {#developing-from-panel}
+
+# Create a new S4 class
+
+In a first instance, we simply declare a new class that directly inherits from the `Panel` class.
+
+```{r}
+#' @export
+setClass("ComplexHeatmapPlot", contains="Panel")
+```
+
+Later, we will revisit this class definition to add new slots relevant to the functionality of the panel.
+
+# Add a constructor function
+
+This is a simple wrapper around the `new` function.
+
+```{r}
+#' @export
+ComplexHeatmapPlot <- function(...) {
+    new("ComplexHeatmapPlot", ...)
+}
+```
+
+# Define the color and panel full name
+
+```{r}
+#' @export
+setMethod(".panelColor", "ComplexHeatmapPlot", function(x) "#ABCDEF")
+
+#' @export
+setMethod(".fullName", "ComplexHeatmapPlot", function(x) "Complex heatmap")
+```
+
+# Define the GUI element
+
+We define a plot element that will simply display the generated plot with a given
+Refer to `help("plotOutput")` for information about further options to enable functionality such as brush, click, and hover.
+
+```{r}
+#' @export
+setMethod(".defineOutput", "ComplexHeatmapPlot", function(x) {
+    plot_name <- .getEncodedName(x)
+    plotOutput(plot_name, height=paste0(x[[.organizationHeight]], "px"))
+})
+```
+
+At this point, the panel already has the basic API that is needed to instantiate panels and run an app.
+However, the panel does not generate neither commands nor a plot object, leaving both the panel output and code tracker blank.
+
+# Generate a GUI output
+
+We define a function that - given the settings of a given panel and information about the content of all other active panels in the GUI - generates the commands necessary to process inputs and produce the plot object to display in the panel.
+To fully integrate in the life cycle of the app, this function should also return the data underlying the panel plot, and the plot object itself.
+
+```{r}
+setMethod(".generateOutput", "ComplexHeatmapPlot", function(x, se, all_memory, all_contents) {
+    plot_env <- new.env()
+    all_cmds <- list()
+
+    all_cmds[["data"]] <- 'plot.data <- matrix(c(1,2,3, 11,12,13), nrow = 2, ncol = 3, byrow = TRUE, dimnames = list(c("row1", "row2"), c("C.1", "C.2", "C.3")))'
+    all_cmds[["heatmap"]] <- "Heatmap(plot.data)"
+
+    plot_out <- .text_eval(all_cmds, plot_env)
+
+    panel_data <- plot_env$plot.data
+
+    list(commands=all_cmds, contents=panel_data, plot=plot_out)
+})
+```
+
+# Render the GUI output
+
+With the `.generateOutput` function above preparing the output object and associated commands, we then define a function to render the plot output in the GUI.
+Essentially, this means fetching the plot object and assigning to the Shiny session `output` list, under the unique encoded name associated with the panel.
+
+Here, we simply outsource the job to the `.create_plot_output` function.
+Note that this function also generates a command expecting the data associated with the plot to be named `plot.data`.
+
+```{r}
+#' @export
+setMethod(".renderOutput", "ComplexHeatmapPlot", function(x, se, output, pObjects, rObjects) {
+    plot_name <- .getEncodedName(x)
+
+    .create_plot_output(plot_name, se=se, output=output, pObjects=pObjects, rObjects=rObjects)
+
+    callNextMethod()
+})
+```
+
