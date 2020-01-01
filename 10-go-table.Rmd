@@ -127,8 +127,10 @@ setMethod(".hideInterface", "GOTable", function(x, field) {
 
 ## Generating the output 
 
-We actually generate the output by specializing the `.generateOutput()` function.
-Here, we use the `r BiocStyle::Biocpkg("GO.db")` package to create a table of GO terms and their definitions.
+We actually generate the output by specializing the `.generateOutput()` function,
+using the `r BiocStyle::Biocpkg("GO.db")` package to create a table of GO terms and their definitions.
+We also store the number of available genes in the `contents` - 
+this will be used later to compute the percentage of all genes in a given gene set. 
 
 ```{r}
 setMethod(".generateOutput", "GOTable", function(x, se, ..., all_memory, all_contents) {
@@ -138,7 +140,10 @@ setMethod(".generateOutput", "GOTable", function(x, se, ..., all_memory, all_con
         "rownames(tab) <- tab$GOID;",
         "tab$GOID <- NULL;")
     eval(parse(text=commands), envir=envir)
-    list(commands=list(commands), contents=envir$tab)
+    list(
+        commands=list(commands), 
+        contents=list(table=envir$tab, available=nrow(se))
+    )
 })
 ```
 
@@ -149,7 +154,7 @@ e.g., by subsetting to the gene sets that contain genes in the selected row.
 ## Creating the observers
 
 We specialize `.createObservers` to define some observers to respond to changes in our new interface elements.
-This also involves creating an observer to respond to the selected `DataTable` row.
+This also involves creating an observer to respond to a change in the selection of a `DataTable` row.
 (We set up observers for the search fields as well, as a courtesy to restore them properly upon re-rendering.) 
 Note the use of `callNextMethod()` to ensure that observers of the parent class are also created.
 
@@ -173,7 +178,7 @@ setMethod(".createObservers", "GOTable",
         if (length(chosen)==0L) {
             chosen <- "" 
         } else {
-            chosen <- rownames(pObjects$contents[[panel_name]])[chosen]
+            chosen <- rownames(pObjects$contents[[panel_name]]$table)[chosen]
         }
 
         previous <- pObjects$memory[[panel_name]][["Selected"]]
@@ -196,7 +201,6 @@ setMethod(".createObservers", "GOTable",
         if (identical(search, pObjects$memory[[panel_name]][["Search"]])) {
             return(NULL)
         }
-
         pObjects$memory[[panel_name]][["Search"]] <- search
     })
 
@@ -207,7 +211,6 @@ setMethod(".createObservers", "GOTable",
         if (identical(search, pObjects$memory[[panel_name]][["SearchColumns"]])) {
             return(NULL)
         }
-
         pObjects$memory[[panel_name]][["SearchColumns"]] <- search
     })
 })
@@ -228,7 +231,7 @@ setMethod(".renderOutput", "GOTable", function(x, se, ..., output, pObjects, rOb
         param_choices <- pObjects$memory[[panel_name]]
 
         t.out <- .retrieveOutput(panel_name, se, pObjects, rObjects)
-        full_tab <- t.out$contents
+        full_tab <- t.out$contents$table
         pObjects$varname[[panel_name]] <- "tab"
 
         chosen <- param_choices[["Selected"]]
@@ -276,6 +279,7 @@ We also need to protect against cases where the requested GO term is not found, 
 setMethod(".multiSelectionCommands", "GOTable", function(x, index) {
     orgdb <- x[["Organism"]]
     type <- x[["IDType"]]
+    print(x)
     c(
         sprintf("require(%s);", orgdb),
         sprintf("selected <- tryCatch(select(%s, keys=%s, keytype='GO', 
@@ -287,7 +291,7 @@ setMethod(".multiSelectionCommands", "GOTable", function(x, index) {
 ```
 
 We also define some generics to indicate whether a `DataTable` row is currently selected, and how to delete that selection.
-In this case, we replace the selected row with an empty string to indicate that no selection has been made,
+For the latter, we replace the selected row with an empty string to indicate that no selection has been made,
 consistent with the actions of our observer in `.createObservers()`.
 
 ```{r}
@@ -302,6 +306,17 @@ setMethod(".multiSelectionActive", "GOTable", function(x) {
 setMethod(".multiSelectionClear", "GOTable", function(x) {
     x[["Selected"]] <- ""
     x
+})
+```
+
+Finally, we define a method to determine the total number of available genes.
+The default is to use the number of rows of the `data.frame` used in the `datatable()` call,
+but that would not be right for us as it represents the number of gene sets.
+Instead, we use the availability information that we previously stored in the `contents` during `.generateOutput()`.
+
+```{r}
+setMethod(".multiSelectionAvailable", "GOTable", function(x, contents) {
+    contents$available
 })
 ```
 
