@@ -87,4 +87,3 @@ setMethod(".renderOutput", "ComplexHeatmapPlot", function(x, se, output, pObject
     callNextMethod()
 })
 ```
-
