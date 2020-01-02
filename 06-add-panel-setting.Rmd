@@ -1,0 +1,14 @@
+# Adding panel settings {#add-panel-setting}
+
+## Create a slot
+
+```{r}
+collated <- character(0)
+.rownamesShown <- "ShowRowNames"
+.colnamesShown <- "ShowColumnNames"
+collated[.rownamesShown] <- "logical"
+collated[.colnamesShown] <- "logical"
+# ... other slots ...
+#' @export
+setClass("ComplexHeatmapPlot", contains="Panel", slots=collated)
+```
