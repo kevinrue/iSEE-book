@@ -6,7 +6,7 @@ We define slot names and the type of value that they expect.
 
 Here the slot will contains a character vector that includes keywords indicating the dimensions (i.e., row, column) for which names should be displayed.
 
-```{r}
+```{r, eval=FALSE}
 collated <- character(0)
 .showDimnames <- "ShowDimNames"
 collated[.showDimnames] <- "character"
@@ -21,7 +21,7 @@ If the panel setting involves a set of predefined choices - as opposed to dynami
 
 We define two keywords that will be used to label corresponding checkboxes in the GUI.
 
-```{r}
+```{r, eval=FALSE}
 .showNamesRowTitle <- "Row"
 .showNamesColumnTitle <- "Column"
 ```
@@ -31,7 +31,7 @@ We define two keywords that will be used to label corresponding checkboxes in th
 In the `initialize` function, we set the default setting to include both keywords.
 This indicates that the heatmap should display both row and column names.
 
-```{r}
+```{r, eval=FALSE}
 #' @export
 #' @importFrom methods callNextMethod
 setMethod("initialize", "ComplexHeatmapPlot", function(.Object, ...) {
@@ -49,7 +49,7 @@ setMethod("initialize", "ComplexHeatmapPlot", function(.Object, ...) {
 In the `.defineInterface` - or typically in a subfunction - we define a UI element that displays the choices to the user.
 Note how we use the slot names and the constants - in combination with the unique panel identifier - to create a unique and standardised identifier for the widget.
 
-```{r}
+```{r, eval=FALSE}
 plot_name <- .getEncodedName(x)
 checkboxGroupInput(
     inputId=paste0(plot_name, "_", .showDimnames), label="Show names:", inline=TRUE,
@@ -62,8 +62,10 @@ checkboxGroupInput(
 We need to add observers watching the UI input, to trigger rerendering of the plot.
 Conveniently, the `.createUnprotectedParameterObservers` takes care of the heavy-lifting for us.
 The `fields` argument only needs to be given the list of fields to watch.
+The function will then create observers watching the given fields for each panel instance of the class in the GUI.
+Using the standardised naming of identifiers for input widget, the observers will take care of updating the corresponding slots of the appropriate panel instance.
 
-```{r}
+```{r, eval=FALSE}
 #' @export
 setMethod(".createObservers", "ComplexHeatmapPlot", function(x, se, input, session, pObjects, rObjects) {
     callNextMethod()
@@ -78,3 +80,22 @@ setMethod(".createObservers", "ComplexHeatmapPlot", function(x, se, input, sessi
 })
 ```
 
+## Update the plotting code
+
+The `Heatmap` function of the `ComplexHeatmap` package has two separate arguments - `show_row_names` and `show_column_names` - each taking a logical value to toggle the visibility of row and column names, respectively.
+
+In `.generateOutput`, when generating the code to draw the heatmap, we use the setting of the corresponding slot to check whether each of the keyword is present.
+
+```{r, eval=FALSE}
+show_row_names <- sprintf("show_row_names=%s", .showNamesRowTitle %in% x[[.showDimnames]])
+show_column_names <- sprintf("show_column_names=%s", .showNamesColumnTitle %in% x[[.showDimnames]])
+# ... process other settings ...
+heatmap_args <- paste("", show_row_names, show_column_names, sep = ", ")
+all_cmds[["heatmap"]] <- sprintf("hm <- Heatmap(matrix = plot.data%s)", heatmap_args)
+```
+
+Ultimately, this generates a command that looks like:
+
+```{r, eval=FALSE}
+hm <- Heatmap(matrix = plot.data, show_row_names=TRUE, show_column_names=FALSE)
+```
