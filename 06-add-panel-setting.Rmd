@@ -2,6 +2,8 @@
 
 ## Create a slot
 
+We define slot names and the type of value that they expect.
+
 ```{r}
 collated <- character(0)
 .rownamesShown <- "ShowRowNames"
@@ -12,3 +14,29 @@ collated[.colnamesShown] <- "logical"
 #' @export
 setClass("ComplexHeatmapPlot", contains="Panel", slots=collated)
 ```
+
+## Define new constants (optional)
+
+If the panel setting involves a set of predefined choices - as opposed to dynamic sets choices that depend on the dataset such as feature names -, we may need to declare those predefined choices as constants.
+
+In this case, both settings simply toggle between `TRUE` and `FALSE`, so there is no need for new constants.
+
+## Initialize setting with a default value
+
+In the `initialize` function, we set both settings to `TRUE`.
+This indicates that both row and column names should be displayed by default.
+
+```{r}
+#' @export
+#' @importFrom methods callNextMethod
+setMethod("initialize", "ComplexHeatmapPlot", function(.Object, ...) {
+    args <- list(...)
+
+    # ... other slots ...
+    args <- .empty_default(args, .rownamesShown, TRUE)
+    args <- .empty_default(args, .colnamesShown, TRUE)
+
+    do.call(callNextMethod, c(list(.Object), args))
+})
+```
+
