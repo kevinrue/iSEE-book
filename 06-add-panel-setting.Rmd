@@ -57,3 +57,24 @@ checkboxGroupInput(
     choices=c(.showNamesRowTitle, .showNamesColumnTitle))
 ```
 
+## Add observers
+
+We need to add observers watching the UI input, to trigger rerendering of the plot.
+Conveniently, the `.createUnprotectedParameterObservers` takes care of the heavy-lifting for us.
+The `fields` argument only needs to be given the list of fields to watch.
+
+```{r}
+#' @export
+setMethod(".createObservers", "ComplexHeatmapPlot", function(x, se, input, session, pObjects, rObjects) {
+    callNextMethod()
+
+    plot_name <- .getEncodedName(x)
+
+    # ... other observers ....
+
+    .createUnprotectedParameterObservers(plot_name,
+        fields=c(.showDimnames),
+        input=input, pObjects=pObjects, rObjects=rObjects)
+})
+```
+
