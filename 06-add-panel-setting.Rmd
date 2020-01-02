@@ -4,12 +4,12 @@
 
 We define slot names and the type of value that they expect.
 
+Here the slot will contains a character vector that includes keywords indicating the dimensions (i.e., row, column) for which names should be displayed.
+
 ```{r}
 collated <- character(0)
-.rownamesShown <- "ShowRowNames"
-.colnamesShown <- "ShowColumnNames"
-collated[.rownamesShown] <- "logical"
-collated[.colnamesShown] <- "logical"
+.showDimnames <- "ShowDimNames"
+collated[.showDimnames] <- "character"
 # ... other slots ...
 #' @export
 setClass("ComplexHeatmapPlot", contains="Panel", slots=collated)
@@ -19,12 +19,17 @@ setClass("ComplexHeatmapPlot", contains="Panel", slots=collated)
 
 If the panel setting involves a set of predefined choices - as opposed to dynamic sets choices that depend on the dataset such as feature names -, we may need to declare those predefined choices as constants.
 
-In this case, both settings simply toggle between `TRUE` and `FALSE`, so there is no need for new constants.
+We define two keywords that will be used to label corresponding checkboxes in the GUI.
+
+```{r}
+.showNamesRowTitle <- "Row"
+.showNamesColumnTitle <- "Column"
+```
 
 ## Initialize setting with a default value
 
-In the `initialize` function, we set both settings to `TRUE`.
-This indicates that both row and column names should be displayed by default.
+In the `initialize` function, we set the default setting to include both keywords.
+This indicates that the heatmap should display both row and column names.
 
 ```{r}
 #' @export
@@ -33,10 +38,22 @@ setMethod("initialize", "ComplexHeatmapPlot", function(.Object, ...) {
     args <- list(...)
 
     # ... other slots ...
-    args <- .empty_default(args, .rownamesShown, TRUE)
-    args <- .empty_default(args, .colnamesShown, TRUE)
+    args <- .empty_default(args, .showDimnames, c(.showNamesRowTitle, .showNamesColumnTitle))
 
     do.call(callNextMethod, c(list(.Object), args))
 })
+```
+
+## Add UI elements
+
+In the `.defineInterface` - or typically in a subfunction - we define a UI element that displays the choices to the user.
+Note how we use the slot names and the constants - in combination with the unique panel identifier - to create a unique and standardised identifier for the widget.
+
+```{r}
+plot_name <- .getEncodedName(x)
+checkboxGroupInput(
+    inputId=paste0(plot_name, "_", .showDimnames), label="Show names:", inline=TRUE,
+    selected=x[[.showDimnames]],
+    choices=c(.showNamesRowTitle, .showNamesColumnTitle))
 ```
 
