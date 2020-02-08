@@ -1,14 +1,18 @@
-#!/bin/bash
+#!/bin/sh
 
-# Following the initial set described at: https://bookdown.org/yihui/bookdown/github.html
-# Then run "bash _deploy.sh" to recompile the book and deploy it to GitHub Pages.
+set -e
 
-Rscript -e "rmarkdown::render_site(encoding = 'UTF-8')"
+[ -z "${GITHUB_PAT}" ] && exit 0
+[ "${TRAVIS_BRANCH}" != "master" ] && exit 0
+
+# configure your name and email if you have not done so
+git config --global user.email "kevinrue67@gmail.com"
+git config --global user.name "Kevin Rue-Albrecht"
+
+# clone the repository to the book-output directory
+git clone -b gh-pages https://${GITHUB_PAT}@github.com/${TRAVIS_REPO_SLUG}.git book-output
 cd book-output
-git checkout gh-pages
-git pull
-git rm -rf *
 cp -r ../_book/* ./
 git add --all *
-git commit -m "Update the book"
+git commit -m "Update the book" || true
 git push -q origin gh-pages
