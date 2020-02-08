@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<html lang="" xml:lang="">
 <head>
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Chapter 4 Developing new panels | Extending iSEE</title>
   <meta name="description" content="This book describes how to use the Bioconductor iSEE package to create web-applications for exploring data stored in SummarizedExperiment objects." />
-  <meta name="generator" content="bookdown 0.16 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.17 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapter 4 Developing new panels | Extending iSEE" />
   <meta property="og:type" content="book" />
@@ -24,7 +24,7 @@
 <meta name="author" content="Kevin Rue-Albrecht, Federico Marini, Charlotte Soneson, and Aaron Lun" />
 
 
-<meta name="date" content="2019-12-31" />
+<meta name="date" content="2020-02-08" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -186,6 +186,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="7.4" data-path="annotated-gene-list.html"><a href="annotated-gene-list.html#creating-the-observers-2"><i class="fa fa-check"></i><b>7.4</b> Creating the observers</a></li>
 <li class="chapter" data-level="7.5" data-path="annotated-gene-list.html"><a href="annotated-gene-list.html#in-action-2"><i class="fa fa-check"></i><b>7.5</b> In action</a></li>
 </ul></li>
+<li class="chapter" data-level="8" data-path="gene-ontology-table.html"><a href="gene-ontology-table.html"><i class="fa fa-check"></i><b>8</b> Gene ontology table</a><ul>
+<li class="chapter" data-level="8.1" data-path="gene-ontology-table.html"><a href="gene-ontology-table.html#overview-4"><i class="fa fa-check"></i><b>8.1</b> Overview</a></li>
+<li class="chapter" data-level="8.2" data-path="gene-ontology-table.html"><a href="gene-ontology-table.html#class-basics-3"><i class="fa fa-check"></i><b>8.2</b> Class basics</a></li>
+<li class="chapter" data-level="8.3" data-path="gene-ontology-table.html"><a href="gene-ontology-table.html#setting-up-the-interface-3"><i class="fa fa-check"></i><b>8.3</b> Setting up the interface</a></li>
+<li class="chapter" data-level="8.4" data-path="gene-ontology-table.html"><a href="gene-ontology-table.html#generating-the-output"><i class="fa fa-check"></i><b>8.4</b> Generating the output</a></li>
+<li class="chapter" data-level="8.5" data-path="gene-ontology-table.html"><a href="gene-ontology-table.html#creating-the-observers-3"><i class="fa fa-check"></i><b>8.5</b> Creating the observers</a></li>
+<li class="chapter" data-level="8.6" data-path="gene-ontology-table.html"><a href="gene-ontology-table.html#handling-selections"><i class="fa fa-check"></i><b>8.6</b> Handling selections</a></li>
+<li class="chapter" data-level="8.7" data-path="gene-ontology-table.html"><a href="gene-ontology-table.html#in-action-3"><i class="fa fa-check"></i><b>8.7</b> In action</a></li>
+</ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -214,19 +223,12 @@ This action imports all the builtin panel class definitions, including the virtu
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw">library</span>(iSEE)</a></code></pre></div>
 <p>We also set up an example using our favorite dataset, creating a <code>SingleCellExperiment</code> object with some precomputed dimensionality reduction results.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="kw">library</span>(scRNAseq)</a>
-<a class="sourceLine" id="cb2-2" title="2">sce &lt;-<span class="st"> </span><span class="kw">ReprocessedAllenData</span>(<span class="dt">assays=</span><span class="st">&quot;tophat_counts&quot;</span>)</a></code></pre></div>
-<pre><code>## snapshotDate(): 2019-12-27</code></pre>
-<pre><code>## see ?scRNAseq and browseVignettes(&#39;scRNAseq&#39;) for documentation</code></pre>
-<pre><code>## loading from cache</code></pre>
-<pre><code>## see ?scRNAseq and browseVignettes(&#39;scRNAseq&#39;) for documentation</code></pre>
-<pre><code>## loading from cache</code></pre>
-<pre><code>## see ?scRNAseq and browseVignettes(&#39;scRNAseq&#39;) for documentation</code></pre>
-<pre><code>## loading from cache</code></pre>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1"><span class="kw">library</span>(scater)</a></code></pre></div>
-<pre><code>## Loading required package: ggplot2</code></pre>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" title="1">sce &lt;-<span class="st"> </span><span class="kw">logNormCounts</span>(sce, <span class="dt">exprs_values=</span><span class="st">&quot;tophat_counts&quot;</span>)</a>
-<a class="sourceLine" id="cb12-2" title="2">sce &lt;-<span class="st"> </span><span class="kw">runPCA</span>(sce, <span class="dt">ncomponents=</span><span class="dv">4</span>)</a>
-<a class="sourceLine" id="cb12-3" title="3">sce &lt;-<span class="st"> </span><span class="kw">runTSNE</span>(sce)</a></code></pre></div>
+<a class="sourceLine" id="cb2-2" title="2">sce &lt;-<span class="st"> </span><span class="kw">ReprocessedAllenData</span>(<span class="dt">assays=</span><span class="st">&quot;tophat_counts&quot;</span>)</a>
+<a class="sourceLine" id="cb2-3" title="3"></a>
+<a class="sourceLine" id="cb2-4" title="4"><span class="kw">library</span>(scater)</a>
+<a class="sourceLine" id="cb2-5" title="5">sce &lt;-<span class="st"> </span><span class="kw">logNormCounts</span>(sce, <span class="dt">exprs_values=</span><span class="st">&quot;tophat_counts&quot;</span>)</a>
+<a class="sourceLine" id="cb2-6" title="6">sce &lt;-<span class="st"> </span><span class="kw">runPCA</span>(sce, <span class="dt">ncomponents=</span><span class="dv">4</span>)</a>
+<a class="sourceLine" id="cb2-7" title="7">sce &lt;-<span class="st"> </span><span class="kw">runTSNE</span>(sce)</a></code></pre></div>
 <div id="create-a-new-s4-class" class="section level2">
 <h2><span class="header-section-number">4.1</span> Create a new S4 class</h2>
 <p>In the chapter <a href="panels.html#panels">Panel classes</a>, we saw how each type of panel is defined as an S4 class, organised in a hierarchy that allows new panel classes to inherit sets of the properties and functionality from parent classes.</p>
@@ -236,25 +238,25 @@ This action imports all the builtin panel class definitions, including the virtu
 <p>The choice of a parent class for the new panel depends on the properties that we want that new panel to have.
 For instance, to create a panel that inherits all the functionality of the <em>Reduced dimension plot</em> panel type, we simply define a new class that extends the <code>RedDimPlot</code> class.
 We call that new class <code>RedDimHexPlot</code>.</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1"><span class="kw">setClass</span>(<span class="st">&quot;RedDimHexPlot&quot;</span>, <span class="dt">contains=</span><span class="st">&quot;RedDimPlot&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="kw">setClass</span>(<span class="st">&quot;RedDimHexPlot&quot;</span>, <span class="dt">contains=</span><span class="st">&quot;RedDimPlot&quot;</span>)</a></code></pre></div>
 </div>
 <div id="add-a-constructor-function" class="section level2">
 <h2><span class="header-section-number">4.2</span> Add a constructor function</h2>
 <p>At this point, it is possible to create instances of the new panel class already.
 To facilitate this, new panels should provide a constructor function - named identically to the class - to accept arbitrary arguments controlling the initialization of new panel instances created by the <code>new</code> function.</p>
 <p>Here, we define a simple constructor function that passes all incoming arguments to the <code>new</code> function <em>as is</em>.</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1">RedDimHexPlot &lt;-<span class="st"> </span><span class="cf">function</span>(...) {</a>
-<a class="sourceLine" id="cb14-2" title="2">    <span class="kw">new</span>(<span class="st">&quot;RedDimHexPlot&quot;</span>, ...)</a>
-<a class="sourceLine" id="cb14-3" title="3">}</a></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1">RedDimHexPlot &lt;-<span class="st"> </span><span class="cf">function</span>(...) {</a>
+<a class="sourceLine" id="cb4-2" title="2">    <span class="kw">new</span>(<span class="st">&quot;RedDimHexPlot&quot;</span>, ...)</a>
+<a class="sourceLine" id="cb4-3" title="3">}</a></code></pre></div>
 <p>At this point, we can already use instances of this new panel class in <em><a href="https://bioconductor.org/packages/3.11/iSEE">iSEE</a></em> apps.</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1">RedDimHexPlot1 &lt;-<span class="st"> </span><span class="kw">RedDimHexPlot</span>()</a>
-<a class="sourceLine" id="cb15-2" title="2">initial &lt;-<span class="st"> </span><span class="kw">list</span>(RedDimHexPlot1)</a>
-<a class="sourceLine" id="cb15-3" title="3">app &lt;-<span class="st"> </span><span class="kw">iSEE</span>(sce, <span class="dt">initial =</span> initial)</a></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1">RedDimHexPlot1 &lt;-<span class="st"> </span><span class="kw">RedDimHexPlot</span>()</a>
+<a class="sourceLine" id="cb5-2" title="2">initial &lt;-<span class="st"> </span><span class="kw">list</span>(RedDimHexPlot1)</a>
+<a class="sourceLine" id="cb5-3" title="3">app &lt;-<span class="st"> </span><span class="kw">iSEE</span>(sce, <span class="dt">initial =</span> initial)</a></code></pre></div>
 <p>However, that would not be very exciting as instances of this new panel class would behave exactly like the those of the <code>RedDimPlot</code> class.</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" title="1">RedDimHexPlot1 &lt;-<span class="st"> </span><span class="kw">RedDimHexPlot</span>()</a>
-<a class="sourceLine" id="cb16-2" title="2">RedDimPlot1 &lt;-<span class="st"> </span><span class="kw">RedDimPlot</span>()</a>
-<a class="sourceLine" id="cb16-3" title="3">initial &lt;-<span class="st"> </span><span class="kw">list</span>(RedDimHexPlot1, RedDimPlot1)</a>
-<a class="sourceLine" id="cb16-4" title="4">app &lt;-<span class="st"> </span><span class="kw">iSEE</span>(sce, <span class="dt">initial =</span> initial)</a></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1">RedDimHexPlot1 &lt;-<span class="st"> </span><span class="kw">RedDimHexPlot</span>()</a>
+<a class="sourceLine" id="cb6-2" title="2">RedDimPlot1 &lt;-<span class="st"> </span><span class="kw">RedDimPlot</span>()</a>
+<a class="sourceLine" id="cb6-3" title="3">initial &lt;-<span class="st"> </span><span class="kw">list</span>(RedDimHexPlot1, RedDimPlot1)</a>
+<a class="sourceLine" id="cb6-4" title="4">app &lt;-<span class="st"> </span><span class="kw">iSEE</span>(sce, <span class="dt">initial =</span> initial)</a></code></pre></div>
 </div>
 <div id="set-the-panel-name-in-the-gui" class="section level2">
 <h2><span class="header-section-number">4.3</span> Set the panel name in the GUI</h2>
@@ -262,7 +264,7 @@ To facilitate this, new panels should provide a constructor function - named ide
 In other words, instances of both classes are indistinguishable from each other in the GUI.</p>
 <p>The name of each panel displayed in the GUI is defined by the <code>.fullName</code> method.
 To clearly distinguish the new panel class in the GUI, we overwrite this method to display a name different from the parent class.</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" title="1"><span class="kw">setMethod</span>(<span class="st">&quot;.fullName&quot;</span>, <span class="st">&quot;RedDimHexPlot&quot;</span>, <span class="cf">function</span>(x) <span class="st">&quot;Reduced dimension hexagonal plot&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1"><span class="kw">setMethod</span>(<span class="st">&quot;.fullName&quot;</span>, <span class="st">&quot;RedDimHexPlot&quot;</span>, <span class="cf">function</span>(x) <span class="st">&quot;Reduced dimension hexagonal plot&quot;</span>)</a></code></pre></div>
 <p>With that, running <code>app</code> again now highlights how panels of the new class now display a different title from the parent class.</p>
 </div>
 <div id="define-the-commands-generating-a-plot-output" class="section level2">
@@ -278,27 +280,26 @@ Using those environment variables, <code>.generateDotPlot</code> can make decisi
 <p>As an example, we overwrite the <code>.generateDotPlot</code> function for the new <code>RedDimHexPlot</code> class to simply show the number of data point in the plotting area as a heatmap dividing the plane into regular hexagons.
 Notably, the function can immediately rely on the <code>plot.data</code> data-frame that is computed by methods defined for the parent class <code>RedDimPlot</code>.
 We also use the precomputed aesthetic <code>labels</code> associated with each column of <code>plot.data</code>, while setting a fixed <code>"Count"</code> label for the <code>fill</code> aesthetic associated with the count of observation in each hexagonal bin.</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" title="1"><span class="kw">setMethod</span>(<span class="st">&quot;.generateDotPlot&quot;</span>, <span class="st">&quot;RedDimHexPlot&quot;</span>, <span class="cf">function</span>(x, labels, envir) {</a>
-<a class="sourceLine" id="cb18-2" title="2">    <span class="kw">print</span>(labels)</a>
-<a class="sourceLine" id="cb18-3" title="3">    <span class="kw">stopifnot</span>(<span class="kw">require</span>(ggplot2))</a>
-<a class="sourceLine" id="cb18-4" title="4">    </a>
-<a class="sourceLine" id="cb18-5" title="5">    plot_cmds &lt;-<span class="st"> </span><span class="kw">list</span>()</a>
-<a class="sourceLine" id="cb18-6" title="6">    plot_cmds[[<span class="st">&quot;ggplot&quot;</span>]] &lt;-<span class="st"> &quot;ggplot() +&quot;</span></a>
-<a class="sourceLine" id="cb18-7" title="7">    </a>
-<a class="sourceLine" id="cb18-8" title="8">    <span class="co"># Adding hexbins to the plot.</span></a>
-<a class="sourceLine" id="cb18-9" title="9">    plot_cmds[[<span class="st">&quot;hex&quot;</span>]] &lt;-<span class="st"> &quot;geom_hex(aes(X, Y), plot.data) +&quot;</span></a>
-<a class="sourceLine" id="cb18-10" title="10">    plot_cmds[[<span class="st">&quot;labs&quot;</span>]] &lt;-<span class="st"> &quot;labs(fill=&#39;Count&#39;) +&quot;</span></a>
-<a class="sourceLine" id="cb18-11" title="11">    plot_cmds[[<span class="st">&quot;labs&quot;</span>]] &lt;-<span class="st"> </span><span class="kw">sprintf</span>(</a>
-<a class="sourceLine" id="cb18-12" title="12">        <span class="st">&quot;labs(x=&#39;%s&#39;, y=&#39;%s&#39;, title=&#39;%s&#39;, fill=&#39;%s&#39;) +&quot;</span>,</a>
-<a class="sourceLine" id="cb18-13" title="13">        labels<span class="op">$</span>X, labels<span class="op">$</span>Y, labels<span class="op">$</span>title, <span class="st">&quot;Count&quot;</span></a>
-<a class="sourceLine" id="cb18-14" title="14">        )</a>
-<a class="sourceLine" id="cb18-15" title="15">    plot_cmds[[<span class="st">&quot;theme_base&quot;</span>]] &lt;-<span class="st"> &quot;theme_bw() +&quot;</span></a>
-<a class="sourceLine" id="cb18-16" title="16">    plot_cmds[[<span class="st">&quot;theme_legend&quot;</span>]] &lt;-<span class="st"> &quot;theme(legend.position = &#39;bottom&#39;)&quot;</span></a>
-<a class="sourceLine" id="cb18-17" title="17">    </a>
-<a class="sourceLine" id="cb18-18" title="18">    gg_plot &lt;-<span class="st"> </span><span class="kw">eval</span>(<span class="kw">parse</span>(<span class="dt">text=</span>plot_cmds), envir)</a>
-<a class="sourceLine" id="cb18-19" title="19">    </a>
-<a class="sourceLine" id="cb18-20" title="20">    <span class="kw">list</span>(<span class="dt">plot=</span>gg_plot, <span class="dt">commands=</span>plot_cmds)</a>
-<a class="sourceLine" id="cb18-21" title="21">})</a></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1"><span class="kw">setMethod</span>(<span class="st">&quot;.generateDotPlot&quot;</span>, <span class="st">&quot;RedDimHexPlot&quot;</span>, <span class="cf">function</span>(x, labels, envir) {</a>
+<a class="sourceLine" id="cb8-2" title="2">    <span class="kw">stopifnot</span>(<span class="kw">require</span>(ggplot2))</a>
+<a class="sourceLine" id="cb8-3" title="3">    </a>
+<a class="sourceLine" id="cb8-4" title="4">    plot_cmds &lt;-<span class="st"> </span><span class="kw">list</span>()</a>
+<a class="sourceLine" id="cb8-5" title="5">    plot_cmds[[<span class="st">&quot;ggplot&quot;</span>]] &lt;-<span class="st"> &quot;ggplot() +&quot;</span></a>
+<a class="sourceLine" id="cb8-6" title="6">    </a>
+<a class="sourceLine" id="cb8-7" title="7">    <span class="co"># Adding hexbins to the plot.</span></a>
+<a class="sourceLine" id="cb8-8" title="8">    plot_cmds[[<span class="st">&quot;hex&quot;</span>]] &lt;-<span class="st"> &quot;geom_hex(aes(X, Y), plot.data) +&quot;</span></a>
+<a class="sourceLine" id="cb8-9" title="9">    plot_cmds[[<span class="st">&quot;labs&quot;</span>]] &lt;-<span class="st"> &quot;labs(fill=&#39;Count&#39;) +&quot;</span></a>
+<a class="sourceLine" id="cb8-10" title="10">    plot_cmds[[<span class="st">&quot;labs&quot;</span>]] &lt;-<span class="st"> </span><span class="kw">sprintf</span>(</a>
+<a class="sourceLine" id="cb8-11" title="11">        <span class="st">&quot;labs(x=&#39;%s&#39;, y=&#39;%s&#39;, title=&#39;%s&#39;, fill=&#39;%s&#39;) +&quot;</span>,</a>
+<a class="sourceLine" id="cb8-12" title="12">        labels<span class="op">$</span>X, labels<span class="op">$</span>Y, labels<span class="op">$</span>title, <span class="st">&quot;Count&quot;</span></a>
+<a class="sourceLine" id="cb8-13" title="13">        )</a>
+<a class="sourceLine" id="cb8-14" title="14">    plot_cmds[[<span class="st">&quot;theme_base&quot;</span>]] &lt;-<span class="st"> &quot;theme_bw() +&quot;</span></a>
+<a class="sourceLine" id="cb8-15" title="15">    plot_cmds[[<span class="st">&quot;theme_legend&quot;</span>]] &lt;-<span class="st"> &quot;theme(legend.position = &#39;bottom&#39;)&quot;</span></a>
+<a class="sourceLine" id="cb8-16" title="16">    </a>
+<a class="sourceLine" id="cb8-17" title="17">    gg_plot &lt;-<span class="st"> </span><span class="kw">eval</span>(<span class="kw">parse</span>(<span class="dt">text=</span>plot_cmds), envir)</a>
+<a class="sourceLine" id="cb8-18" title="18">    </a>
+<a class="sourceLine" id="cb8-19" title="19">    <span class="kw">list</span>(<span class="dt">plot=</span>gg_plot, <span class="dt">commands=</span>plot_cmds)</a>
+<a class="sourceLine" id="cb8-20" title="20">})</a></code></pre></div>
 <p>Running <code>app</code> again highlights how the <code>RedDimHexPlot</code> panel fills each hexagonal bin with a color indicating the number of data points present in the corresponding area in the <code>RedDimPlot</code> panel.</p>
 <!-- TODO:
 second fastest visual result:
