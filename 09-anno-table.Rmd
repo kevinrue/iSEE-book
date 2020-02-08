@@ -1,3 +1,9 @@
+```{r, include=FALSE}
+knitr::opts_chunk$set(message = FALSE, warning = FALSE, error = FALSE, cache = FALSE)
+suppressPackageStartupMessages(require(BiocStyle))
+options(digits = 4)
+```
+
 # Annotated gene list
 
 ## Overview
@@ -30,7 +36,7 @@ We specialize the validity method to check that the `IDColumn` is either a strin
 if the latter, we assume that the ID is stored in the row name.
 We also add some cursory checks for the other parameters.
 
-```{r}
+```{r, results='hide'}
 allowable <- c("ENSEMBL", "SYMBOL", "ENTREZID")
 setValidity2("GeneAnnoTable", function(object) {
     msg <- character(0)

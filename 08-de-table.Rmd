@@ -1,3 +1,9 @@
+```{r, include=FALSE}
+knitr::opts_chunk$set(message = FALSE, warning = FALSE, error = FALSE, cache = FALSE)
+suppressPackageStartupMessages(require(BiocStyle))
+options(digits = 4)
+```
+
 # Dynamic differential expression
 
 ## Overview
@@ -20,7 +26,7 @@ setClass("DGETable", contains="RowTable", slots=c(LogFC="numeric"))
 
 Any new slots should come with validity methods, as shown below.
 
-```{r}
+```{r, results='hide'}
 library(S4Vectors)
 setValidity2("DGETable", function(object) {
     msg <- character(0)

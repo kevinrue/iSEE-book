@@ -1,3 +1,9 @@
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(message = FALSE, warning = FALSE, error = FALSE, cache = FALSE)
+suppressPackageStartupMessages(require(BiocStyle))
+options(digits = 4)
+```
+
 # Dynamic reduced dimensions 
 
 ## Overview
@@ -21,7 +27,7 @@ setClass("DynRedDimPlot", contains="ColumnDotPlot",
 We add a slot specifying the type of dimensionality reduction result and the number of highly variable genes to use. 
 Any new slots should also come with validity methods, as shown below.
 
-```{r}
+```{r, results='hide'}
 library(S4Vectors)
 setValidity2("DynRedDimPlot", function(object) {
     msg <- character(0)

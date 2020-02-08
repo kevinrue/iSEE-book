@@ -1,3 +1,9 @@
+```{r, include=FALSE}
+knitr::opts_chunk$set(message = FALSE, warning = FALSE, error = FALSE, cache = FALSE)
+suppressPackageStartupMessages(require(BiocStyle))
+options(digits = 4)
+```
+
 # Gene ontology table
 
 ## Overview
@@ -31,7 +37,7 @@ setClass("GOTable", contains="Panel",
 
 We also add some checks for these parameters.
 
-```{r}
+```{r, results='hide'}
 allowable <- c("ENSEMBL", "SYMBOL", "ENTREZID")
 setValidity2("GOTable", function(object) {
     msg <- character(0)

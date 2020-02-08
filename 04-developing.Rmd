@@ -1,9 +1,15 @@
+```{r, include=FALSE}
+knitr::opts_chunk$set(message = FALSE, warning = FALSE, error = FALSE, cache = FALSE)
+suppressPackageStartupMessages(require(BiocStyle))
+options(digits = 4)
+```
+
 # Developing new panels {#developing}
 
 First, we need to load the `r Biocpkg("iSEE")` package for this chapter.
 This action imports all the builtin panel class definitions, including the virtual class `Panel` that is the base class for any `r Biocpkg("iSEE")` panel class.
 
-```{r, message=FALSE}
+```{r}
 library(iSEE)
 ```
 
@@ -20,6 +26,7 @@ sce <- runTSNE(sce)
 ```
 
 ```{r, include=FALSE}
+# Checkpoint for subsequent chapters
 saveRDS(sce, "sce.rds")
 ```
 
@@ -105,7 +112,6 @@ We also use the precomputed aesthetic `labels` associated with each column of `p
 
 ```{r}
 setMethod(".generateDotPlot", "RedDimHexPlot", function(x, labels, envir) {
-    print(labels)
     stopifnot(require(ggplot2))
     
     plot_cmds <- list()
