@@ -384,17 +384,17 @@ re-rendering of the GUI, as described in the section
 
 The very first step invokes the internal function
 \texttt{checkColormapCompatibility()}. This function takes the
-\texttt{se} object and the optional \texttt{colormap} argument provided
-to \texttt{iSEE()}, and carries out a number of compatibility checks
-between the two objects. The function collects a character vector of
-incompatibility issues that are displayed - if any - as warning
-notifications in GUI when the app is launched.
+\texttt{se} object and the optional argument \texttt{iSEE(colormap)},
+and carries out a number of compatibility checks between the two
+objects. The function collects a character vector of incompatibility
+issues that are displayed - if any - as warning notifications in GUI
+when the app is launched.
 
 Next, the internal function \texttt{iSEE:::.prepare\_SE()} calls the
 method \texttt{.cacheCommonInfo()} on each type of panel present
-provided to \texttt{iSEE(initial)} and \texttt{iSEE(extra)}, to
-precompute and cache information relevant to all the types of panels
-that will be available in that app instance.
+provided to the arguments \texttt{iSEE(initial)} and
+\texttt{iSEE(extra)}, to precompute and cache information relevant to
+all the types of panels that will be available in that app instance.
 
 Shortly after, the internal function
 \texttt{iSEE:::.setup\_initial\_state()} calls the method
