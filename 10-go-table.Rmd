@@ -123,7 +123,7 @@ To avoid confusion, we can hide all selection parameter UI elements by specializ
 
 ```{r}
 setMethod(".hideInterface", "GOTable", function(x, field) {
-    if (field %in% "SelectBoxOpen") {
+    if (field %in% "SelectionBoxOpen") {
         TRUE
     } else {
         callNextMethod()
@@ -333,7 +333,7 @@ Setting up the iSEE instance is as easy as:
 
 ```{r}
 got <- new("GOTable", PanelWidth=8L)
-rst <- RowStatTable(SelectRowSource="GOTable1")
+rst <- RowDataTable(RowSelectionSource="GOTable1")
 app <- iSEE(sce, initial=list(got, rst))
 ```
 

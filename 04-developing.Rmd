@@ -36,24 +36,24 @@ In the chapter [Panel classes](#panels), we saw how each type of panel is define
 
 Then, developing a new panel type starts with the creation of a new class that inherits from the `Panel` class.
 
-While it is possible to create a new panel class that directly inherits from the top-most virtual `Panel` class, this is the most advanced use case that we will describe in a later section. <!-- TODO: cross-reference when done. -->
+While it is possible to create a new panel class that directly inherits from the top-most virtual `Panel` class, this is the most advanced use case that we will describe in later chapters. <!-- TODO: cross-reference when done. -->
 
 Instead, new concrete panels classes can be rapidly derived from other concrete parent panel classes, using the inheritance relationships between classes to reuse properties and functionality defined in all of the parent classes.
 
-The choice of a parent class for the new panel depends on the properties that we want that new panel to have.
-For instance, to create a panel that inherits all the functionality of the _Reduced dimension plot_ panel type, we simply define a new class that extends the `RedDimPlot` class.
-We call that new class `RedDimHexPlot`.
+The choice of a parent class depends on the properties that we want that new panel class to start with.
+For instance, to create a panel that inherits all the functionality of the `ReducedDimensionPlot` panel type, we simply define a new class that extends that class.
+For example in this chapter, we call that new class `RedDimHexPlot`.
 
 ```{r}
-setClass("RedDimHexPlot", contains="RedDimPlot")
+setClass("RedDimHexPlot", contains="ReducedDimensionPlot")
 ```
 
 ## Add a constructor function
 
-At this point, it is possible to create instances of the new panel class already.
-To facilitate this, new panels should provide a constructor function - named identically to the class - to accept arbitrary arguments controlling the initialization of new panel instances created by the `new` function.
+At this point, it is already possible to create instances of the new panel class.
+To facilitate this, new panels should provide a constructor function - best practice is to name it identically to the class - to accept arbitrary arguments controlling the initialization of new panel instances created by the function `new()`.
 
-Here, we define a simple constructor function that passes all incoming arguments to the `new` function _as is_.
+Here, we define a simple constructor function that passes all incoming arguments _as is_ to `new()`.
 
 ```{r}
 RedDimHexPlot <- function(...) {
@@ -69,46 +69,47 @@ initial <- list(RedDimHexPlot1)
 app <- iSEE(sce, initial = initial)
 ```
 
-However, that would not be very exciting as instances of this new panel class would behave exactly like the those of the `RedDimPlot` class.
+However, that would not be very exciting as instances of this new panel class would behave exactly like the those of the parent `ReducedDimensionPlot` class itself.
+To illustrate this, the following code chunk initializes an app displaying an instance of the new `RedDimHexPlot` and its parent `ReducedDimensionPlot` side by side.
 
 ```{r}
 RedDimHexPlot1 <- RedDimHexPlot()
-RedDimPlot1 <- RedDimPlot()
-initial <- list(RedDimHexPlot1, RedDimPlot1)
+ReducedDimensionPlot1 <- ReducedDimensionPlot()
+initial <- list(RedDimHexPlot1, ReducedDimensionPlot1)
 app <- iSEE(sce, initial = initial)
 ```
 
 ## Set the panel name in the GUI
 
 The panel class that we created so far also inherited the name of the parent panel class.
-In other words, instances of both classes are indistinguishable from each other in the GUI.
+In other words, instances of both classes are entirely indistinguishable from each other in the GUI.
 
-The name of each panel displayed in the GUI is defined by the `.fullName` method.
+The name of each panel displayed in the GUI is defined by the method `.fullName()`.
 To clearly distinguish the new panel class in the GUI, we overwrite this method to display a name different from the parent class.
 
 ```{r}
 setMethod(".fullName", "RedDimHexPlot", function(x) "Reduced dimension hexagonal plot")
 ```
 
-With that, running `app` again now highlights how panels of the new class now display a different title from the parent class.
+With that, launching `app` again now highlights how panels of the new class now display a different title from the parent class.
 
 ## Define the commands generating a plot output
 
 Importantly, the API separates the generation of commands processing data from `sce` into a data-frame, from the generation of commands producing a `ggplot` object using the processed data-frame.
-If a new `DotPlot` panel class is meant to process data in the same way as its parent panel, only to display in a different way, it is then possible to overwrite only the `.generateDotPlot` method.
+If a new panel class derived from `DotPlot` is meant to process data in the same way as its parent panel, only to display in a different way, it is then possible to overwrite only the method `.generateDotPlot()`.
 Meanwhile, the data preprocessing will be implicitly handled by the other API methods inherited from the parent class.
 
-Importantly, the `.generateDotPlot` method requires two key arguments: `labels` provides the plot labels for each of the aesthetics in the plot data, and `envir` provides the environment in which the plotting commands are to be evaluated to produce the `ggplot` object.
+Importantly, the method `.generateDotPlot()` requires two key arguments: `labels` provides the plot labels for each of the aesthetics in the plot data, and `envir` provides the environment in which the plotting commands are to be evaluated to produce the `ggplot` object.
 
-In particular, `.generateDotPlot` can rely on certain environment variables promised by the contract.
-Above all, those include `plot.data`, the data-frame that contains one row per data point to display.
-Using those environment variables, `.generateDotPlot` can make decisions altering the plotting commands and the resulting `ggplot` object.
+In particular, the contract offered by iSEE to panel developers promises the presence of certain variables in `envir`, that `.generateDotPlot()` can rely on.
+Using those environment variables, `.generateDotPlot()` can make decisions altering the plotting commands and the resulting `ggplot` object.
+For instance, the most important environment variable is `plot.data`, the data-frame that contains one row per data point to display in `DotPlot` panels.
 
-We invite readers to refer to the **"Generating the ggplot object"** section of `help(".generateDotPlot")` for more information.
+Readers should refer to the **"Generating the ggplot object"** section of `help(".generateDotPlot")` for more information.
 
-As an example, we overwrite the `.generateDotPlot` function for the new `RedDimHexPlot` class to simply show the number of data point in the plotting area as a heatmap dividing the plane into regular hexagons.
-Notably, the function can immediately rely on the `plot.data` data-frame that is computed by methods defined for the parent class `RedDimPlot`.
-We also use the precomputed aesthetic `labels` associated with each column of `plot.data`, while setting a fixed `"Count"` label for the `fill` aesthetic associated with the count of observation in each hexagonal bin.
+As an example, we overwrite the method `.generateDotPlot()` for the new class `RedDimHexPlot` to simply show the number of data points in the plotting area as a heatmap dividing the plane into regular hexagons.
+Notably, the contract described above guarantees that the function can immediately rely on the `plot.data` data-frame that is computed by methods defined for the parent class `ReducedDimensionPlot`.
+We also use the precomputed aesthetic `labels` associated with each column of `plot.data`, while setting a fixed label `"Count"` for the `fill` aesthetic associated with the count of observation in each hexagonal bin.
 
 ```{r}
 setMethod(".generateDotPlot", "RedDimHexPlot", function(x, labels, envir) {
@@ -133,7 +134,7 @@ setMethod(".generateDotPlot", "RedDimHexPlot", function(x, labels, envir) {
 })
 ```
 
-Running `app` again highlights how the `RedDimHexPlot` panel fills each hexagonal bin with a color indicating the number of data points present in the corresponding area in the `RedDimPlot` panel.
+Running `app` again highlights how the `RedDimHexPlot` panel fills each hexagonal bin with a color indicating the number of data points present in the corresponding area in the `ReducedDimensionPlot` panel.
 
 <!-- TODO:
 second fastest visual result:

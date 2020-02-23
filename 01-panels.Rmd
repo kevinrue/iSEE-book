@@ -2,54 +2,56 @@
 
 ## Overview
 
-The types of panels available to compose an `r Biocpkg("iSEE")` app are defined as a hierarchy of S4 classes.
+The types of builtin panels available to compose an `r Biocpkg("iSEE")` app are defined as a hierarchy of S4 classes.
 
 <!-- TODO Replace the bullet list below by a figure, like a filesystem tree. -->
 
-- `Panel`<sup>*</sup>
-  - `DotPlot`<sup>*</sup>
-    - `ColumnDotPlot`<sup>*</sup>
-      - `RedDimPlot`
-      - `ColDataPlot`
-      - `FeatAssayPlot`
-    - `RowDotPlot`<sup>*</sup>
-      - `RowDataPlot`
-      - `SampAssayPlot`
-  - `Table`<sup>*</sup>
-    - `RowTable`<sup>*</sup>
-      - `RowStatTable`
-    - `ColumnTable`<sup>*</sup>
-      - `ColStatTable`
-  - `HeatMapPlot`
+- `Panel` <i class="fa fa-eye-slash"></i>
+    - `DotPlot` <i class="fa fa-eye-slash"></i>
+        - `ColumnDotPlot` <i class="fa fa-eye-slash"></i>
+            - `ReducedDimensionPlot`
+            - `ColumnDataPlot`
+            - `FeatureAssayPlot`
+        - `RowDotPlot` <i class="fa fa-eye-slash"></i>
+            - `RowDataPlot`
+            - `SampleAssayPlot`
+    - `Table` <i class="fa fa-eye-slash"></i>
+        - `RowTable` <i class="fa fa-eye-slash"></i>
+            - `RowDataTable`
+        - `ColumnTable` <i class="fa fa-eye-slash"></i>
+            - `ColDataTable`
+    - `ComplexHeatmapPlot`
 
-Some of those classes are "virtual" (indicated by <sup>*</sup>), meaning that they cannot be directly instanciated as panels in the GUI.
+Some of those classes are "virtual" (indicated by <i class="fa fa-eye-slash"></i>), meaning that they cannot be directly instanciated as panels in the GUI.
 Instead, virtual panel classes define families of panels that share groups of properties.
+As such, virtual classes are meant to be used as the parent of concrete classes that share the associated properties.
 
-Virtual classes are meant to be used as the parent of one or more concrete classes.
-In contrast, concrete classes must define fully-functional panels that can be embedded in a GUI, interact with other panels, receive and process data, and generate an output such as a plot or a table, accompanied by a code chunk to display in the code tracker for reproducibility.
+In contrast, concrete classes must define fully-functional panels that can be embedded in a GUI, interact with other panels, receive and process data, and generate an output such as a plot or a table, accompanied by the associated R code to display in the code tracker for reproducibility.
 
 ## The Panel class
 
 The top-most class is called `Panel`.
 It is a virtual class that defines the core properties common to any panel - existing or future - that may be displayed in the interface.
 
-Refer to `help("Panel-class")` for more information about the slots and methods provided by this core class.
+Refer to `help("Panel-class")` for more information about the slots and methods provided by this class.
 
 ## The DotPlot and Table panel families
 
-The `Panel` virtual class is directly derived into two major virtual sub-classes:
+The virtual class `Panel` is directly derived into two major virtual sub-classes:
 
 - `DotPlot`
 - `Table`
 
 Those classes introduce properties that are specific to distinct subsets of panel types.
 
-The `DotPlot` class introduces parameters specific to panels where the output is a `ggplot` object and each row in the data-frame is represented as a point in a plot.
+The class `DotPlot` introduces parameters specific to panels where the output is a `ggplot` object and each row in the data-frame is represented as a point in a plot.
+Refer to `help("DotPlot-class")` for more information.
 
-The `Table` class introduces parameters specific to panels where the main output is a data-frame directly displayed as a table in the GUI.
+The class `Table` introduces parameters specific to panels where the main output is a data-frame directly displayed as a table in the GUI.
+Refer to `help("Table-class")` for more information.
 
-In addition, the `HeatMapPlot` class defines a special concrete panel class that directly extends the `Panel` class, as it introduces a set of parameters distinct from both the `DotPlot` and `Table` panel families.
-This panel type is described in further details in a separate section [below](#heatmapplot-class).
+As a special case, the class `ComplexHeatmapPlot` defines a concrete panel class that directly extends the class `Panel`, as it introduces a set of parameters distinct from both the `DotPlot` and `Table` panel families.
+This panel class is described in further details in the section [The ComplexHeatmapPlot panel class](#complexheatmapplot-class).
 
 <!-- TODO: properties introduced by the DotPlot class -->
 
@@ -63,17 +65,17 @@ This panel type is described in further details in a separate section [below](#h
 
 ## Built-in ColumnDotPlot panel classes
 
-<!-- TODO: properties introduced by the RedDimPlot class -->
+<!-- TODO: properties introduced by the ReducedDimensionPlot class -->
 
-<!-- TODO: properties introduced by the ColDataPlot class -->
+<!-- TODO: properties introduced by the ColumnDataPlot class -->
 
-<!-- TODO: properties introduced by the FeatAssayPlot class -->
+<!-- TODO: properties introduced by the FeatureAssayPlot class -->
 
 ## Built-in RowDotPlot panel classes
 
 <!-- TODO: properties introduced by the RowDataPlot class -->
 
-<!-- TODO: properties introduced by the SampAssayPlot class -->
+<!-- TODO: properties introduced by the SampleAssayPlot class -->
 
 ## The ColumnTable and RowTable panel families
 
@@ -83,14 +85,15 @@ This panel type is described in further details in a separate section [below](#h
 
 ## Built-in ColumnTable panel classes
 
-<!-- TODO: properties introduced by the RowStatTable class -->
+<!-- TODO: properties introduced by the RowDataTable class -->
 
 ## Built-in RowTable panel classes
 
-<!-- TODO: properties introduced by the ColStatTable class -->
+<!-- TODO: properties introduced by the ColDataTable class -->
 
-## The HeatMapPlot panel class {#heatmapplot-class}
+## The ComplexHeatmapPlot panel class {#complexheatmapplot-class}
 
-This type of panel introduces parameters specific to panels where the output is a heat map, with each row representing a feature and each column representing a sample in the `se` object.
+This type of panel introduces parameters specific to panels where the output is a `Heatmap` object from the `r Biocpkg("ComplexHeatmap")` package.
+In this panel, each row represents a feature and each column represents a sample in the `se` object.
 
-<!-- TODO: properties introduced by the HeatMapPlot class -->
+<!-- TODO: properties introduced by the ComplexHeatmapPlot class -->

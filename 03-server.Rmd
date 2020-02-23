@@ -35,38 +35,41 @@ Some examples:
 
 ## The app memory {#memory}
 
-The app `memory` is a list of instances created from available panel classes, which defines the order in which individual panels are displayed in the GUI.
+The app `memory` is a list of instances created from available panel classes and currently visible in the GUI.
+The order of panel instances in `memory` directly reflects their order in the GUI.
 
 ## Initialization of the app server
 
 The app server is initialized as soon as a valid `se` object is provided.
-This can be either in the call to `iSEE(se)` or using the Shiny file upload button in apps that were launched without providing the `se` arguments, e.g., `iSEE()`.
+This can be either in the call to `iSEE(se)` or using other mechanisms of data upload at runtime within the app (e.g., `fileInput` UI widgets when `iSEE()` is called without providing the `se` argument).
 
-The `initialize_server` function takes the `se` object and the list holding reactive values used to trigger re-rendering of the GUI, as described [above](#robjects).
+The internal function `iSEE:::.initialize_server()` takes the `se` object and the list holding reactive values used to trigger re-rendering of the GUI, as described in the section [Reactive objects](#robjects).
 
-The very first step invokes the function `.sanitize_SE_input` on the `se` object.
-This function coerces the `se` to `SingleCellExperiment`, flattens nested DataFrames, adds row and column names, and removes other non-atomic fields.
-In addition, it also sanitizes the `SingleCellExperiment` object by moving internal fields into the column- or row-level metadata, making them visible in the _Column statistics table_ and _Row statistics table_ panels, respectively. The function returns both the sanitized `se` object that will be used by the app, and the list of R commands that will be displayed in the code tracker for users.
-
-Next, the server invokes the `checkColormapCompatibility` function.
-This function takes the `se` object and the optioanl `colormap` provided to `iSEE()`, and carries out a number of compatibility checks between the two objects.
-The function collects a character vector of issue messages that are displayed - if any - as warning messages in GUI during initialization.
+The very first step invokes the internal function `checkColormapCompatibility()`.
+This function takes the `se` object and the optioanl `colormap` argument provided to `iSEE()`, and carries out a number of compatibility checks between the two objects.
+The function collects a character vector of incompatibility issues that are displayed - if any - as warning notifications in GUI when the app is launched.
 
 <!-- TODO: something about setting up memory, once the current TEST code is replaced. -->
 
-Next, the `.cacheCommonInfo` and `.refineParameters` are successively invoked on each panel instance initialized in the app memory.
-As described in a separate section [above](#panel-api), the first function precomputes and caches information specific to the `se` object and frequently used throughout the runtime of the app.
-The second function ensures that each panel instance is initialized with valid parameters; it replaces any invalid parameters with sensible values for a given `se` object.
+Next, the internal function `iSEE:::.prepare_SE()` calls the method `.cacheCommonInfo()` on each type of panel present provided to `iSEE(initial)` and `iSEE(extra)`, to precompute and cache information relevant to all the types of panels that will be available in that app instance.
+
+Shortly after, the internal function `iSEE:::.setup_initial_state()` calls the method `.refineParameters` on each panel instance provided to `iSEE(initial)`, to ensure that all the panels present in the GUI when the app is launched are initialized with valid parameters; any invalid parameter is replaced with sensible values for the given `se` object.
+
+<!-- TODO: something about .define_reservoir -->
 
 <!-- TODO: something, once we deal with user-supplied panel IDs -->
 
-Next, persistent (non-reactive) objects are initialized:
+The internal function `iSEE:::.create_persistent_objects()` executes the initialization of persistent (non-reactive) objects:
 
-- the app `memory` (see this [section](#memory))
-- the count of panels of each type, used to assign increasing ID to new panel instances
-- the list of commands to display in the code tracker for each panel instance
-- the list of data point coordinates selectable in each panel instance^[Data points downsampled for rendering speed performance remain selectable, even though they are not visible in the plot.]
-- a list of miscellaneous cached information^[The plot that contain the legend keys of _Heatmap_ panels is currently cached as miscellaneous information retrieved separately when rendering the GUI.]
+- the app `memory` (see the section [The app memory](#memory))
+- the app `reservoir`, which stores one instance of panel type available for this app instance
+- the app `counter` is used to track the number of panels previously created for each type, and to assign an increasing identifier to new panel instances
+- the app `commands` stores the list of code chunks to display in the code tracker, to reproduce each panel output
+- the app `contents` stores the list of data point coordinates selectable in each panel instance^[Data points downsampled for rendering speed performance remain selectable, even though they are not visible in the plot.]
+<!-- TODO: something about varname -->
+<!-- TODO: something about aesthetics_links -->
+<!-- TODO: something about selection_links -->
+- the identifier of the panel under the control of speech recognition
 
 <!-- TODO: something about rObjects -->
 

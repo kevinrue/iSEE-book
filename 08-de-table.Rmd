@@ -42,7 +42,7 @@ setValidity2("DGETable", function(object) {
 ```
 
 It is also worthwhile specializing the `initialize()` method to provide a default for new parameters.
-We hard-code the `SelectColType` setting as we want to obtain all multiple selections from the transmitting panel,
+We hard-code the `ColumnSelectionType` setting as we want to obtain all multiple selections from the transmitting panel,
 in order to be able to perform pairwise DE analyses between the various active and saved selections.
 (By comparison, the default of `"Active"` will only transmit the current active selection.)
 
@@ -50,7 +50,7 @@ in order to be able to perform pairwise DE analyses between the various active a
 setMethod("initialize", "DGETable", 
     function(.Object, LogFC=0, ...) 
 {
-    callNextMethod(.Object, LogFC=LogFC, SelectColType="Union", ...)
+    callNextMethod(.Object, LogFC=LogFC, ColumnSelectionType="Union", ...)
 })
 ```
 
@@ -150,14 +150,14 @@ while the useful column selection parameters are visible.
     
 We do so by specializing the `.hideInterface()` method, 
 which returns `TRUE` to indicate that a particular interface element should be hidden.
-We do not "un-hide" `SelectColType` and `SelectColSaved` here;
+We do not "un-hide" `ColumnSelectionType` and `ColumnSelectionSaved` here;
 our tests are always performed between the active versus saved selection, so there is no effect from choosing the selection type.
 
 ```{r}
 setMethod(".hideInterface", "DGETable", function(x, field) {
-    if (field %in% c("SelectRowSource", "SelectRowType", "SelectRowSaved")) {
+    if (field %in% c("RowSelectionSource", "RowSelectionType", "RowSelectionSaved")) {
         TRUE
-    } else if (field %in% "SelectColSource") {
+    } else if (field %in% "ColumnSelectionSource") {
         FALSE
     } else {
         callNextMethod()
@@ -166,7 +166,7 @@ setMethod(".hideInterface", "DGETable", function(x, field) {
 ```
 
 A more advanced version of this panel class might consider responding to a row selection by only performing the DE analysis on the selected features.
-In such cases, we would not need to hide `SelectRowSource`, though we will leave that as an exercise for the curious.
+In such cases, we would not need to hide `RowSelectionSource`, though we will leave that as an exercise for the curious.
 
 ## In action
 
@@ -181,8 +181,8 @@ The plan is to create a (fixed) reduced dimension plot that will transmit to our
 Setting up the iSEE instance is as easy as:
 
 ```{r}
-rdp <- RedDimPlot(PanelId=1L, SelectBoxOpen=TRUE)
-dget <- new("DGETable", SelectColSource="RedDimPlot1", PanelWidth=8L)
+rdp <- ReducedDimensionPlot(PanelId=1L, SelectionBoxOpen=TRUE)
+dget <- new("DGETable", ColumnSelectionSource="ReducedDimensionPlot1", PanelWidth=8L)
 app <- iSEE(sce, initial=list(rdp, dget))
 ```
 

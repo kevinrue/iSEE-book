@@ -3,12 +3,29 @@
 # - https://bookdown.org/yihui/bookdown/build-the-book.html#build-the-book
 
 language: r
+r: bioc-devel
+os: linux
 cache: packages
 pandoc_version: 1.19.2.1
 
+warnings_are_errors: false
+
 env:
-  global:
-    secure: lT3Wyzb8ouAV2hxQ4SJEfFi1k9nkQiKN3jNAM3c9SQKy1d2KTOTdN2lXr/ek7mqwqPgNBvMEhgwGFxMTuZ7OSyQWvGxDeTnH+emc6TCz1GTXGE3jhir3qCZwfxrMFOrMmnVdT+ozzFVRhg23MeAq0lcpY2UZsj2X4vNDvbVMjBEDtXBXASyLS67GdpXsCrpK9UrVRowTMWRn8uzmEte25EKwKP3rLKfi69Kqkcd/nMy+HaIeP+tm8jD0NLwgbigqSij2TVwBlQf6kwHa3eeCbdqDcZcoZJI91sfc5AZ6s0hfwFSET93cbbM4/eClVBc2b+RPNiv3C8ZBXN/1Zcyunj3ClNoyhfG0Ip+v4tV+VohSbZ43yTRluRZH5pSWPktka9yojTNabrSIQu1lKrYazO0DPNDDujKkc9AAbUtNneZblcVs4W4hr4kjD5hMEMtF4xKu+728lQ9RxevMvXE+382pQiWy/g656ybtildwvfUZksmiNt0m7ip1jTb2AtNQvX0/NaGGCHNCWJGMjQEucTogLS5s434e9rruehC4MLSnfAgKNWOz0PhI1m8wkMa70l4dBCYCpMeZuEZdLDN+m3MeapOI+TVSOwq5olOcN+bVXybceRTvr3josNNZShSGi1Yac3IFMghfFI3J/s69maA8pzfvytXFqnHQzU6YE+I=
+  - R_REMOTES_UPGRADE="always"
+
+r_packages:
+  - BiocManager
+
+before_install:
+  - mkdir -p ~/.R
+  - echo -e 'MAKEFLAGS = -j2' > ~/.R/Makevars
+  - echo 'options(Ncpus = 2)' > ~/.Rprofile
+  - Rscript -e 'install.packages("devtools")'
+  - Rscript -e 'devtools::install(dependencies=TRUE)'
+  - Rscript -e 'BiocManager::install("Rtsne")'
+
+r_build_args: "--no-manual --no-resave-data"
+r_check_args: "--no-build-vignettes --no-manual --timings"
 
 before_script:
   - chmod +x ./_build.sh

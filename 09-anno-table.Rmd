@@ -16,13 +16,13 @@ We demonstrate by showing how we can dynamically look up annotation for each gen
 ## Class basics 
 
 First, we define the basics of our new `Panel` class.
-Our new class will be showing the gene-level metadata, so we inherit from the `RowStatTable` class that does exactly this.
+Our new class will be showing the gene-level metadata, so we inherit from the `RowDataTable` class that does exactly this.
 We add some slots specifying which column of the table contains our gene IDs, the type of ID and the organism database to use.
 
 ```{r, echo=FALSE}
 library(iSEE)
 library(S4Vectors)
-setClass("GeneAnnoTable", contains="RowStatTable",
+setClass("GeneAnnoTable", contains="RowDataTable",
     slots=c(
         IDColumn="character_OR_NULL", 
         IDType="character",
@@ -93,7 +93,7 @@ note the prefixing by the panel name to ensure that output element IDs from diff
 setMethod(".defineOutput", "GeneAnnoTable", function(x, ...) {
     panel_name <- .getEncodedName(x)
     tagList(
-        callNextMethod(), # Re-using RowStatTable's definition.
+        callNextMethod(), # Re-using RowDataTable's definition.
         uiOutput(paste0(panel_name, "_annotation")),
         hr()
     )
@@ -160,7 +160,7 @@ We add a series of protective measures to avoid the application crashing due to 
 
 ```{r}
 setMethod(".renderOutput", "GeneAnnoTable", function(x, se, ..., output, pObjects, rObjects) {
-    callNextMethod() # Re-using RowStatTable's output rendering.
+    callNextMethod() # Re-using RowDataTable's output rendering.
 
     panel_name <- .getEncodedName(x)
     output[[paste0(panel_name, "_annotation")]] <- renderUI({

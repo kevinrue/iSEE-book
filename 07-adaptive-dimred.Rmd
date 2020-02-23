@@ -20,7 +20,7 @@ including interface elements and observers to handle multiple selections and res
 
 ```{r, echo=FALSE}
 library(iSEE)
-setClass("DynRedDimPlot", contains="ColumnDotPlot",
+setClass("DynReducedDimensionPlot", contains="ColumnDotPlot",
     slots=c(NGenes="integer", Type="character"))
 ```
 
@@ -29,7 +29,7 @@ Any new slots should also come with validity methods, as shown below.
 
 ```{r, results='hide'}
 library(S4Vectors)
-setValidity2("DynRedDimPlot", function(object) {
+setValidity2("DynReducedDimensionPlot", function(object) {
     msg <- character(0)
 
     if (length(n <- object[["NGenes"]])!=1L || n < 1L) {
@@ -51,7 +51,7 @@ setValidity2("DynRedDimPlot", function(object) {
 It is also worthwhile specializing the `initialize()` method to provide a default for new parameters:
 
 ```{r}
-setMethod("initialize", "DynRedDimPlot", 
+setMethod("initialize", "DynReducedDimensionPlot", 
     function(.Object, Type="PCA", NGenes=1000L, ...) 
 {
     callNextMethod(.Object, Type=Type, NGenes=NGenes, ...)
@@ -64,9 +64,9 @@ The most basic requirement is to define some methods that describe our new panel
 This includes defining the full name and desired default color for display purposes:
 
 ```{r}
-setMethod(".fullName", "DynRedDimPlot", function(x) "Dynamic reduced dimension plot")
+setMethod(".fullName", "DynReducedDimensionPlot", function(x) "Dynamic reduced dimension plot")
 
-setMethod(".panelColor", "DynRedDimPlot", function(x) "#0F0F0F")
+setMethod(".panelColor", "DynReducedDimensionPlot", function(x) "#0F0F0F")
 ```
 
 We also add interface elements to change the result type and the number of genes.
@@ -74,7 +74,7 @@ This is most easily done by specializing the `.defineDataInterface` method:
 
 ```{r}
 library(shiny)
-setMethod(".defineDataInterface", "DynRedDimPlot", function(x, se, select_info) {
+setMethod(".defineDataInterface", "DynReducedDimensionPlot", function(x, se, select_info) {
     plot_name <- .getEncodedName(x)
 
     list(
@@ -86,9 +86,9 @@ setMethod(".defineDataInterface", "DynRedDimPlot", function(x, se, select_info) 
 })
 ```
 
-We call `.getEncodedName()` to obtain a unique name for the current instance of our panel, e.g., `DynRedDimPlot1`.
+We call `.getEncodedName()` to obtain a unique name for the current instance of our panel, e.g., `DynReducedDimensionPlot1`.
 We then `paste0` the name of our panel to the name of any parameter to ensure that the ID is unique to this instance of our panel;
-otherwise, multiple `DynRedDimPlot`s would override each other.
+otherwise, multiple `DynReducedDimensionPlot`s would override each other.
 One can imagine this as a poor man's Shiny module.
 
 ## Creating the observers
@@ -98,7 +98,7 @@ Note the use of `callNextMethod()` to ensure that observers of the parent class 
 this automatically ensures that we can respond to changes in parameters provided by `ColumnDotPlot`.
 
 ```{r}
-setMethod(".createObservers", "DynRedDimPlot", 
+setMethod(".createObservers", "DynReducedDimensionPlot", 
     function(x, se, input, session, pObjects, rObjects) 
 {
     callNextMethod()
@@ -125,7 +125,7 @@ It should also return a character vector of R commands describing how that `plot
 The easiest way to do this is to create a character vector of commands and call `eval(parse(text=...), envir=envir)` to evaluate them within `envir`.
 
 ```{r}
-setMethod(".generateDotPlotData", "DynRedDimPlot", function(x, envir) {
+setMethod(".generateDotPlotData", "DynReducedDimensionPlot", function(x, envir) {
     commands <- character(0)
 
     if (!exists("col_selected", envir=envir, inherits=FALSE)) {
@@ -172,7 +172,7 @@ Doing so is the only sensible course of action as the reduced dimension coordina
 having old brushes or lassos hanging around would be of no benefit at best, and be misleading at worst.
 
 ```{r}
-setMethod(".multiSelectionInvalidated", "DynRedDimPlot", function(x) TRUE)
+setMethod(".multiSelectionInvalidated", "DynReducedDimensionPlot", function(x) TRUE)
 ```
 
 ## In action
@@ -188,9 +188,9 @@ The plan is to create a (fixed) reduced dimension plot that will transmit a mult
 This is as easy as:
 
 ```{r}
-rdp <- RedDimPlot(PanelId=1L)
-drdp <- new("DynRedDimPlot", SelectColSource="RedDimPlot1")
+rdp <- ReducedDimensionPlot(PanelId=1L)
+drdp <- new("DynReducedDimensionPlot", ColumnSelectionSource="ReducedDimensionPlot1")
 app <- iSEE(sce, initial=list(rdp, drdp))
 ```
 
-Brushing at any location in `RedDimPlot1` will then trigger dynamically recompution of results in our `DynRedDimPlot`.
+Brushing at any location in `ReducedDimensionPlot1` will then trigger dynamically recompution of results in our `DynReducedDimensionPlot`.
