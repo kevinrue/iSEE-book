@@ -24,7 +24,7 @@
 <meta name="author" content="Kevin Rue-Albrecht, Federico Marini, Charlotte Soneson, and Aaron Lun" />
 
 
-<meta name="date" content="2020-02-08" />
+<meta name="date" content="2020-02-23" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -53,66 +53,41 @@
 
 
 <style type="text/css">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
-}
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(title);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-    color: #aaaaaa;
-  }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
-div.sourceCode
-  {  }
-@media screen {
-a.sourceLine::before { text-decoration: underline; }
-}
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #7d9029; } /* Attribute */
-code span.bn { color: #40a070; } /* BaseN */
-code span.bu { } /* BuiltIn */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4070a0; } /* Char */
-code span.cn { color: #880000; } /* Constant */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #40a070; } /* Float */
-code span.fu { color: #06287e; } /* Function */
-code span.im { } /* Import */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.op { color: #666666; } /* Operator */
-code span.ot { color: #007020; } /* Other */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.st { color: #4070a0; } /* String */
-code span.va { color: #19177c; } /* Variable */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
 </style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
@@ -142,7 +117,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="1.7" data-path="panels.html"><a href="panels.html#the-columntable-and-rowtable-panel-families"><i class="fa fa-check"></i><b>1.7</b> The ColumnTable and RowTable panel families</a></li>
 <li class="chapter" data-level="1.8" data-path="panels.html"><a href="panels.html#built-in-columntable-panel-classes"><i class="fa fa-check"></i><b>1.8</b> Built-in ColumnTable panel classes</a></li>
 <li class="chapter" data-level="1.9" data-path="panels.html"><a href="panels.html#built-in-rowtable-panel-classes"><i class="fa fa-check"></i><b>1.9</b> Built-in RowTable panel classes</a></li>
-<li class="chapter" data-level="1.10" data-path="panels.html"><a href="panels.html#heatmapplot-class"><i class="fa fa-check"></i><b>1.10</b> The HeatMapPlot panel class</a></li>
+<li class="chapter" data-level="1.10" data-path="panels.html"><a href="panels.html#complexheatmapplot-class"><i class="fa fa-check"></i><b>1.10</b> The ComplexHeatmapPlot panel class</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="api.html"><a href="api.html"><i class="fa fa-check"></i><b>2</b> The panel API</a><ul>
 <li class="chapter" data-level="2.1" data-path="api.html"><a href="api.html#cachecommoninfo"><i class="fa fa-check"></i><b>2.1</b> .cacheCommonInfo</a></li>
@@ -220,263 +195,232 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h1><span class="header-section-number">Chapter 8</span> Gene ontology table</h1>
 <div id="overview-4" class="section level2">
 <h2><span class="header-section-number">8.1</span> Overview</h2>
-<p>Here, we will construct a table of GO terms where selection of a row in the table
-causes transmission of a multiple selection of gene names.
-The aim is to enable us to transmit multiple row selections to other panels based on their membership of a gene set.
-This is a fairly involved example of creating a <code>Panel</code> subclass as we cannot easily inherit from an existing subclass;
-rather, we need to provide all the methods ourselves.</p>
+<p>Here, we will construct a table of GO terms where selection of a row in the table causes transmission of a multiple selection of gene names. The aim is to enable us to transmit multiple row selections to other panels based on their membership of a gene set. This is a fairly involved example of creating a <code>Panel</code> subclass as we cannot easily inherit from an existing subclass; rather, we need to provide all the methods ourselves.</p>
 </div>
 <div id="class-basics-3" class="section level2">
 <h2><span class="header-section-number">8.2</span> Class basics</h2>
-<p>First, we define the basics of our new <code>GOTable</code> class.
-This inherits from the virtual base <code>Panel</code> class as it cannot meet any of the contractual requirements of the subclasses,
-what with the <code>DataTable</code> selection event triggering a multiple selection rather than a single selection.
-We add some slots to specify the feature ID type and the organism of interest as well as for <code>DataTable</code> parameters.</p>
+<p>First, we define the basics of our new <code>GOTable</code> class. This inherits from the virtual base <code>Panel</code> class as it cannot meet any of the contractual requirements of the subclasses, what with the <code>DataTable</code> selection event triggering a multiple selection rather than a single selection. We add some slots to specify the feature ID type and the organism of interest as well as for <code>DataTable</code> parameters.</p>
 <p>We also add some checks for these parameters.</p>
-<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb33-1" title="1">allowable &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;ENSEMBL&quot;</span>, <span class="st">&quot;SYMBOL&quot;</span>, <span class="st">&quot;ENTREZID&quot;</span>)</a>
-<a class="sourceLine" id="cb33-2" title="2"><span class="kw">setValidity2</span>(<span class="st">&quot;GOTable&quot;</span>, <span class="cf">function</span>(object) {</a>
-<a class="sourceLine" id="cb33-3" title="3">    msg &lt;-<span class="st"> </span><span class="kw">character</span>(<span class="dv">0</span>)</a>
-<a class="sourceLine" id="cb33-4" title="4"></a>
-<a class="sourceLine" id="cb33-5" title="5">    <span class="cf">if</span> (<span class="op">!</span><span class="kw">isSingleString</span>(orgdb &lt;-<span class="st"> </span>object[[<span class="st">&quot;Organism&quot;</span>]])) {</a>
-<a class="sourceLine" id="cb33-6" title="6">        msg &lt;-<span class="st"> </span><span class="kw">c</span>(msg, <span class="kw">sprintf</span>(<span class="st">&quot;&#39;Organism&#39; should be a single string&quot;</span>, orgdb))</a>
-<a class="sourceLine" id="cb33-7" title="7">    }</a>
-<a class="sourceLine" id="cb33-8" title="8"></a>
-<a class="sourceLine" id="cb33-9" title="9">    <span class="cf">if</span> (<span class="op">!</span><span class="kw">isSingleString</span>(type &lt;-<span class="st"> </span>object[[<span class="st">&quot;IDType&quot;</span>]]) <span class="op">||</span><span class="st"> </span><span class="op">!</span>type <span class="op">%in%</span><span class="st"> </span>allowable) {</a>
-<a class="sourceLine" id="cb33-10" title="10">        msg &lt;-<span class="st"> </span><span class="kw">c</span>(msg, <span class="st">&quot;&#39;IDType&#39; should be &#39;ENSEMBL&#39;, &#39;SYMBOL&#39; or &#39;ENTREZID&#39;&quot;</span>)</a>
-<a class="sourceLine" id="cb33-11" title="11">    }</a>
-<a class="sourceLine" id="cb33-12" title="12"></a>
-<a class="sourceLine" id="cb33-13" title="13">    <span class="cf">if</span> (<span class="op">!</span><span class="kw">isSingleString</span>(object[[<span class="st">&quot;Selected&quot;</span>]])) { </a>
-<a class="sourceLine" id="cb33-14" title="14">        msg &lt;-<span class="st"> </span><span class="kw">c</span>(msg, <span class="st">&quot;&#39;Selected&#39; should be a single string&quot;</span>)</a>
-<a class="sourceLine" id="cb33-15" title="15">    }</a>
-<a class="sourceLine" id="cb33-16" title="16"></a>
-<a class="sourceLine" id="cb33-17" title="17">    <span class="cf">if</span> (<span class="op">!</span><span class="kw">isSingleString</span>(object[[<span class="st">&quot;Search&quot;</span>]])) {</a>
-<a class="sourceLine" id="cb33-18" title="18">        msg &lt;-<span class="st"> </span><span class="kw">c</span>(msg, <span class="st">&quot;&#39;Search&#39; should be a single string&quot;</span>)</a>
-<a class="sourceLine" id="cb33-19" title="19">    }</a>
-<a class="sourceLine" id="cb33-20" title="20"></a>
-<a class="sourceLine" id="cb33-21" title="21">    <span class="cf">if</span> (<span class="kw">length</span>(msg)) {</a>
-<a class="sourceLine" id="cb33-22" title="22">        <span class="kw">return</span>(msg)</a>
-<a class="sourceLine" id="cb33-23" title="23">    }</a>
-<a class="sourceLine" id="cb33-24" title="24">    <span class="ot">TRUE</span></a>
-<a class="sourceLine" id="cb33-25" title="25">})</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">allowable &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;ENSEMBL&quot;</span>, <span class="st">&quot;SYMBOL&quot;</span>, <span class="st">&quot;ENTREZID&quot;</span>)
+<span class="kw">setValidity2</span>(<span class="st">&quot;GOTable&quot;</span>, <span class="cf">function</span>(object) {
+    msg &lt;-<span class="st"> </span><span class="kw">character</span>(<span class="dv">0</span>)
+
+    <span class="cf">if</span> (<span class="op">!</span><span class="kw">isSingleString</span>(orgdb &lt;-<span class="st"> </span>object[[<span class="st">&quot;Organism&quot;</span>]])) {
+        msg &lt;-<span class="st"> </span><span class="kw">c</span>(msg, <span class="kw">sprintf</span>(<span class="st">&quot;&#39;Organism&#39; should be a single string&quot;</span>, orgdb))
+    }
+
+    <span class="cf">if</span> (<span class="op">!</span><span class="kw">isSingleString</span>(type &lt;-<span class="st"> </span>object[[<span class="st">&quot;IDType&quot;</span>]]) <span class="op">||</span><span class="st"> </span><span class="op">!</span>type <span class="op">%in%</span><span class="st"> </span>allowable) {
+        msg &lt;-<span class="st"> </span><span class="kw">c</span>(msg, <span class="st">&quot;&#39;IDType&#39; should be &#39;ENSEMBL&#39;, &#39;SYMBOL&#39; or &#39;ENTREZID&#39;&quot;</span>)
+    }
+
+    <span class="cf">if</span> (<span class="op">!</span><span class="kw">isSingleString</span>(object[[<span class="st">&quot;Selected&quot;</span>]])) { 
+        msg &lt;-<span class="st"> </span><span class="kw">c</span>(msg, <span class="st">&quot;&#39;Selected&#39; should be a single string&quot;</span>)
+    }
+
+    <span class="cf">if</span> (<span class="op">!</span><span class="kw">isSingleString</span>(object[[<span class="st">&quot;Search&quot;</span>]])) {
+        msg &lt;-<span class="st"> </span><span class="kw">c</span>(msg, <span class="st">&quot;&#39;Search&#39; should be a single string&quot;</span>)
+    }
+
+    <span class="cf">if</span> (<span class="kw">length</span>(msg)) {
+        <span class="kw">return</span>(msg)
+    }
+    <span class="ot">TRUE</span>
+})</code></pre></div>
 <p>We then specialize the initialize method to set reasonable defaults.</p>
-<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb34-1" title="1"><span class="kw">setMethod</span>(<span class="st">&quot;initialize&quot;</span>, <span class="st">&quot;GOTable&quot;</span>, <span class="cf">function</span>(.Object, </a>
-<a class="sourceLine" id="cb34-2" title="2">    <span class="dt">Organism=</span><span class="st">&quot;org.Mm.eg.db&quot;</span>, <span class="dt">IDType=</span><span class="st">&quot;SYMBOL&quot;</span>, </a>
-<a class="sourceLine" id="cb34-3" title="3">    <span class="dt">Selected=</span><span class="st">&quot;&quot;</span>, <span class="dt">Search=</span><span class="st">&quot;&quot;</span>, <span class="dt">SearchColumns=</span><span class="kw">character</span>(<span class="dv">0</span>), ...)</a>
-<a class="sourceLine" id="cb34-4" title="4">{</a>
-<a class="sourceLine" id="cb34-5" title="5">    <span class="kw">callNextMethod</span>(.Object, <span class="dt">IDType=</span>IDType, <span class="dt">Organism=</span>Organism, </a>
-<a class="sourceLine" id="cb34-6" title="6">        <span class="dt">Selected=</span>Selected, <span class="dt">Search=</span>Search, </a>
-<a class="sourceLine" id="cb34-7" title="7">        <span class="dt">SearchColumns=</span>SearchColumns, ...)</a>
-<a class="sourceLine" id="cb34-8" title="8">})</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">setMethod</span>(<span class="st">&quot;initialize&quot;</span>, <span class="st">&quot;GOTable&quot;</span>, <span class="cf">function</span>(.Object, 
+    <span class="dt">Organism=</span><span class="st">&quot;org.Mm.eg.db&quot;</span>, <span class="dt">IDType=</span><span class="st">&quot;SYMBOL&quot;</span>, 
+    <span class="dt">Selected=</span><span class="st">&quot;&quot;</span>, <span class="dt">Search=</span><span class="st">&quot;&quot;</span>, <span class="dt">SearchColumns=</span><span class="kw">character</span>(<span class="dv">0</span>), ...)
+{
+    <span class="kw">callNextMethod</span>(.Object, <span class="dt">IDType=</span>IDType, <span class="dt">Organism=</span>Organism, 
+        <span class="dt">Selected=</span>Selected, <span class="dt">Search=</span>Search, 
+        <span class="dt">SearchColumns=</span>SearchColumns, ...)
+})</code></pre></div>
 </div>
 <div id="setting-up-the-interface-3" class="section level2">
 <h2><span class="header-section-number">8.3</span> Setting up the interface</h2>
 <p>We define the full name and desired default color for display purposes:</p>
-<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb35-1" title="1"><span class="kw">setMethod</span>(<span class="st">&quot;.fullName&quot;</span>, <span class="st">&quot;GOTable&quot;</span>, <span class="cf">function</span>(x) <span class="st">&quot;Gene ontology table&quot;</span>)</a>
-<a class="sourceLine" id="cb35-2" title="2"></a>
-<a class="sourceLine" id="cb35-3" title="3"><span class="kw">setMethod</span>(<span class="st">&quot;.panelColor&quot;</span>, <span class="st">&quot;GOTable&quot;</span>, <span class="cf">function</span>(x) <span class="st">&quot;#BB00FF&quot;</span>)</a></code></pre></div>
-<p>We add our UI element for showing the gene set table, which is simply a <code>DataTable</code> object from the <em><a href="https://CRAN.R-project.org/package=DT">DT</a></em> package.
-Note that <em><a href="https://CRAN.R-project.org/package=shiny">shiny</a></em> also has a <code>dataTableOutput</code> function so care must be taken to disambiguate them.</p>
-<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb36-1" title="1"><span class="kw">setMethod</span>(<span class="st">&quot;.defineOutput&quot;</span>, <span class="st">&quot;GOTable&quot;</span>, <span class="cf">function</span>(x, ...) {</a>
-<a class="sourceLine" id="cb36-2" title="2">    panel_name &lt;-<span class="st"> </span><span class="kw">.getEncodedName</span>(x)</a>
-<a class="sourceLine" id="cb36-3" title="3">    <span class="kw">tagList</span>(DT<span class="op">::</span><span class="kw">dataTableOutput</span>(panel_name))</a>
-<a class="sourceLine" id="cb36-4" title="4">})</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">setMethod</span>(<span class="st">&quot;.fullName&quot;</span>, <span class="st">&quot;GOTable&quot;</span>, <span class="cf">function</span>(x) <span class="st">&quot;Gene ontology table&quot;</span>)
+
+<span class="kw">setMethod</span>(<span class="st">&quot;.panelColor&quot;</span>, <span class="st">&quot;GOTable&quot;</span>, <span class="cf">function</span>(x) <span class="st">&quot;#BB00FF&quot;</span>)</code></pre></div>
+<p>We add our UI element for showing the gene set table, which is simply a <code>DataTable</code> object from the <em><a href="https://CRAN.R-project.org/package=DT">DT</a></em> package. Note that <em><a href="https://CRAN.R-project.org/package=shiny">shiny</a></em> also has a <code>dataTableOutput</code> function so care must be taken to disambiguate them.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">setMethod</span>(<span class="st">&quot;.defineOutput&quot;</span>, <span class="st">&quot;GOTable&quot;</span>, <span class="cf">function</span>(x, ...) {
+    panel_name &lt;-<span class="st"> </span><span class="kw">.getEncodedName</span>(x)
+    <span class="kw">tagList</span>(DT<span class="op">::</span><span class="kw">dataTableOutput</span>(panel_name))
+})</code></pre></div>
 <p>We set up interface elements for changing the annotation parameters.</p>
-<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb37-1" title="1"><span class="kw">setMethod</span>(<span class="st">&quot;.defineDataInterface&quot;</span>, <span class="st">&quot;GOTable&quot;</span>, <span class="cf">function</span>(x, se, select_info) {</a>
-<a class="sourceLine" id="cb37-2" title="2">    panel_name &lt;-<span class="st"> </span><span class="kw">.getEncodedName</span>(x)</a>
-<a class="sourceLine" id="cb37-3" title="3">    <span class="kw">list</span>(</a>
-<a class="sourceLine" id="cb37-4" title="4">        <span class="kw">selectInput</span>(<span class="kw">paste0</span>(panel_name, <span class="st">&quot;_IDType&quot;</span>),</a>
-<a class="sourceLine" id="cb37-5" title="5">            <span class="dt">label=</span><span class="st">&quot;ID type:&quot;</span>,</a>
-<a class="sourceLine" id="cb37-6" title="6">            <span class="dt">choices=</span>allowable,</a>
-<a class="sourceLine" id="cb37-7" title="7">            <span class="dt">selected=</span>x[[<span class="st">&quot;IDType&quot;</span>]]</a>
-<a class="sourceLine" id="cb37-8" title="8">        ),</a>
-<a class="sourceLine" id="cb37-9" title="9">        <span class="kw">selectInput</span>(<span class="kw">paste0</span>(panel_name, <span class="st">&quot;_Organism&quot;</span>),</a>
-<a class="sourceLine" id="cb37-10" title="10">            <span class="dt">label=</span><span class="st">&quot;Organism&quot;</span>,</a>
-<a class="sourceLine" id="cb37-11" title="11">            <span class="dt">choices=</span><span class="kw">c</span>(<span class="st">&quot;org.Hs.eg.db&quot;</span>, <span class="st">&quot;org.Mm.eg.db&quot;</span>),</a>
-<a class="sourceLine" id="cb37-12" title="12">            <span class="dt">selected=</span>x[[<span class="st">&quot;Organism&quot;</span>]]</a>
-<a class="sourceLine" id="cb37-13" title="13">        )</a>
-<a class="sourceLine" id="cb37-14" title="14">    )</a>
-<a class="sourceLine" id="cb37-15" title="15">})</a></code></pre></div>
-<p>Our implementation will be a pure transmitter, i.e., it will not respond to row or column selections from other panels.
-To avoid confusion, we can hide all selection parameter UI elements by specializing the <code>.hideInterface()</code> method:</p>
-<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb38-1" title="1"><span class="kw">setMethod</span>(<span class="st">&quot;.hideInterface&quot;</span>, <span class="st">&quot;GOTable&quot;</span>, <span class="cf">function</span>(x, field) {</a>
-<a class="sourceLine" id="cb38-2" title="2">    <span class="cf">if</span> (field <span class="op">%in%</span><span class="st"> &quot;SelectBoxOpen&quot;</span>) {</a>
-<a class="sourceLine" id="cb38-3" title="3">        <span class="ot">TRUE</span></a>
-<a class="sourceLine" id="cb38-4" title="4">    } <span class="cf">else</span> {</a>
-<a class="sourceLine" id="cb38-5" title="5">        <span class="kw">callNextMethod</span>()</a>
-<a class="sourceLine" id="cb38-6" title="6">    }</a>
-<a class="sourceLine" id="cb38-7" title="7">})</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">setMethod</span>(<span class="st">&quot;.defineDataInterface&quot;</span>, <span class="st">&quot;GOTable&quot;</span>, <span class="cf">function</span>(x, se, select_info) {
+    panel_name &lt;-<span class="st"> </span><span class="kw">.getEncodedName</span>(x)
+    <span class="kw">list</span>(
+        <span class="kw">selectInput</span>(<span class="kw">paste0</span>(panel_name, <span class="st">&quot;_IDType&quot;</span>),
+            <span class="dt">label=</span><span class="st">&quot;ID type:&quot;</span>,
+            <span class="dt">choices=</span>allowable,
+            <span class="dt">selected=</span>x[[<span class="st">&quot;IDType&quot;</span>]]
+        ),
+        <span class="kw">selectInput</span>(<span class="kw">paste0</span>(panel_name, <span class="st">&quot;_Organism&quot;</span>),
+            <span class="dt">label=</span><span class="st">&quot;Organism&quot;</span>,
+            <span class="dt">choices=</span><span class="kw">c</span>(<span class="st">&quot;org.Hs.eg.db&quot;</span>, <span class="st">&quot;org.Mm.eg.db&quot;</span>),
+            <span class="dt">selected=</span>x[[<span class="st">&quot;Organism&quot;</span>]]
+        )
+    )
+})</code></pre></div>
+<p>Our implementation will be a pure transmitter, i.e., it will not respond to row or column selections from other panels. To avoid confusion, we can hide all selection parameter UI elements by specializing the <code>.hideInterface()</code> method:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">setMethod</span>(<span class="st">&quot;.hideInterface&quot;</span>, <span class="st">&quot;GOTable&quot;</span>, <span class="cf">function</span>(x, field) {
+    <span class="cf">if</span> (field <span class="op">%in%</span><span class="st"> &quot;SelectionBoxOpen&quot;</span>) {
+        <span class="ot">TRUE</span>
+    } <span class="cf">else</span> {
+        <span class="kw">callNextMethod</span>()
+    }
+})</code></pre></div>
 </div>
 <div id="generating-the-output" class="section level2">
 <h2><span class="header-section-number">8.4</span> Generating the output</h2>
-<p>We actually generate the output by specializing the <code>.generateOutput()</code> function,
-using the <em><a href="https://bioconductor.org/packages/3.11/GO.db">GO.db</a></em> package to create a table of GO terms and their definitions.
-We also store the number of available genes in the <code>contents</code> -
-this will be used later to compute the percentage of all genes in a given gene set.</p>
-<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb39-1" title="1"><span class="kw">setMethod</span>(<span class="st">&quot;.generateOutput&quot;</span>, <span class="st">&quot;GOTable&quot;</span>, <span class="cf">function</span>(x, se, ..., all_memory, all_contents) {</a>
-<a class="sourceLine" id="cb39-2" title="2">    envir &lt;-<span class="st"> </span><span class="kw">new.env</span>()</a>
-<a class="sourceLine" id="cb39-3" title="3">    commands &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;require(GO.db);&quot;</span>,</a>
-<a class="sourceLine" id="cb39-4" title="4">        <span class="st">&quot;tab &lt;- select(GO.db, keys=keys(GO.db), columns=&#39;TERM&#39;);&quot;</span>,</a>
-<a class="sourceLine" id="cb39-5" title="5">        <span class="st">&quot;rownames(tab) &lt;- tab$GOID;&quot;</span>,</a>
-<a class="sourceLine" id="cb39-6" title="6">        <span class="st">&quot;tab$GOID &lt;- NULL;&quot;</span>)</a>
-<a class="sourceLine" id="cb39-7" title="7">    <span class="kw">eval</span>(<span class="kw">parse</span>(<span class="dt">text=</span>commands), <span class="dt">envir=</span>envir)</a>
-<a class="sourceLine" id="cb39-8" title="8">    <span class="kw">list</span>(</a>
-<a class="sourceLine" id="cb39-9" title="9">        <span class="dt">commands=</span><span class="kw">list</span>(commands), </a>
-<a class="sourceLine" id="cb39-10" title="10">        <span class="dt">contents=</span><span class="kw">list</span>(<span class="dt">table=</span>envir<span class="op">$</span>tab, <span class="dt">available=</span><span class="kw">nrow</span>(se))</a>
-<a class="sourceLine" id="cb39-11" title="11">    )</a>
-<a class="sourceLine" id="cb39-12" title="12">})</a></code></pre></div>
-<p>We don’t actually depend on any parameters of <code>x</code> itself to generate this table.
-However, one could imagine a more complex case where the <code>GOTable</code> itself responds to a multiple row selection,
-e.g., by subsetting to the gene sets that contain genes in the selected row.</p>
+<p>We actually generate the output by specializing the <code>.generateOutput()</code> function, using the <em><a href="https://bioconductor.org/packages/3.11/GO.db">GO.db</a></em> package to create a table of GO terms and their definitions. We also store the number of available genes in the <code>contents</code> - this will be used later to compute the percentage of all genes in a given gene set.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">setMethod</span>(<span class="st">&quot;.generateOutput&quot;</span>, <span class="st">&quot;GOTable&quot;</span>, <span class="cf">function</span>(x, se, ..., all_memory, all_contents) {
+    envir &lt;-<span class="st"> </span><span class="kw">new.env</span>()
+    commands &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;require(GO.db);&quot;</span>,
+        <span class="st">&quot;tab &lt;- select(GO.db, keys=keys(GO.db), columns=&#39;TERM&#39;);&quot;</span>,
+        <span class="st">&quot;rownames(tab) &lt;- tab$GOID;&quot;</span>,
+        <span class="st">&quot;tab$GOID &lt;- NULL;&quot;</span>)
+    <span class="kw">eval</span>(<span class="kw">parse</span>(<span class="dt">text=</span>commands), <span class="dt">envir=</span>envir)
+    <span class="kw">list</span>(
+        <span class="dt">commands=</span><span class="kw">list</span>(commands), 
+        <span class="dt">contents=</span><span class="kw">list</span>(<span class="dt">table=</span>envir<span class="op">$</span>tab, <span class="dt">available=</span><span class="kw">nrow</span>(se))
+    )
+})</code></pre></div>
+<p>We don’t actually depend on any parameters of <code>x</code> itself to generate this table. However, one could imagine a more complex case where the <code>GOTable</code> itself responds to a multiple row selection, e.g., by subsetting to the gene sets that contain genes in the selected row.</p>
 </div>
 <div id="creating-the-observers-3" class="section level2">
 <h2><span class="header-section-number">8.5</span> Creating the observers</h2>
-<p>We specialize <code>.createObservers</code> to define some observers to respond to changes in our new interface elements.
-This also involves creating an observer to respond to a change in the selection of a <code>DataTable</code> row,
-calling <code>.requestActiveSelectionUpdate()</code> to trigger changes in panels that are receiving the multiple row selection.
-(We set up observers for the search fields as well, as a courtesy to restore them properly upon re-rendering.)
-Note the use of <code>callNextMethod()</code> to ensure that observers of the parent class are also created.</p>
-<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb40-1" title="1"><span class="kw">setMethod</span>(<span class="st">&quot;.createObservers&quot;</span>, <span class="st">&quot;GOTable&quot;</span>,</a>
-<a class="sourceLine" id="cb40-2" title="2">    <span class="cf">function</span>(x, se, input, session, pObjects, rObjects)</a>
-<a class="sourceLine" id="cb40-3" title="3">{</a>
-<a class="sourceLine" id="cb40-4" title="4">    <span class="kw">callNextMethod</span>()</a>
-<a class="sourceLine" id="cb40-5" title="5"></a>
-<a class="sourceLine" id="cb40-6" title="6">    panel_name &lt;-<span class="st"> </span><span class="kw">.getEncodedName</span>(x)</a>
-<a class="sourceLine" id="cb40-7" title="7"></a>
-<a class="sourceLine" id="cb40-8" title="8">    <span class="kw">.createUnprotectedParameterObservers</span>(panel_name,</a>
-<a class="sourceLine" id="cb40-9" title="9">        <span class="dt">fields=</span><span class="kw">c</span>(<span class="st">&quot;Organism&quot;</span>, <span class="st">&quot;IDType&quot;</span>), </a>
-<a class="sourceLine" id="cb40-10" title="10">        <span class="dt">input=</span>input, <span class="dt">pObjects=</span>pObjects, <span class="dt">rObjects=</span>rObjects)</a>
-<a class="sourceLine" id="cb40-11" title="11"></a>
-<a class="sourceLine" id="cb40-12" title="12">    <span class="co"># Observer for the DataTable row selection:</span></a>
-<a class="sourceLine" id="cb40-13" title="13">    select_field &lt;-<span class="st"> </span><span class="kw">paste0</span>(panel_name, <span class="st">&quot;_rows_selected&quot;</span>)</a>
-<a class="sourceLine" id="cb40-14" title="14">    multi_name &lt;-<span class="st"> </span><span class="kw">paste0</span>(panel_name, <span class="st">&quot;_&quot;</span>, iSEE<span class="op">:::</span>.flagMultiSelect)</a>
-<a class="sourceLine" id="cb40-15" title="15">    <span class="kw">observeEvent</span>(input[[select_field]], {</a>
-<a class="sourceLine" id="cb40-16" title="16">        chosen &lt;-<span class="st"> </span>input[[select_field]]</a>
-<a class="sourceLine" id="cb40-17" title="17">        <span class="cf">if</span> (<span class="kw">length</span>(chosen)<span class="op">==</span>0L) {</a>
-<a class="sourceLine" id="cb40-18" title="18">            chosen &lt;-<span class="st"> &quot;&quot;</span> </a>
-<a class="sourceLine" id="cb40-19" title="19">        } <span class="cf">else</span> {</a>
-<a class="sourceLine" id="cb40-20" title="20">            chosen &lt;-<span class="st"> </span><span class="kw">rownames</span>(pObjects<span class="op">$</span>contents[[panel_name]]<span class="op">$</span>table)[chosen]</a>
-<a class="sourceLine" id="cb40-21" title="21">        }</a>
-<a class="sourceLine" id="cb40-22" title="22"></a>
-<a class="sourceLine" id="cb40-23" title="23">        previous &lt;-<span class="st"> </span>pObjects<span class="op">$</span>memory[[panel_name]][[<span class="st">&quot;Selected&quot;</span>]]</a>
-<a class="sourceLine" id="cb40-24" title="24">        <span class="cf">if</span> (chosen<span class="op">==</span>previous) {</a>
-<a class="sourceLine" id="cb40-25" title="25">            <span class="kw">return</span>(<span class="ot">NULL</span>)</a>
-<a class="sourceLine" id="cb40-26" title="26">        }</a>
-<a class="sourceLine" id="cb40-27" title="27">        pObjects<span class="op">$</span>memory[[panel_name]][[<span class="st">&quot;Selected&quot;</span>]] &lt;-<span class="st"> </span>chosen</a>
-<a class="sourceLine" id="cb40-28" title="28">        <span class="kw">.requestActiveSelectionUpdate</span>(panel_name, rObjects, <span class="dt">update_output=</span><span class="ot">FALSE</span>)</a>
-<a class="sourceLine" id="cb40-29" title="29">    }, <span class="dt">ignoreNULL=</span><span class="ot">FALSE</span>)</a>
-<a class="sourceLine" id="cb40-30" title="30"></a>
-<a class="sourceLine" id="cb40-31" title="31">    <span class="co"># Observer for the search field:</span></a>
-<a class="sourceLine" id="cb40-32" title="32">    search_field &lt;-<span class="st"> </span><span class="kw">paste0</span>(panel_name, <span class="st">&quot;_search&quot;</span>)</a>
-<a class="sourceLine" id="cb40-33" title="33">    <span class="kw">observeEvent</span>(input[[search_field]], {</a>
-<a class="sourceLine" id="cb40-34" title="34">        search &lt;-<span class="st"> </span>input[[search_field]]</a>
-<a class="sourceLine" id="cb40-35" title="35">        <span class="cf">if</span> (<span class="kw">identical</span>(search, pObjects<span class="op">$</span>memory[[panel_name]][[<span class="st">&quot;Search&quot;</span>]])) {</a>
-<a class="sourceLine" id="cb40-36" title="36">            <span class="kw">return</span>(<span class="ot">NULL</span>)</a>
-<a class="sourceLine" id="cb40-37" title="37">        }</a>
-<a class="sourceLine" id="cb40-38" title="38">        pObjects<span class="op">$</span>memory[[panel_name]][[<span class="st">&quot;Search&quot;</span>]] &lt;-<span class="st"> </span>search</a>
-<a class="sourceLine" id="cb40-39" title="39">    })</a>
-<a class="sourceLine" id="cb40-40" title="40"></a>
-<a class="sourceLine" id="cb40-41" title="41">    <span class="co"># Observer for the column search fields:</span></a>
-<a class="sourceLine" id="cb40-42" title="42">    colsearch_field &lt;-<span class="st"> </span><span class="kw">paste0</span>(panel_name, <span class="st">&quot;_search_columns&quot;</span>)</a>
-<a class="sourceLine" id="cb40-43" title="43">    <span class="kw">observeEvent</span>(input[[colsearch_field]], {</a>
-<a class="sourceLine" id="cb40-44" title="44">        search &lt;-<span class="st"> </span>input[[colsearch_field]]</a>
-<a class="sourceLine" id="cb40-45" title="45">        <span class="cf">if</span> (<span class="kw">identical</span>(search, pObjects<span class="op">$</span>memory[[panel_name]][[<span class="st">&quot;SearchColumns&quot;</span>]])) {</a>
-<a class="sourceLine" id="cb40-46" title="46">            <span class="kw">return</span>(<span class="ot">NULL</span>)</a>
-<a class="sourceLine" id="cb40-47" title="47">        }</a>
-<a class="sourceLine" id="cb40-48" title="48">        pObjects<span class="op">$</span>memory[[panel_name]][[<span class="st">&quot;SearchColumns&quot;</span>]] &lt;-<span class="st"> </span>search</a>
-<a class="sourceLine" id="cb40-49" title="49">    })</a>
-<a class="sourceLine" id="cb40-50" title="50">})</a></code></pre></div>
-<p>We set up a rendering expression for the output table by specializing <code>.renderOutput()</code>.
-This uses the <code>renderDataTable()</code> function from the <em><a href="https://CRAN.R-project.org/package=DT">DT</a></em> package
-(again, this has a similar-but-not-identical function in <em><a href="https://CRAN.R-project.org/package=shiny">shiny</a></em>, so be careful which one you import.)
-Some effort is involved in making sure that the output table responds to the memorized parameter values of our <code>GOTable</code> panel.</p>
-<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb41-1" title="1"><span class="kw">setMethod</span>(<span class="st">&quot;.renderOutput&quot;</span>, <span class="st">&quot;GOTable&quot;</span>, <span class="cf">function</span>(x, se, ..., output, pObjects, rObjects) {</a>
-<a class="sourceLine" id="cb41-2" title="2">    <span class="kw">callNextMethod</span>()</a>
-<a class="sourceLine" id="cb41-3" title="3"></a>
-<a class="sourceLine" id="cb41-4" title="4">    panel_name &lt;-<span class="st"> </span><span class="kw">.getEncodedName</span>(x)</a>
-<a class="sourceLine" id="cb41-5" title="5">    output[[panel_name]] &lt;-<span class="st"> </span>DT<span class="op">::</span><span class="kw">renderDataTable</span>({</a>
-<a class="sourceLine" id="cb41-6" title="6">        <span class="kw">.trackUpdate</span>(panel_name, rObjects)</a>
-<a class="sourceLine" id="cb41-7" title="7">        param_choices &lt;-<span class="st"> </span>pObjects<span class="op">$</span>memory[[panel_name]]</a>
-<a class="sourceLine" id="cb41-8" title="8"></a>
-<a class="sourceLine" id="cb41-9" title="9">        t.out &lt;-<span class="st"> </span><span class="kw">.retrieveOutput</span>(panel_name, se, pObjects, rObjects)</a>
-<a class="sourceLine" id="cb41-10" title="10">        full_tab &lt;-<span class="st"> </span>t.out<span class="op">$</span>contents<span class="op">$</span>table</a>
-<a class="sourceLine" id="cb41-11" title="11">        pObjects<span class="op">$</span>varname[[panel_name]] &lt;-<span class="st"> &quot;tab&quot;</span></a>
-<a class="sourceLine" id="cb41-12" title="12"></a>
-<a class="sourceLine" id="cb41-13" title="13">        chosen &lt;-<span class="st"> </span>param_choices[[<span class="st">&quot;Selected&quot;</span>]]</a>
-<a class="sourceLine" id="cb41-14" title="14">        search &lt;-<span class="st"> </span>param_choices[[<span class="st">&quot;Search&quot;</span>]]</a>
-<a class="sourceLine" id="cb41-15" title="15">        search_col &lt;-<span class="st"> </span>param_choices[[<span class="st">&quot;SearchColumns&quot;</span>]]</a>
-<a class="sourceLine" id="cb41-16" title="16">        search_col &lt;-<span class="st"> </span><span class="kw">lapply</span>(search_col, <span class="dt">FUN=</span><span class="cf">function</span>(x) { <span class="kw">list</span>(<span class="dt">search=</span>x) })</a>
-<a class="sourceLine" id="cb41-17" title="17"></a>
-<a class="sourceLine" id="cb41-18" title="18">        <span class="co"># If the existing row in memory doesn&#39;t exist in the current table, we</span></a>
-<a class="sourceLine" id="cb41-19" title="19">        <span class="co"># don&#39;t initialize it with any selection.</span></a>
-<a class="sourceLine" id="cb41-20" title="20">        idx &lt;-<span class="st"> </span><span class="kw">which</span>(<span class="kw">rownames</span>(full_tab)<span class="op">==</span>chosen)[<span class="dv">1</span>]</a>
-<a class="sourceLine" id="cb41-21" title="21">        <span class="cf">if</span> (<span class="op">!</span><span class="kw">is.na</span>(idx)) {</a>
-<a class="sourceLine" id="cb41-22" title="22">            selection &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">mode=</span><span class="st">&quot;single&quot;</span>, <span class="dt">selected=</span>idx)</a>
-<a class="sourceLine" id="cb41-23" title="23">        } <span class="cf">else</span> {</a>
-<a class="sourceLine" id="cb41-24" title="24">            selection &lt;-<span class="st"> &quot;single&quot;</span></a>
-<a class="sourceLine" id="cb41-25" title="25">        }</a>
-<a class="sourceLine" id="cb41-26" title="26"></a>
-<a class="sourceLine" id="cb41-27" title="27">        DT<span class="op">::</span><span class="kw">datatable</span>(</a>
-<a class="sourceLine" id="cb41-28" title="28">            full_tab, <span class="dt">filter=</span><span class="st">&quot;top&quot;</span>, <span class="dt">rownames=</span><span class="ot">TRUE</span>,</a>
-<a class="sourceLine" id="cb41-29" title="29">            <span class="dt">options=</span><span class="kw">list</span>(</a>
-<a class="sourceLine" id="cb41-30" title="30">                <span class="dt">search=</span><span class="kw">list</span>(<span class="dt">search=</span>search, <span class="dt">smart=</span><span class="ot">FALSE</span>, <span class="dt">regex=</span><span class="ot">TRUE</span>, <span class="dt">caseInsensitive=</span><span class="ot">FALSE</span>),</a>
-<a class="sourceLine" id="cb41-31" title="31">                <span class="dt">searchCols=</span><span class="kw">c</span>(<span class="kw">list</span>(<span class="ot">NULL</span>), search_col), <span class="co"># row names are the first column!</span></a>
-<a class="sourceLine" id="cb41-32" title="32">                <span class="dt">scrollX=</span><span class="ot">TRUE</span>),</a>
-<a class="sourceLine" id="cb41-33" title="33">            <span class="dt">selection=</span>selection</a>
-<a class="sourceLine" id="cb41-34" title="34">        )</a>
-<a class="sourceLine" id="cb41-35" title="35">    })</a>
-<a class="sourceLine" id="cb41-36" title="36">})</a></code></pre></div>
+<p>We specialize <code>.createObservers</code> to define some observers to respond to changes in our new interface elements. This also involves creating an observer to respond to a change in the selection of a <code>DataTable</code> row, calling <code>.requestActiveSelectionUpdate()</code> to trigger changes in panels that are receiving the multiple row selection. (We set up observers for the search fields as well, as a courtesy to restore them properly upon re-rendering.) Note the use of <code>callNextMethod()</code> to ensure that observers of the parent class are also created.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">setMethod</span>(<span class="st">&quot;.createObservers&quot;</span>, <span class="st">&quot;GOTable&quot;</span>,
+    <span class="cf">function</span>(x, se, input, session, pObjects, rObjects)
+{
+    <span class="kw">callNextMethod</span>()
+
+    panel_name &lt;-<span class="st"> </span><span class="kw">.getEncodedName</span>(x)
+
+    <span class="kw">.createUnprotectedParameterObservers</span>(panel_name,
+        <span class="dt">fields=</span><span class="kw">c</span>(<span class="st">&quot;Organism&quot;</span>, <span class="st">&quot;IDType&quot;</span>), 
+        <span class="dt">input=</span>input, <span class="dt">pObjects=</span>pObjects, <span class="dt">rObjects=</span>rObjects)
+
+    <span class="co"># Observer for the DataTable row selection:</span>
+    select_field &lt;-<span class="st"> </span><span class="kw">paste0</span>(panel_name, <span class="st">&quot;_rows_selected&quot;</span>)
+    multi_name &lt;-<span class="st"> </span><span class="kw">paste0</span>(panel_name, <span class="st">&quot;_&quot;</span>, iSEE<span class="op">:::</span>.flagMultiSelect)
+    <span class="kw">observeEvent</span>(input[[select_field]], {
+        chosen &lt;-<span class="st"> </span>input[[select_field]]
+        <span class="cf">if</span> (<span class="kw">length</span>(chosen)<span class="op">==</span>0L) {
+            chosen &lt;-<span class="st"> &quot;&quot;</span> 
+        } <span class="cf">else</span> {
+            chosen &lt;-<span class="st"> </span><span class="kw">rownames</span>(pObjects<span class="op">$</span>contents[[panel_name]]<span class="op">$</span>table)[chosen]
+        }
+
+        previous &lt;-<span class="st"> </span>pObjects<span class="op">$</span>memory[[panel_name]][[<span class="st">&quot;Selected&quot;</span>]]
+        <span class="cf">if</span> (chosen<span class="op">==</span>previous) {
+            <span class="kw">return</span>(<span class="ot">NULL</span>)
+        }
+        pObjects<span class="op">$</span>memory[[panel_name]][[<span class="st">&quot;Selected&quot;</span>]] &lt;-<span class="st"> </span>chosen
+        <span class="kw">.requestActiveSelectionUpdate</span>(panel_name, rObjects, <span class="dt">update_output=</span><span class="ot">FALSE</span>)
+    }, <span class="dt">ignoreNULL=</span><span class="ot">FALSE</span>)
+
+    <span class="co"># Observer for the search field:</span>
+    search_field &lt;-<span class="st"> </span><span class="kw">paste0</span>(panel_name, <span class="st">&quot;_search&quot;</span>)
+    <span class="kw">observeEvent</span>(input[[search_field]], {
+        search &lt;-<span class="st"> </span>input[[search_field]]
+        <span class="cf">if</span> (<span class="kw">identical</span>(search, pObjects<span class="op">$</span>memory[[panel_name]][[<span class="st">&quot;Search&quot;</span>]])) {
+            <span class="kw">return</span>(<span class="ot">NULL</span>)
+        }
+        pObjects<span class="op">$</span>memory[[panel_name]][[<span class="st">&quot;Search&quot;</span>]] &lt;-<span class="st"> </span>search
+    })
+
+    <span class="co"># Observer for the column search fields:</span>
+    colsearch_field &lt;-<span class="st"> </span><span class="kw">paste0</span>(panel_name, <span class="st">&quot;_search_columns&quot;</span>)
+    <span class="kw">observeEvent</span>(input[[colsearch_field]], {
+        search &lt;-<span class="st"> </span>input[[colsearch_field]]
+        <span class="cf">if</span> (<span class="kw">identical</span>(search, pObjects<span class="op">$</span>memory[[panel_name]][[<span class="st">&quot;SearchColumns&quot;</span>]])) {
+            <span class="kw">return</span>(<span class="ot">NULL</span>)
+        }
+        pObjects<span class="op">$</span>memory[[panel_name]][[<span class="st">&quot;SearchColumns&quot;</span>]] &lt;-<span class="st"> </span>search
+    })
+})</code></pre></div>
+<p>We set up a rendering expression for the output table by specializing <code>.renderOutput()</code>. This uses the <code>renderDataTable()</code> function from the <em><a href="https://CRAN.R-project.org/package=DT">DT</a></em> package (again, this has a similar-but-not-identical function in <em><a href="https://CRAN.R-project.org/package=shiny">shiny</a></em>, so be careful which one you import.) Some effort is involved in making sure that the output table responds to the memorized parameter values of our <code>GOTable</code> panel.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">setMethod</span>(<span class="st">&quot;.renderOutput&quot;</span>, <span class="st">&quot;GOTable&quot;</span>, <span class="cf">function</span>(x, se, ..., output, pObjects, rObjects) {
+    <span class="kw">callNextMethod</span>()
+
+    panel_name &lt;-<span class="st"> </span><span class="kw">.getEncodedName</span>(x)
+    output[[panel_name]] &lt;-<span class="st"> </span>DT<span class="op">::</span><span class="kw">renderDataTable</span>({
+        <span class="kw">.trackUpdate</span>(panel_name, rObjects)
+        param_choices &lt;-<span class="st"> </span>pObjects<span class="op">$</span>memory[[panel_name]]
+
+        t.out &lt;-<span class="st"> </span><span class="kw">.retrieveOutput</span>(panel_name, se, pObjects, rObjects)
+        full_tab &lt;-<span class="st"> </span>t.out<span class="op">$</span>contents<span class="op">$</span>table
+        pObjects<span class="op">$</span>varname[[panel_name]] &lt;-<span class="st"> &quot;tab&quot;</span>
+
+        chosen &lt;-<span class="st"> </span>param_choices[[<span class="st">&quot;Selected&quot;</span>]]
+        search &lt;-<span class="st"> </span>param_choices[[<span class="st">&quot;Search&quot;</span>]]
+        search_col &lt;-<span class="st"> </span>param_choices[[<span class="st">&quot;SearchColumns&quot;</span>]]
+        search_col &lt;-<span class="st"> </span><span class="kw">lapply</span>(search_col, <span class="dt">FUN=</span><span class="cf">function</span>(x) { <span class="kw">list</span>(<span class="dt">search=</span>x) })
+
+        <span class="co"># If the existing row in memory doesn&#39;t exist in the current table, we</span>
+        <span class="co"># don&#39;t initialize it with any selection.</span>
+        idx &lt;-<span class="st"> </span><span class="kw">which</span>(<span class="kw">rownames</span>(full_tab)<span class="op">==</span>chosen)[<span class="dv">1</span>]
+        <span class="cf">if</span> (<span class="op">!</span><span class="kw">is.na</span>(idx)) {
+            selection &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">mode=</span><span class="st">&quot;single&quot;</span>, <span class="dt">selected=</span>idx)
+        } <span class="cf">else</span> {
+            selection &lt;-<span class="st"> &quot;single&quot;</span>
+        }
+
+        DT<span class="op">::</span><span class="kw">datatable</span>(
+            full_tab, <span class="dt">filter=</span><span class="st">&quot;top&quot;</span>, <span class="dt">rownames=</span><span class="ot">TRUE</span>,
+            <span class="dt">options=</span><span class="kw">list</span>(
+                <span class="dt">search=</span><span class="kw">list</span>(<span class="dt">search=</span>search, <span class="dt">smart=</span><span class="ot">FALSE</span>, <span class="dt">regex=</span><span class="ot">TRUE</span>, <span class="dt">caseInsensitive=</span><span class="ot">FALSE</span>),
+                <span class="dt">searchCols=</span><span class="kw">c</span>(<span class="kw">list</span>(<span class="ot">NULL</span>), search_col), <span class="co"># row names are the first column!</span>
+                <span class="dt">scrollX=</span><span class="ot">TRUE</span>),
+            <span class="dt">selection=</span>selection
+        )
+    })
+})</code></pre></div>
 </div>
 <div id="handling-selections" class="section level2">
 <h2><span class="header-section-number">8.6</span> Handling selections</h2>
-<p>Now for the most important bit - configuring the <code>GOTable</code> to transmit a multiple row selection to other panels.
-This is achieved by specializing a series of <code>.multiSelection*()</code> methods.
-The first is the <code>.multiSelectionDimension()</code>, which controls the dimension being transmitted:</p>
-<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb42-1" title="1"><span class="kw">setMethod</span>(<span class="st">&quot;.multiSelectionDimension&quot;</span>, <span class="st">&quot;GOTable&quot;</span>, <span class="cf">function</span>(x) <span class="st">&quot;row&quot;</span>)</a></code></pre></div>
-<p>The next most important method is the <code>.multiSelectionCommands()</code>, which tells <code>iSEE()</code> how to create the multiple row selection from the selected <code>DataTable</code> row.
-It is expected to return a vector of commands that, when evaluated, creates a character vector of row names for transmission.
-This has an option (<code>index</code>) to differentiate between active and saved selections, though the latter case is not relevant to our <code>GOTable</code> so we will simply ignore it.
-We also need to protect against cases where the requested GO term is not found, upon which we simply return an empty character vector.</p>
-<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb43-1" title="1"><span class="kw">setMethod</span>(<span class="st">&quot;.multiSelectionCommands&quot;</span>, <span class="st">&quot;GOTable&quot;</span>, <span class="cf">function</span>(x, index) {</a>
-<a class="sourceLine" id="cb43-2" title="2">    orgdb &lt;-<span class="st"> </span>x[[<span class="st">&quot;Organism&quot;</span>]]</a>
-<a class="sourceLine" id="cb43-3" title="3">    type &lt;-<span class="st"> </span>x[[<span class="st">&quot;IDType&quot;</span>]]</a>
-<a class="sourceLine" id="cb43-4" title="4">    <span class="kw">c</span>(</a>
-<a class="sourceLine" id="cb43-5" title="5">        <span class="kw">sprintf</span>(<span class="st">&quot;require(%s);&quot;</span>, orgdb),</a>
-<a class="sourceLine" id="cb43-6" title="6">        <span class="kw">sprintf</span>(<span class="st">&quot;selected &lt;- tryCatch(select(%s, keys=%s, keytype=&#39;GO&#39;, </span></a>
-<a class="sourceLine" id="cb43-7" title="7"><span class="st">    column=%s)$SYMBOL, error=function(e) character(0));&quot;</span>, </a>
-<a class="sourceLine" id="cb43-8" title="8">            orgdb, <span class="kw">deparse</span>(x[[<span class="st">&quot;Selected&quot;</span>]]), <span class="kw">deparse</span>(type)),</a>
-<a class="sourceLine" id="cb43-9" title="9">        <span class="st">&quot;selected &lt;- intersect(selected, rownames(se));&quot;</span></a>
-<a class="sourceLine" id="cb43-10" title="10">    )</a>
-<a class="sourceLine" id="cb43-11" title="11">})</a></code></pre></div>
-<p>We also define some generics to indicate whether a <code>DataTable</code> row is currently selected, and how to delete that selection.
-For the latter, we replace the selected row with an empty string to indicate that no selection has been made,
-consistent with the actions of our observer in <code>.createObservers()</code>.</p>
-<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb44-1" title="1"><span class="kw">setMethod</span>(<span class="st">&quot;.multiSelectionActive&quot;</span>, <span class="st">&quot;GOTable&quot;</span>, <span class="cf">function</span>(x) {</a>
-<a class="sourceLine" id="cb44-2" title="2">    <span class="cf">if</span> (x[[<span class="st">&quot;Selected&quot;</span>]]<span class="op">!=</span><span class="st">&quot;&quot;</span>) {</a>
-<a class="sourceLine" id="cb44-3" title="3">        x[[<span class="st">&quot;Selected&quot;</span>]]</a>
-<a class="sourceLine" id="cb44-4" title="4">    } <span class="cf">else</span> {</a>
-<a class="sourceLine" id="cb44-5" title="5">        <span class="ot">NULL</span></a>
-<a class="sourceLine" id="cb44-6" title="6">    }</a>
-<a class="sourceLine" id="cb44-7" title="7">})</a>
-<a class="sourceLine" id="cb44-8" title="8"></a>
-<a class="sourceLine" id="cb44-9" title="9"><span class="kw">setMethod</span>(<span class="st">&quot;.multiSelectionClear&quot;</span>, <span class="st">&quot;GOTable&quot;</span>, <span class="cf">function</span>(x) {</a>
-<a class="sourceLine" id="cb44-10" title="10">    x[[<span class="st">&quot;Selected&quot;</span>]] &lt;-<span class="st"> &quot;&quot;</span></a>
-<a class="sourceLine" id="cb44-11" title="11">    x</a>
-<a class="sourceLine" id="cb44-12" title="12">})</a></code></pre></div>
-<p>Finally, we define a method to determine the total number of available genes.
-The default is to use the number of rows of the <code>data.frame</code> used in the <code>datatable()</code> call,
-but that would not be right for us as it represents the number of gene sets.
-Instead, we use the availability information that we previously stored in the <code>contents</code> during <code>.generateOutput()</code>.</p>
-<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb45-1" title="1"><span class="kw">setMethod</span>(<span class="st">&quot;.multiSelectionAvailable&quot;</span>, <span class="st">&quot;GOTable&quot;</span>, <span class="cf">function</span>(x, contents) {</a>
-<a class="sourceLine" id="cb45-2" title="2">    contents<span class="op">$</span>available</a>
-<a class="sourceLine" id="cb45-3" title="3">})</a></code></pre></div>
+<p>Now for the most important bit - configuring the <code>GOTable</code> to transmit a multiple row selection to other panels. This is achieved by specializing a series of <code>.multiSelection*()</code> methods. The first is the <code>.multiSelectionDimension()</code>, which controls the dimension being transmitted:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">setMethod</span>(<span class="st">&quot;.multiSelectionDimension&quot;</span>, <span class="st">&quot;GOTable&quot;</span>, <span class="cf">function</span>(x) <span class="st">&quot;row&quot;</span>)</code></pre></div>
+<p>The next most important method is the <code>.multiSelectionCommands()</code>, which tells <code>iSEE()</code> how to create the multiple row selection from the selected <code>DataTable</code> row. It is expected to return a vector of commands that, when evaluated, creates a character vector of row names for transmission. This has an option (<code>index</code>) to differentiate between active and saved selections, though the latter case is not relevant to our <code>GOTable</code> so we will simply ignore it. We also need to protect against cases where the requested GO term is not found, upon which we simply return an empty character vector.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">setMethod</span>(<span class="st">&quot;.multiSelectionCommands&quot;</span>, <span class="st">&quot;GOTable&quot;</span>, <span class="cf">function</span>(x, index) {
+    orgdb &lt;-<span class="st"> </span>x[[<span class="st">&quot;Organism&quot;</span>]]
+    type &lt;-<span class="st"> </span>x[[<span class="st">&quot;IDType&quot;</span>]]
+    <span class="kw">c</span>(
+        <span class="kw">sprintf</span>(<span class="st">&quot;require(%s);&quot;</span>, orgdb),
+        <span class="kw">sprintf</span>(<span class="st">&quot;selected &lt;- tryCatch(select(%s, keys=%s, keytype=&#39;GO&#39;, </span>
+<span class="st">    column=%s)$SYMBOL, error=function(e) character(0));&quot;</span>, 
+            orgdb, <span class="kw">deparse</span>(x[[<span class="st">&quot;Selected&quot;</span>]]), <span class="kw">deparse</span>(type)),
+        <span class="st">&quot;selected &lt;- intersect(selected, rownames(se));&quot;</span>
+    )
+})</code></pre></div>
+<p>We also define some generics to indicate whether a <code>DataTable</code> row is currently selected, and how to delete that selection. For the latter, we replace the selected row with an empty string to indicate that no selection has been made, consistent with the actions of our observer in <code>.createObservers()</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">setMethod</span>(<span class="st">&quot;.multiSelectionActive&quot;</span>, <span class="st">&quot;GOTable&quot;</span>, <span class="cf">function</span>(x) {
+    <span class="cf">if</span> (x[[<span class="st">&quot;Selected&quot;</span>]]<span class="op">!=</span><span class="st">&quot;&quot;</span>) {
+        x[[<span class="st">&quot;Selected&quot;</span>]]
+    } <span class="cf">else</span> {
+        <span class="ot">NULL</span>
+    }
+})
+
+<span class="kw">setMethod</span>(<span class="st">&quot;.multiSelectionClear&quot;</span>, <span class="st">&quot;GOTable&quot;</span>, <span class="cf">function</span>(x) {
+    x[[<span class="st">&quot;Selected&quot;</span>]] &lt;-<span class="st"> &quot;&quot;</span>
+    x
+})</code></pre></div>
+<p>Finally, we define a method to determine the total number of available genes. The default is to use the number of rows of the <code>data.frame</code> used in the <code>datatable()</code> call, but that would not be right for us as it represents the number of gene sets. Instead, we use the availability information that we previously stored in the <code>contents</code> during <code>.generateOutput()</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">setMethod</span>(<span class="st">&quot;.multiSelectionAvailable&quot;</span>, <span class="st">&quot;GOTable&quot;</span>, <span class="cf">function</span>(x, contents) {
+    contents<span class="op">$</span>available
+})</code></pre></div>
 </div>
 <div id="in-action-3" class="section level2">
 <h2><span class="header-section-number">8.7</span> In action</h2>
 <p>Let’s put our new panel to the test using the <code>sce</code> object, preprocessed in a <a href="developing.html#developing">previous chapter</a>.</p>
 <p>Setting up the iSEE instance is as easy as:</p>
-<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb46-1" title="1">got &lt;-<span class="st"> </span><span class="kw">new</span>(<span class="st">&quot;GOTable&quot;</span>, <span class="dt">PanelWidth=</span>8L)</a>
-<a class="sourceLine" id="cb46-2" title="2">rst &lt;-<span class="st"> </span><span class="kw">RowStatTable</span>(<span class="dt">SelectRowSource=</span><span class="st">&quot;GOTable1&quot;</span>)</a>
-<a class="sourceLine" id="cb46-3" title="3">app &lt;-<span class="st"> </span><span class="kw">iSEE</span>(sce, <span class="dt">initial=</span><span class="kw">list</span>(got, rst))</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">got &lt;-<span class="st"> </span><span class="kw">new</span>(<span class="st">&quot;GOTable&quot;</span>, <span class="dt">PanelWidth=</span>8L)
+rst &lt;-<span class="st"> </span><span class="kw">RowDataTable</span>(<span class="dt">RowSelectionSource=</span><span class="st">&quot;GOTable1&quot;</span>)
+app &lt;-<span class="st"> </span><span class="kw">iSEE</span>(sce, <span class="dt">initial=</span><span class="kw">list</span>(got, rst))</code></pre></div>
 <p>Clicking on any row in the <code>GOTable</code> will subset <code>RowTable1</code> to only those genes in the corresponding GO term.</p>
 
 </div>
@@ -542,7 +486,7 @@ gitbook.start({
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    var src = "true";
+    var src = "";
     if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
     if (location.protocol !== "file:")
       if (/^https?:/.test(src))

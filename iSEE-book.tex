@@ -1,6 +1,3 @@
-\PassOptionsToPackage{unicode=true}{hyperref} % options for packages loaded elsewhere
-\PassOptionsToPackage{hyphens}{url}
-%
 \documentclass[]{book}
 \usepackage{lmodern}
 \usepackage{amssymb,amsmath}
@@ -9,9 +6,12 @@
 \ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
-  \usepackage{textcomp} % provides euro and other symbols
 \else % if luatex or xelatex
-  \usepackage{unicode-math}
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
   \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
 \fi
 % use upquote if available, for straight quotes in verbatim environments
@@ -21,19 +21,16 @@
 \usepackage[]{microtype}
 \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
-\IfFileExists{parskip.sty}{%
-\usepackage{parskip}
-}{% else
-\setlength{\parindent}{0pt}
-\setlength{\parskip}{6pt plus 2pt minus 1pt}
-}
-\usepackage{hyperref}
+\PassOptionsToPackage{hyphens}{url} % url is loaded by hyperref
+\usepackage[unicode=true]{hyperref}
 \hypersetup{
             pdftitle={Extending iSEE},
             pdfauthor={Kevin Rue-Albrecht, Federico Marini, Charlotte Soneson, and Aaron Lun},
             pdfborder={0 0 0},
             breaklinks=true}
 \urlstyle{same}  % don't use monospace font for urls
+\usepackage{natbib}
+\bibliographystyle{apalike}
 \usepackage{color}
 \usepackage{fancyvrb}
 \newcommand{\VerbBar}{|}
@@ -43,40 +40,40 @@
 \usepackage{framed}
 \definecolor{shadecolor}{RGB}{248,248,248}
 \newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
-\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
-\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
-\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
-\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
-\newcommand{\BuiltInTok}[1]{#1}
-\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
-\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
-\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
-\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
-\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
 \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
 \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
-\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
-\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
-\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
 \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
-\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
-\newcommand{\ImportTok}[1]{#1}
-\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
-\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
-\newcommand{\NormalTok}[1]{#1}
-\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
-\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
-\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
-\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
 \newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
-\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
 \newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
-\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
 \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
 \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
 \usepackage{longtable,booktabs}
 % Fix footnotes in tables (requires footnote package)
-\IfFileExists{footnote.sty}{\usepackage{footnote}\makesavenoteenv{longtable}}{}
+\IfFileExists{footnote.sty}{\usepackage{footnote}\makesavenoteenv{long table}}{}
 \usepackage{graphicx,grffile}
 \makeatletter
 \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
@@ -86,6 +83,12 @@
 % margins by default, and it is still possible to overwrite the defaults
 % using explicit options in \includegraphics[width, height, ...]{}
 \setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
 \setlength{\emergencystretch}{3em}  % prevent overfull lines
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
@@ -106,12 +109,10 @@
 \makeatother
 
 \usepackage{booktabs}
-\usepackage[]{natbib}
-\bibliographystyle{apalike}
 
 \title{Extending \emph{iSEE}}
 \author{Kevin Rue-Albrecht, Federico Marini, Charlotte Soneson, and Aaron Lun}
-\date{2020-02-08}
+\date{2020-02-23}
 
 \begin{document}
 \maketitle
@@ -120,102 +121,98 @@
 \setcounter{tocdepth}{1}
 \tableofcontents
 }
-\hypertarget{preface}{%
-\chapter*{Preface}\label{preface}}
+\chapter*{Preface}\label{preface}
 \addcontentsline{toc}{chapter}{Preface}
 
-The \href{https://bioconductor.org/}{Bioconductor} package \emph{\href{https://bioconductor.org/packages/3.11/iSEE}{iSEE}} provides functions for creating an interactive graphical user interface (GUI) using the \href{https://rstudio.com/}{RStudio} \emph{\href{https://CRAN.R-project.org/package=Shiny}{Shiny}} package for exploring data stored in \emph{\href{https://bioconductor.org/packages/3.11/SummarizedExperiment}{SummarizedExperiment}} objects, including row- and column-level metadata \citep{rue2018isee}.
-In this book we describe how to create web-applications that leverage builtin panels and develop new ones.
-We also present case studies to illustrate the development of custom panels.
+The \href{https://bioconductor.org/}{Bioconductor} package
+\emph{\href{https://bioconductor.org/packages/3.11/iSEE}{iSEE}} provides
+functions for creating an interactive graphical user interface (GUI)
+using the \href{https://rstudio.com/}{RStudio}
+\emph{\href{https://CRAN.R-project.org/package=Shiny}{Shiny}} package
+for exploring data stored in
+\emph{\href{https://bioconductor.org/packages/3.11/SummarizedExperiment}{SummarizedExperiment}}
+objects, including row- and column-level metadata \citep{rue2018isee}.
+In this book we describe key concepts and case studies to create
+web-applications that leverage builtin panels and develop new ones. We
+also present case studies to illustrate the development of custom
+panels.
 
-\hypertarget{panels}{%
-\chapter{Panel classes}\label{panels}}
+\hypertarget{panels}{\chapter{Panel classes}\label{panels}}
 
-\hypertarget{overview}{%
-\section{Overview}\label{overview}}
+\section{Overview}\label{overview}
 
-The types of panels available to compose an \emph{\href{https://bioconductor.org/packages/3.11/iSEE}{iSEE}} app are defined as a hierarchy of S4 classes.
+The types of builtin panels available to compose an
+\emph{\href{https://bioconductor.org/packages/3.11/iSEE}{iSEE}} app are
+defined as a hierarchy of S4 classes.
 
 \begin{itemize}
 \tightlist
 \item
-  \texttt{Panel}*
+  \texttt{Panel} 
+\item
+  \texttt{DotPlot}
 
   \begin{itemize}
   \tightlist
   \item
-    \texttt{DotPlot}*
-
-    \begin{itemize}
-    \tightlist
-    \item
-      \texttt{ColumnDotPlot}*
-
-      \begin{itemize}
-      \tightlist
-      \item
-        \texttt{RedDimPlot}
-      \item
-        \texttt{ColDataPlot}
-      \item
-        \texttt{FeatAssayPlot}
-      \end{itemize}
-    \item
-      \texttt{RowDotPlot}*
-
-      \begin{itemize}
-      \tightlist
-      \item
-        \texttt{RowDataPlot}
-      \item
-        \texttt{SampAssayPlot}
-      \end{itemize}
-    \end{itemize}
+    \texttt{ColumnDotPlot} 
   \item
-    \texttt{Table}*
-
-    \begin{itemize}
-    \tightlist
-    \item
-      \texttt{RowTable}*
-
-      \begin{itemize}
-      \tightlist
-      \item
-        \texttt{RowStatTable}
-      \end{itemize}
-    \item
-      \texttt{ColumnTable}*
-
-      \begin{itemize}
-      \tightlist
-      \item
-        \texttt{ColStatTable}
-      \end{itemize}
-    \end{itemize}
+    \texttt{ReducedDimensionPlot}
   \item
-    \texttt{HeatMapPlot}
+    \texttt{ColumnDataPlot}
+  \item
+    \texttt{FeatureAssayPlot}
+  \item
+    \texttt{RowDotPlot} 
+  \item
+    \texttt{RowDataPlot}
+  \item
+    \texttt{SampleAssayPlot}
   \end{itemize}
+\item
+  \texttt{Table}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \texttt{RowTable} 
+  \item
+    \texttt{RowDataTable}
+  \item
+    \texttt{ColumnTable} 
+  \item
+    \texttt{ColDataTable}
+  \end{itemize}
+\item
+  \texttt{ComplexHeatmapPlot}
 \end{itemize}
 
-Some of those classes are ``virtual'' (indicated by *), meaning that they cannot be directly instanciated as panels in the GUI.
-Instead, virtual panel classes define families of panels that share groups of properties.
+Some of those classes are ``virtual'' (indicated by ), meaning that they
+cannot be directly instanciated as panels in the GUI. Instead, virtual
+panel classes define families of panels that share groups of properties.
+As such, virtual classes are meant to be used as the parent of concrete
+classes that share the associated properties.
 
-Virtual classes are meant to be used as the parent of one or more concrete classes.
-In contrast, concrete classes must define fully-functional panels that can be embedded in a GUI, interact with other panels, receive and process data, and generate an output such as a plot or a table, accompanied by a code chunk to display in the code tracker for reproducibility.
+In contrast, concrete classes must define fully-functional panels that
+can be embedded in a GUI, interact with other panels, receive and
+process data, and generate an output such as a plot or a table,
+accompanied by the associated R code to display in the code tracker for
+reproducibility.
 
-\hypertarget{the-panel-class}{%
-\section{The Panel class}\label{the-panel-class}}
+\section{The Panel class}\label{the-panel-class}
 
-The top-most class is called \texttt{Panel}.
-It is a virtual class that defines the core properties common to any panel - existing or future - that may be displayed in the interface.
+The top-most class is called \texttt{Panel}. It is a virtual class that
+defines the core properties common to any panel - existing or future -
+that may be displayed in the interface.
 
-Refer to \texttt{help("Panel-class")} for more information about the slots and methods provided by this core class.
+Refer to \texttt{help("Panel-class")} for more information about the
+slots and methods provided by this class.
 
-\hypertarget{the-dotplot-and-table-panel-families}{%
-\section{The DotPlot and Table panel families}\label{the-dotplot-and-table-panel-families}}
+\section{The DotPlot and Table panel
+families}\label{the-dotplot-and-table-panel-families}
 
-The \texttt{Panel} virtual class is directly derived into two major virtual sub-classes:
+The virtual class \texttt{Panel} is directly derived into two major
+virtual sub-classes:
 
 \begin{itemize}
 \tightlist
@@ -225,133 +222,204 @@ The \texttt{Panel} virtual class is directly derived into two major virtual sub-
   \texttt{Table}
 \end{itemize}
 
-Those classes introduce properties that are specific to distinct subsets of panel types.
+Those classes introduce properties that are specific to distinct subsets
+of panel types.
 
-The \texttt{DotPlot} class introduces parameters specific to panels where the output is a \texttt{ggplot} object and each row in the data-frame is represented as a point in a plot.
+The class \texttt{DotPlot} introduces parameters specific to panels
+where the output is a \texttt{ggplot} object and each row in the
+data-frame is represented as a point in a plot. Refer to
+\texttt{help("DotPlot-class")} for more information.
 
-The \texttt{Table} class introduces parameters specific to panels where the main output is a data-frame directly displayed as a table in the GUI.
+The class \texttt{Table} introduces parameters specific to panels where
+the main output is a data-frame directly displayed as a table in the
+GUI. Refer to \texttt{help("Table-class")} for more information.
 
-In addition, the \texttt{HeatMapPlot} class defines a special concrete panel class that directly extends the \texttt{Panel} class, as it introduces a set of parameters distinct from both the \texttt{DotPlot} and \texttt{Table} panel families.
-This panel type is described in further details in a separate section \protect\hyperlink{heatmapplot-class}{below}.
+As a special case, the class \texttt{ComplexHeatmapPlot} defines a
+concrete panel class that directly extends the class \texttt{Panel}, as
+it introduces a set of parameters distinct from both the
+\texttt{DotPlot} and \texttt{Table} panel families. This panel class is
+described in further details in the section
+\protect\hyperlink{complexheatmapplot-class}{The ComplexHeatmapPlot
+panel class}.
 
-\hypertarget{the-columndotplot-and-rowdotplot-panel-families}{%
-\section{The ColumnDotPlot and RowDotPlot panel families}\label{the-columndotplot-and-rowdotplot-panel-families}}
+\section{The ColumnDotPlot and RowDotPlot panel
+families}\label{the-columndotplot-and-rowdotplot-panel-families}
 
-\hypertarget{built-in-columndotplot-panel-classes}{%
-\section{Built-in ColumnDotPlot panel classes}\label{built-in-columndotplot-panel-classes}}
+\section{Built-in ColumnDotPlot panel
+classes}\label{built-in-columndotplot-panel-classes}
 
-\hypertarget{built-in-rowdotplot-panel-classes}{%
-\section{Built-in RowDotPlot panel classes}\label{built-in-rowdotplot-panel-classes}}
+\section{Built-in RowDotPlot panel
+classes}\label{built-in-rowdotplot-panel-classes}
 
-\hypertarget{the-columntable-and-rowtable-panel-families}{%
-\section{The ColumnTable and RowTable panel families}\label{the-columntable-and-rowtable-panel-families}}
+\section{The ColumnTable and RowTable panel
+families}\label{the-columntable-and-rowtable-panel-families}
 
-\hypertarget{built-in-columntable-panel-classes}{%
-\section{Built-in ColumnTable panel classes}\label{built-in-columntable-panel-classes}}
+\section{Built-in ColumnTable panel
+classes}\label{built-in-columntable-panel-classes}
 
-\hypertarget{built-in-rowtable-panel-classes}{%
-\section{Built-in RowTable panel classes}\label{built-in-rowtable-panel-classes}}
+\section{Built-in RowTable panel
+classes}\label{built-in-rowtable-panel-classes}
 
-\hypertarget{heatmapplot-class}{%
-\section{The HeatMapPlot panel class}\label{heatmapplot-class}}
+\hypertarget{complexheatmapplot-class}{\section{The ComplexHeatmapPlot
+panel class}\label{complexheatmapplot-class}}
 
-This type of panel introduces parameters specific to panels where the output is a heat map, with each row representing a feature and each column representing a sample in the \texttt{se} object.
+This type of panel introduces parameters specific to panels where the
+output is a \texttt{Heatmap} object from the
+\emph{\href{https://bioconductor.org/packages/3.11/ComplexHeatmap}{ComplexHeatmap}}
+package. In this panel, each row represents a feature and each column
+represents a sample in the \texttt{se} object.
 
-\hypertarget{api}{%
-\chapter{The panel API}\label{api}}
+\chapter{The panel API}\label{api}
 
-\hypertarget{cachecommoninfo}{%
-\section{.cacheCommonInfo}\label{cachecommoninfo}}
+\section{.cacheCommonInfo}\label{cachecommoninfo}
 
-Each individual panel type (e.g., \emph{Reduced dimension plot}) and family of panel types (e.g., \emph{Column dot plot}) defines a \texttt{.cacheCommonInfo} function.
+Each individual panel type (e.g., \texttt{ReducedDimensionPlot}) and
+family of panel types (e.g., \texttt{ColumnDotPlot}) defines a signature
+for the method \texttt{.cacheCommonInfo()}.
 
-This function is called for each panel instance in memory when the app is initialized.
-It allows the app to efficiently compute a single time common information that only depends on the input \texttt{se} object, and may be frequently reused during the runtime of an app.
+This function is called for each panel instance in memory when the app
+is initialized. It allows the app to efficiently compute a single time
+common information that depends only on the input \texttt{se} object,
+and that may be frequently reused during the runtime of an app.
 
-Following the hierarchy of panel types, each call to the signature takes a panel instance \texttt{x} and the \texttt{se} object, and caches common information relevant to all instances of that panel type in the \texttt{se} object itself, before calling \texttt{callNextMethod()} to invoke the next parent signature.
+Following the hierarchy of panel types, each call to the signature takes
+a panel instance \texttt{x} and the \texttt{se} object, and caches
+common information relevant to any instance of that panel type in the
+\texttt{se} object itself, before calling \texttt{callNextMethod()} to
+invoke the next parent signature.
 
-The top-most signature - for the \texttt{Panel} class - returns the \texttt{se} object that contains all the cached information.
+The top-most signature - for the \texttt{Panel} class - returns the
+\texttt{se} object that contains all the cached information.
 
-Note that this function only populates the cache for the first panel of each type; it is a no-op if the common cache has already been initialized.
+Note that this function only populates the cache for the first panel of
+each type; it is a no-op if the common cache has already been
+initialized.
 
-\hypertarget{refineparameters}{%
-\section{.refineParameters}\label{refineparameters}}
+\section{.refineParameters}\label{refineparameters}
 
-Each individual panel type (e.g., \emph{Reduced dimension plot}) and family of panel types (e.g., \emph{Column dot plot}) defines a \texttt{.refineParameters} function.
+Each individual panel type (e.g., \texttt{ReducedDimensionPlot}) and
+family of panel types (e.g., \texttt{ColumnDotPlot}) defines a signature
+for the method \texttt{.refineParameters()}.
 
-This function is called for each panel instance in memory when the app is initialized, and also when a new panel is added to the GUI.
-It inspects the parameters of a given panel instance, and replaces invalid parameters with sensible values for a given \texttt{se} object.
+This function is called for each panel instance in memory when the app
+is initialized, and also for each new panel added to the GUI at runtime.
+It inspects the parameters of the given panel instance, and replaces any
+invalid parameter with a sensible value for a given \texttt{se} object.
 
-Following the hierarchy of panel types, each call to the signature takes an instance \texttt{x} and the \texttt{se} object, and first calls \texttt{callNextMethod()} to invoke the next parent signature, to refine generic parameters before processing specific ones.
+Following the hierarchy of panel types, each call to the signature takes
+a panel instance \texttt{x} and the \texttt{se} object, and first calls
+\texttt{callNextMethod()} to invoke the next parent signature, to refine
+generic parameters before processing specific ones.
 
-The called signature ultimately returns the updated instance panel \texttt{x}, or \texttt{NULL} if the panel instance is not available for this app.
+The called signature ultimately returns the updated panel instance
+\texttt{x}, or \texttt{NULL} if the panel instance is not available for
+this app.
 
-\hypertarget{generatedotplot}{%
-\section{.generateDotPlot}\label{generatedotplot}}
+\section{.generateDotPlot}\label{generatedotplot}
 
-Each panel type that derives from the virtual class \texttt{DotPlot} must define - or inherits - the \texttt{.generateDotPlot} method.
+Each panel type that derives from the virtual class \texttt{DotPlot}
+must define - or inherit - a signature for the method
+\texttt{.generateDotPlot()}.
 
-This function is called within \texttt{.renderOutput}, which is triggered by observers when the value of the input widgets are changed by users, or when a new panel is added to the GUI.
+This function is called within \texttt{.renderOutput()}, which is
+triggered by app observers when the value of the input widgets are
+changed by users, or when a new panel is added to the GUI.
 
-The \texttt{.generateDotPlot} function has access to the parameters for a given panel instance, and uses information available in the panel evaluation environment to generate and evaluate the plotting commands that ultimately produce the \texttt{ggplot} object to display in the panel.
+The method \texttt{.generateDotPlot()} has access to the parameters for
+a given panel instance, and uses information available in the panel
+evaluation environment to generate and evaluate the plotting commands
+that ultimately produce the \texttt{ggplot} object to display in the
+panel.
 
-Refer to the \textbf{``Generating the ggplot object''} section of \texttt{help(".generateDotPlot")} for more information.
+Refer to the \textbf{``Generating the ggplot object''} section of
+\texttt{help(".generateDotPlot")} for more information.
 
-\hypertarget{server}{%
-\chapter{The app server}\label{server}}
+\chapter{The app server}\label{server}
 
-\hypertarget{robjects}{%
-\section{Reactive objects}\label{robjects}}
+\hypertarget{robjects}{\section{Reactive objects}\label{robjects}}
 
-\hypertarget{persistent-non-reactive-objects}{%
-\section{Persistent (non-reactive) objects}\label{persistent-non-reactive-objects}}
+\section{Persistent (non-reactive)
+objects}\label{persistent-non-reactive-objects}
 
-\hypertarget{memory}{%
-\section{The app memory}\label{memory}}
+\hypertarget{memory}{\section{The app memory}\label{memory}}
 
-The app \texttt{memory} is a list of instances created from available panel classes, which defines the order in which individual panels are displayed in the GUI.
+The app \texttt{memory} is a list of instances created from available
+panel classes and currently visible in the GUI. The order of panel
+instances in \texttt{memory} directly reflects their order in the GUI.
 
-\hypertarget{initialization-of-the-app-server}{%
-\section{Initialization of the app server}\label{initialization-of-the-app-server}}
+\section{Initialization of the app
+server}\label{initialization-of-the-app-server}
 
-The app server is initialized as soon as a valid \texttt{se} object is provided.
-This can be either in the call to \texttt{iSEE(se)} or using the Shiny file upload button in apps that were launched without providing the \texttt{se} arguments, e.g., \texttt{iSEE()}.
+The app server is initialized as soon as a valid \texttt{se} object is
+provided. This can be either in the call to \texttt{iSEE(se)} or using
+other mechanisms of data upload at runtime within the app (e.g.,
+\texttt{fileInput} UI widgets when \texttt{iSEE()} is called without
+providing the \texttt{se} argument).
 
-The \texttt{initialize\_server} function takes the \texttt{se} object and the list holding reactive values used to trigger re-rendering of the GUI, as described \protect\hyperlink{robjects}{above}.
+The internal function \texttt{iSEE:::.initialize\_server()} takes the
+\texttt{se} object and the list holding reactive values used to trigger
+re-rendering of the GUI, as described in the section
+\protect\hyperlink{robjects}{Reactive objects}.
 
-The very first step invokes the function \texttt{.sanitize\_SE\_input} on the \texttt{se} object.
-This function coerces the \texttt{se} to \texttt{SingleCellExperiment}, flattens nested DataFrames, adds row and column names, and removes other non-atomic fields.
-In addition, it also sanitizes the \texttt{SingleCellExperiment} object by moving internal fields into the column- or row-level metadata, making them visible in the \emph{Column statistics table} and \emph{Row statistics table} panels, respectively. The function returns both the sanitized \texttt{se} object that will be used by the app, and the list of R commands that will be displayed in the code tracker for users.
+The very first step invokes the internal function
+\texttt{checkColormapCompatibility()}. This function takes the
+\texttt{se} object and the optioanl \texttt{colormap} argument provided
+to \texttt{iSEE()}, and carries out a number of compatibility checks
+between the two objects. The function collects a character vector of
+incompatibility issues that are displayed - if any - as warning
+notifications in GUI when the app is launched.
 
-Next, the server invokes the \texttt{checkColormapCompatibility} function.
-This function takes the \texttt{se} object and the optioanl \texttt{colormap} provided to \texttt{iSEE()}, and carries out a number of compatibility checks between the two objects.
-The function collects a character vector of issue messages that are displayed - if any - as warning messages in GUI during initialization.
+Next, the internal function \texttt{iSEE:::.prepare\_SE()} calls the
+method \texttt{.cacheCommonInfo()} on each type of panel present
+provided to \texttt{iSEE(initial)} and \texttt{iSEE(extra)}, to
+precompute and cache information relevant to all the types of panels
+that will be available in that app instance.
 
-Next, the \texttt{.cacheCommonInfo} and \texttt{.refineParameters} are successively invoked on each panel instance initialized in the app memory.
-As described in a separate section \protect\hyperlink{panel-api}{above}, the first function precomputes and caches information specific to the \texttt{se} object and frequently used throughout the runtime of the app.
-The second function ensures that each panel instance is initialized with valid parameters; it replaces any invalid parameters with sensible values for a given \texttt{se} object.
+Shortly after, the internal function
+\texttt{iSEE:::.setup\_initial\_state()} calls the method
+\texttt{.refineParameters} on each panel instance provided to
+\texttt{iSEE(initial)}, to ensure that all the panels present in the GUI
+when the app is launched are initialized with valid parameters; any
+invalid parameter is replaced with sensible values for the given
+\texttt{se} object.
 
-Next, persistent (non-reactive) objects are initialized:
+The internal function \texttt{iSEE:::.create\_persistent\_objects()}
+executes the initialization of persistent (non-reactive) objects:
 
 \begin{itemize}
 \tightlist
 \item
-  the app \texttt{memory} (see this \protect\hyperlink{memory}{section})
+  the app \texttt{memory} (see the section
+  \protect\hyperlink{memory}{The app memory})
 \item
-  the count of panels of each type, used to assign increasing ID to new panel instances
+  the app \texttt{reservoir}, which stores one instance of panel type
+  available for this app instance
 \item
-  the list of commands to display in the code tracker for each panel instance
+  the app \texttt{counter} is used to track the number of panels
+  previously created for each type, and to assign an increasing
+  identifier to new panel instances
 \item
-  the list of data point coordinates selectable in each panel instance\footnote{Data points downsampled for rendering speed performance remain selectable, even though they are not visible in the plot.}
+  the app \texttt{commands} stores the list of code chunks to display in
+  the code tracker, to reproduce each panel output
 \item
-  a list of miscellaneous cached information\footnote{The plot that contain the legend keys of \emph{Heatmap} panels is currently cached as miscellaneous information retrieved separately when rendering the GUI.}
+  the app \texttt{contents} stores the list of data point coordinates
+  selectable in each panel instance\footnote{Data points downsampled for
+    rendering speed performance remain selectable, even though they are
+    not visible in the plot.} 
+\item
+  the identifier of the panel under the control of speech recognition
 \end{itemize}
 
-\hypertarget{developing}{%
-\chapter{Developing new panels}\label{developing}}
+\hypertarget{developing}{\chapter{Developing new
+panels}\label{developing}}
 
-First, we need to load the \emph{\href{https://bioconductor.org/packages/3.11/iSEE}{iSEE}} package for this chapter.
-This action imports all the builtin panel class definitions, including the virtual class \texttt{Panel} that is the base class for any \emph{\href{https://bioconductor.org/packages/3.11/iSEE}{iSEE}} panel class.
+First, we need to load the
+\emph{\href{https://bioconductor.org/packages/3.11/iSEE}{iSEE}} package
+for this chapter. This action imports all the builtin panel class
+definitions, including the virtual class \texttt{Panel} that is the base
+class for any
+\emph{\href{https://bioconductor.org/packages/3.11/iSEE}{iSEE}} panel
+class.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -359,7 +427,9 @@ This action imports all the builtin panel class definitions, including the virtu
 \end{Highlighting}
 \end{Shaded}
 
-We also set up an example using our favorite dataset, creating a \texttt{SingleCellExperiment} object with some precomputed dimensionality reduction results.
+We also set up an example using our favorite dataset, creating a
+\texttt{SingleCellExperiment} object with some precomputed
+dimensionality reduction results.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -373,34 +443,47 @@ We also set up an example using our favorite dataset, creating a \texttt{SingleC
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{create-a-new-s4-class}{%
-\section{Create a new S4 class}\label{create-a-new-s4-class}}
+\section{Create a new S4 class}\label{create-a-new-s4-class}
 
-In the chapter \protect\hyperlink{panels}{Panel classes}, we saw how each type of panel is defined as an S4 class, organised in a hierarchy that allows new panel classes to inherit sets of the properties and functionality from parent classes.
+In the chapter \protect\hyperlink{panels}{Panel classes}, we saw how
+each type of panel is defined as an S4 class, organised in a hierarchy
+that allows new panel classes to inherit sets of the properties and
+functionality from parent classes.
 
-Then, developing a new panel type starts with the creation of a new class that inherits from the \texttt{Panel} class.
+Then, developing a new panel type starts with the creation of a new
+class that inherits from the \texttt{Panel} class.
 
-While it is possible to create a new panel class that directly inherits from the top-most virtual \texttt{Panel} class, this is the most advanced use case that we will describe in a later section.
+While it is possible to create a new panel class that directly inherits
+from the top-most virtual \texttt{Panel} class, this is the most
+advanced use case that we will describe in later chapters.
 
-Instead, new concrete panels classes can be rapidly derived from other concrete parent panel classes, using the inheritance relationships between classes to reuse properties and functionality defined in all of the parent classes.
+Instead, new concrete panels classes can be rapidly derived from other
+concrete parent panel classes, using the inheritance relationships
+between classes to reuse properties and functionality defined in all of
+the parent classes.
 
-The choice of a parent class for the new panel depends on the properties that we want that new panel to have.
-For instance, to create a panel that inherits all the functionality of the \emph{Reduced dimension plot} panel type, we simply define a new class that extends the \texttt{RedDimPlot} class.
-We call that new class \texttt{RedDimHexPlot}.
+The choice of a parent class depends on the properties that we want that
+new panel class to start with. For instance, to create a panel that
+inherits all the functionality of the \texttt{ReducedDimensionPlot}
+panel type, we simply define a new class that extends that class. For
+example in this chapter, we call that new class \texttt{RedDimHexPlot}.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{setClass}\NormalTok{(}\StringTok{"RedDimHexPlot"}\NormalTok{, }\DataTypeTok{contains=}\StringTok{"RedDimPlot"}\NormalTok{)}
+\KeywordTok{setClass}\NormalTok{(}\StringTok{"RedDimHexPlot"}\NormalTok{, }\DataTypeTok{contains=}\StringTok{"ReducedDimensionPlot"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{add-a-constructor-function}{%
-\section{Add a constructor function}\label{add-a-constructor-function}}
+\section{Add a constructor function}\label{add-a-constructor-function}
 
-At this point, it is possible to create instances of the new panel class already.
-To facilitate this, new panels should provide a constructor function - named identically to the class - to accept arbitrary arguments controlling the initialization of new panel instances created by the \texttt{new} function.
+At this point, it is already possible to create instances of the new
+panel class. To facilitate this, new panels should provide a constructor
+function - best practice is to name it identically to the class - to
+accept arbitrary arguments controlling the initialization of new panel
+instances created by the function \texttt{new()}.
 
-Here, we define a simple constructor function that passes all incoming arguments to the \texttt{new} function \emph{as is}.
+Here, we define a simple constructor function that passes all incoming
+arguments \emph{as is} to \texttt{new()}.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -410,7 +493,8 @@ Here, we define a simple constructor function that passes all incoming arguments
 \end{Highlighting}
 \end{Shaded}
 
-At this point, we can already use instances of this new panel class in \emph{\href{https://bioconductor.org/packages/3.11/iSEE}{iSEE}} apps.
+At this point, we can already use instances of this new panel class in
+\emph{\href{https://bioconductor.org/packages/3.11/iSEE}{iSEE}} apps.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -420,25 +504,33 @@ At this point, we can already use instances of this new panel class in \emph{\hr
 \end{Highlighting}
 \end{Shaded}
 
-However, that would not be very exciting as instances of this new panel class would behave exactly like the those of the \texttt{RedDimPlot} class.
+However, that would not be very exciting as instances of this new panel
+class would behave exactly like the those of the parent
+\texttt{ReducedDimensionPlot} class itself. To illustrate this, the
+following code chunk initializes an app displaying an instance of the
+new \texttt{RedDimHexPlot} and its parent \texttt{ReducedDimensionPlot}
+side by side.
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{RedDimHexPlot1 <-}\StringTok{ }\KeywordTok{RedDimHexPlot}\NormalTok{()}
-\NormalTok{RedDimPlot1 <-}\StringTok{ }\KeywordTok{RedDimPlot}\NormalTok{()}
-\NormalTok{initial <-}\StringTok{ }\KeywordTok{list}\NormalTok{(RedDimHexPlot1, RedDimPlot1)}
+\NormalTok{ReducedDimensionPlot1 <-}\StringTok{ }\KeywordTok{ReducedDimensionPlot}\NormalTok{()}
+\NormalTok{initial <-}\StringTok{ }\KeywordTok{list}\NormalTok{(RedDimHexPlot1, ReducedDimensionPlot1)}
 \NormalTok{app <-}\StringTok{ }\KeywordTok{iSEE}\NormalTok{(sce, }\DataTypeTok{initial =}\NormalTok{ initial)}
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{set-the-panel-name-in-the-gui}{%
-\section{Set the panel name in the GUI}\label{set-the-panel-name-in-the-gui}}
+\section{Set the panel name in the
+GUI}\label{set-the-panel-name-in-the-gui}
 
-The panel class that we created so far also inherited the name of the parent panel class.
-In other words, instances of both classes are indistinguishable from each other in the GUI.
+The panel class that we created so far also inherited the name of the
+parent panel class. In other words, instances of both classes are
+entirely indistinguishable from each other in the GUI.
 
-The name of each panel displayed in the GUI is defined by the \texttt{.fullName} method.
-To clearly distinguish the new panel class in the GUI, we overwrite this method to display a name different from the parent class.
+The name of each panel displayed in the GUI is defined by the method
+\texttt{.fullName()}. To clearly distinguish the new panel class in the
+GUI, we overwrite this method to display a name different from the
+parent class.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -446,26 +538,50 @@ To clearly distinguish the new panel class in the GUI, we overwrite this method 
 \end{Highlighting}
 \end{Shaded}
 
-With that, running \texttt{app} again now highlights how panels of the new class now display a different title from the parent class.
+With that, launching \texttt{app} again now highlights how panels of the
+new class now display a different title from the parent class.
 
-\hypertarget{define-the-commands-generating-a-plot-output}{%
-\section{Define the commands generating a plot output}\label{define-the-commands-generating-a-plot-output}}
+\section{Define the commands generating a plot
+output}\label{define-the-commands-generating-a-plot-output}
 
-Importantly, the API separates the generation of commands processing data from \texttt{sce} into a data-frame, from the generation of commands producing a \texttt{ggplot} object using the processed data-frame.
-If a new \texttt{DotPlot} panel class is meant to process data in the same way as its parent panel, only to display in a different way, it is then possible to overwrite only the \texttt{.generateDotPlot} method.
-Meanwhile, the data preprocessing will be implicitly handled by the other API methods inherited from the parent class.
+Importantly, the API separates the generation of commands processing
+data from \texttt{sce} into a data-frame, from the generation of
+commands producing a \texttt{ggplot} object using the processed
+data-frame. If a new panel class derived from \texttt{DotPlot} is meant
+to process data in the same way as its parent panel, only to display in
+a different way, it is then possible to overwrite only the method
+\texttt{.generateDotPlot()}. Meanwhile, the data preprocessing will be
+implicitly handled by the other API methods inherited from the parent
+class.
 
-Importantly, the \texttt{.generateDotPlot} method requires two key arguments: \texttt{labels} provides the plot labels for each of the aesthetics in the plot data, and \texttt{envir} provides the environment in which the plotting commands are to be evaluated to produce the \texttt{ggplot} object.
+Importantly, the method \texttt{.generateDotPlot()} requires two key
+arguments: \texttt{labels} provides the plot labels for each of the
+aesthetics in the plot data, and \texttt{envir} provides the environment
+in which the plotting commands are to be evaluated to produce the
+\texttt{ggplot} object.
 
-In particular, \texttt{.generateDotPlot} can rely on certain environment variables promised by the contract.
-Above all, those include \texttt{plot.data}, the data-frame that contains one row per data point to display.
-Using those environment variables, \texttt{.generateDotPlot} can make decisions altering the plotting commands and the resulting \texttt{ggplot} object.
+In particular, the contract offered by iSEE to panel developers promises
+the presence of certain variables in \texttt{envir}, that
+\texttt{.generateDotPlot()} can rely on. Using those environment
+variables, \texttt{.generateDotPlot()} can make decisions altering the
+plotting commands and the resulting \texttt{ggplot} object. For
+instance, the most important environment variable is \texttt{plot.data},
+the data-frame that contains one row per data point to display in
+\texttt{DotPlot} panels.
 
-We invite readers to refer to the \textbf{``Generating the ggplot object''} section of \texttt{help(".generateDotPlot")} for more information.
+Readers should refer to the \textbf{``Generating the ggplot object''}
+section of \texttt{help(".generateDotPlot")} for more information.
 
-As an example, we overwrite the \texttt{.generateDotPlot} function for the new \texttt{RedDimHexPlot} class to simply show the number of data point in the plotting area as a heatmap dividing the plane into regular hexagons.
-Notably, the function can immediately rely on the \texttt{plot.data} data-frame that is computed by methods defined for the parent class \texttt{RedDimPlot}.
-We also use the precomputed aesthetic \texttt{labels} associated with each column of \texttt{plot.data}, while setting a fixed \texttt{"Count"} label for the \texttt{fill} aesthetic associated with the count of observation in each hexagonal bin.
+As an example, we overwrite the method \texttt{.generateDotPlot()} for
+the new class \texttt{RedDimHexPlot} to simply show the number of data
+points in the plotting area as a heatmap dividing the plane into regular
+hexagons. Notably, the contract described above guarantees that the
+function can immediately rely on the \texttt{plot.data} data-frame that
+is computed by methods defined for the parent class
+\texttt{ReducedDimensionPlot}. We also use the precomputed aesthetic
+\texttt{labels} associated with each column of \texttt{plot.data}, while
+setting a fixed label \texttt{"Count"} for the \texttt{fill} aesthetic
+associated with the count of observation in each hexagonal bin.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -492,32 +608,40 @@ We also use the precomputed aesthetic \texttt{labels} associated with each colum
 \end{Highlighting}
 \end{Shaded}
 
-Running \texttt{app} again highlights how the \texttt{RedDimHexPlot} panel fills each hexagonal bin with a color indicating the number of data points present in the corresponding area in the \texttt{RedDimPlot} panel.
+Running \texttt{app} again highlights how the \texttt{RedDimHexPlot}
+panel fills each hexagonal bin with a color indicating the number of
+data points present in the corresponding area in the
+\texttt{ReducedDimensionPlot} panel.
 
-\hypertarget{dynamic-reduced-dimensions}{%
-\chapter{Dynamic reduced dimensions}\label{dynamic-reduced-dimensions}}
+\chapter{Dynamic reduced dimensions}\label{dynamic-reduced-dimensions}
 
-\hypertarget{overview-1}{%
-\section{Overview}\label{overview-1}}
+\section{Overview}\label{overview-1}
 
-In this case study, we will create a custom panel class to regenerate sample-level PCA coordinates using only a subset of points transmitted as a multiple column selection from another panel.
-We call this a \textbf{dynamic reduced dimension plot}, as it is dynamically recomputing the dimensionality reduction results rather than using pre-computed values in the \texttt{reducedDims()} slot of a \texttt{SingleCellExperiment} object.
+In this case study, we will create a custom panel class to regenerate
+sample-level PCA coordinates using only a subset of points transmitted
+as a multiple column selection from another panel. We call this a
+\textbf{dynamic reduced dimension plot}, as it is dynamically
+recomputing the dimensionality reduction results rather than using
+pre-computed values in the \texttt{reducedDims()} slot of a
+\texttt{SingleCellExperiment} object.
 
-\hypertarget{class-basics}{%
-\section{Class basics}\label{class-basics}}
+\section{Class basics}\label{class-basics}
 
-First, we define the basics of our new \texttt{Panel} class.
-As our new class will be showing each sample as a point, we inherit from the \texttt{ColumnDotPlot} virtual class.
-This automatically gives us access to all the functionality promised in the contract,
-including interface elements and observers to handle multiple selections and respond to aesthetic parameters.
+First, we define the basics of our new \texttt{Panel} class. As our new
+class will be showing each sample as a point, we inherit from the
+\texttt{ColumnDotPlot} virtual class. This automatically gives us access
+to all the functionality promised in the contract, including interface
+elements and observers to handle multiple selections and respond to
+aesthetic parameters.
 
-We add a slot specifying the type of dimensionality reduction result and the number of highly variable genes to use.
-Any new slots should also come with validity methods, as shown below.
+We add a slot specifying the type of dimensionality reduction result and
+the number of highly variable genes to use. Any new slots should also
+come with validity methods, as shown below.
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{library}\NormalTok{(S4Vectors)}
-\KeywordTok{setValidity2}\NormalTok{(}\StringTok{"DynRedDimPlot"}\NormalTok{, }\ControlFlowTok{function}\NormalTok{(object) \{}
+\KeywordTok{setValidity2}\NormalTok{(}\StringTok{"DynReducedDimensionPlot"}\NormalTok{, }\ControlFlowTok{function}\NormalTok{(object) \{}
 \NormalTok{    msg <-}\StringTok{ }\KeywordTok{character}\NormalTok{(}\DecValTok{0}\NormalTok{)}
 
     \ControlFlowTok{if}\NormalTok{ (}\KeywordTok{length}\NormalTok{(n <-}\StringTok{ }\NormalTok{object[[}\StringTok{"NGenes"}\NormalTok{]])}\OperatorTok{!=}\NormalTok{1L }\OperatorTok{||}\StringTok{ }\NormalTok{n }\OperatorTok{<}\StringTok{ }\NormalTok{1L) \{}
@@ -537,11 +661,12 @@ Any new slots should also come with validity methods, as shown below.
 \end{Highlighting}
 \end{Shaded}
 
-It is also worthwhile specializing the \texttt{initialize()} method to provide a default for new parameters:
+It is also worthwhile specializing the \texttt{initialize()} method to
+provide a default for new parameters:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{setMethod}\NormalTok{(}\StringTok{"initialize"}\NormalTok{, }\StringTok{"DynRedDimPlot"}\NormalTok{, }
+\KeywordTok{setMethod}\NormalTok{(}\StringTok{"initialize"}\NormalTok{, }\StringTok{"DynReducedDimensionPlot"}\NormalTok{, }
     \ControlFlowTok{function}\NormalTok{(.Object, }\DataTypeTok{Type=}\StringTok{"PCA"}\NormalTok{, }\DataTypeTok{NGenes=}\NormalTok{1000L, ...) }
 \NormalTok{\{}
     \KeywordTok{callNextMethod}\NormalTok{(.Object, }\DataTypeTok{Type=}\NormalTok{Type, }\DataTypeTok{NGenes=}\NormalTok{NGenes, ...)}
@@ -549,27 +674,28 @@ It is also worthwhile specializing the \texttt{initialize()} method to provide a
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{setting-up-the-interface}{%
-\section{Setting up the interface}\label{setting-up-the-interface}}
+\section{Setting up the interface}\label{setting-up-the-interface}
 
-The most basic requirement is to define some methods that describe our new panel in the \texttt{iSEE()} interface.
-This includes defining the full name and desired default color for display purposes:
+The most basic requirement is to define some methods that describe our
+new panel in the \texttt{iSEE()} interface. This includes defining the
+full name and desired default color for display purposes:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{setMethod}\NormalTok{(}\StringTok{".fullName"}\NormalTok{, }\StringTok{"DynRedDimPlot"}\NormalTok{, }\ControlFlowTok{function}\NormalTok{(x) }\StringTok{"Dynamic reduced dimension plot"}\NormalTok{)}
+\KeywordTok{setMethod}\NormalTok{(}\StringTok{".fullName"}\NormalTok{, }\StringTok{"DynReducedDimensionPlot"}\NormalTok{, }\ControlFlowTok{function}\NormalTok{(x) }\StringTok{"Dynamic reduced dimension plot"}\NormalTok{)}
 
-\KeywordTok{setMethod}\NormalTok{(}\StringTok{".panelColor"}\NormalTok{, }\StringTok{"DynRedDimPlot"}\NormalTok{, }\ControlFlowTok{function}\NormalTok{(x) }\StringTok{"#0F0F0F"}\NormalTok{)}
+\KeywordTok{setMethod}\NormalTok{(}\StringTok{".panelColor"}\NormalTok{, }\StringTok{"DynReducedDimensionPlot"}\NormalTok{, }\ControlFlowTok{function}\NormalTok{(x) }\StringTok{"#0F0F0F"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
-We also add interface elements to change the result type and the number of genes.
-This is most easily done by specializing the \texttt{.defineDataInterface} method:
+We also add interface elements to change the result type and the number
+of genes. This is most easily done by specializing the
+\texttt{.defineDataInterface} method:
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{library}\NormalTok{(shiny)}
-\KeywordTok{setMethod}\NormalTok{(}\StringTok{".defineDataInterface"}\NormalTok{, }\StringTok{"DynRedDimPlot"}\NormalTok{, }\ControlFlowTok{function}\NormalTok{(x, se, select_info) \{}
+\KeywordTok{setMethod}\NormalTok{(}\StringTok{".defineDataInterface"}\NormalTok{, }\StringTok{"DynReducedDimensionPlot"}\NormalTok{, }\ControlFlowTok{function}\NormalTok{(x, se, select_info) \{}
 \NormalTok{    plot_name <-}\StringTok{ }\KeywordTok{.getEncodedName}\NormalTok{(x)}
 
     \KeywordTok{list}\NormalTok{(}
@@ -582,21 +708,24 @@ This is most easily done by specializing the \texttt{.defineDataInterface} metho
 \end{Highlighting}
 \end{Shaded}
 
-We call \texttt{.getEncodedName()} to obtain a unique name for the current instance of our panel, e.g., \texttt{DynRedDimPlot1}.
-We then \texttt{paste0} the name of our panel to the name of any parameter to ensure that the ID is unique to this instance of our panel;
-otherwise, multiple \texttt{DynRedDimPlot}s would override each other.
-One can imagine this as a poor man's Shiny module.
+We call \texttt{.getEncodedName()} to obtain a unique name for the
+current instance of our panel, e.g., \texttt{DynReducedDimensionPlot1}.
+We then \texttt{paste0} the name of our panel to the name of any
+parameter to ensure that the ID is unique to this instance of our panel;
+otherwise, multiple \texttt{DynReducedDimensionPlot}s would override
+each other. One can imagine this as a poor man's Shiny module.
 
-\hypertarget{creating-the-observers}{%
-\section{Creating the observers}\label{creating-the-observers}}
+\section{Creating the observers}\label{creating-the-observers}
 
-We specialize \texttt{.createObservers} to define some observers to respond to changes in our new interface elements.
-Note the use of \texttt{callNextMethod()} to ensure that observers of the parent class are also created;
-this automatically ensures that we can respond to changes in parameters provided by \texttt{ColumnDotPlot}.
+We specialize \texttt{.createObservers} to define some observers to
+respond to changes in our new interface elements. Note the use of
+\texttt{callNextMethod()} to ensure that observers of the parent class
+are also created; this automatically ensures that we can respond to
+changes in parameters provided by \texttt{ColumnDotPlot}.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{setMethod}\NormalTok{(}\StringTok{".createObservers"}\NormalTok{, }\StringTok{"DynRedDimPlot"}\NormalTok{, }
+\KeywordTok{setMethod}\NormalTok{(}\StringTok{".createObservers"}\NormalTok{, }\StringTok{"DynReducedDimensionPlot"}\NormalTok{, }
     \ControlFlowTok{function}\NormalTok{(x, se, input, session, pObjects, rObjects) }
 \NormalTok{\{}
     \KeywordTok{callNextMethod}\NormalTok{()}
@@ -610,23 +739,31 @@ this automatically ensures that we can respond to changes in parameters provided
 \end{Highlighting}
 \end{Shaded}
 
-Both the \texttt{NGenes} and \texttt{Type} parameters are what we consider to be ``protected'' parameters,
-as changing them will alter the nature of the displayed plot.
-We use the \texttt{.createProtectedParameterObservers()} utility to set up observers for both parameters,
-which will instruct \texttt{iSEE()} to destroy existing brushes and lassos when these parameters are changed.
-The idea here is that brushes/lassos made on the previous plot do not make sense when the coordinates are recomputed.
+Both the \texttt{NGenes} and \texttt{Type} parameters are what we
+consider to be ``protected'' parameters, as changing them will alter the
+nature of the displayed plot. We use the
+\texttt{.createProtectedParameterObservers()} utility to set up
+observers for both parameters, which will instruct \texttt{iSEE()} to
+destroy existing brushes and lassos when these parameters are changed.
+The idea here is that brushes/lassos made on the previous plot do not
+make sense when the coordinates are recomputed.
 
-\hypertarget{making-the-plot}{%
-\section{Making the plot}\label{making-the-plot}}
+\section{Making the plot}\label{making-the-plot}
 
-When working with a \texttt{ColumnDotPlot} subclass, the easiest way to change plotting content to override the \texttt{.generateDotPlotData} method.
-This should add a \texttt{plot.data} variable to the \texttt{envir} environment that has columns \texttt{X} and \texttt{Y} and contains one row per column of the original \texttt{SummarizedExperiment}.
-It should also return a character vector of R commands describing how that \texttt{plot.data} object was constructed.
-The easiest way to do this is to create a character vector of commands and call \texttt{eval(parse(text=...),\ envir=envir)} to evaluate them within \texttt{envir}.
+When working with a \texttt{ColumnDotPlot} subclass, the easiest way to
+change plotting content to override the \texttt{.generateDotPlotData}
+method. This should add a \texttt{plot.data} variable to the
+\texttt{envir} environment that has columns \texttt{X} and \texttt{Y}
+and contains one row per column of the original
+\texttt{SummarizedExperiment}. It should also return a character vector
+of R commands describing how that \texttt{plot.data} object was
+constructed. The easiest way to do this is to create a character vector
+of commands and call \texttt{eval(parse(text=...),\ envir=envir)} to
+evaluate them within \texttt{envir}.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{setMethod}\NormalTok{(}\StringTok{".generateDotPlotData"}\NormalTok{, }\StringTok{"DynRedDimPlot"}\NormalTok{, }\ControlFlowTok{function}\NormalTok{(x, envir) \{}
+\KeywordTok{setMethod}\NormalTok{(}\StringTok{".generateDotPlotData"}\NormalTok{, }\StringTok{"DynReducedDimensionPlot"}\NormalTok{, }\ControlFlowTok{function}\NormalTok{(x, envir) \{}
 \NormalTok{    commands <-}\StringTok{ }\KeywordTok{character}\NormalTok{(}\DecValTok{0}\NormalTok{)}
 
     \ControlFlowTok{if}\NormalTok{ (}\OperatorTok{!}\KeywordTok{exists}\NormalTok{(}\StringTok{"col_selected"}\NormalTok{, }\DataTypeTok{envir=}\NormalTok{envir, }\DataTypeTok{inherits=}\OtherTok{FALSE}\NormalTok{)) \{}
@@ -655,67 +792,87 @@ The easiest way to do this is to create a character vector of commands and call 
 \end{Highlighting}
 \end{Shaded}
 
-We use functions from the \emph{\href{https://bioconductor.org/packages/3.11/scater}{scater}} package to do the actual heavy lifting of calculating the dimensionality reduction results.
-The \texttt{exists()} call will check whether any column selection is being transmitted to this panel; if not, it will just return a \texttt{plot.data} variable that contains all \texttt{NA}s such that an empty plot is created.
-If \texttt{col\_selected} does exist, it will contain a list of character vectors specifying the active and saved multiple selections that are being transmitted.
-For this particular example, we do not care about the distinction between active/saved selections so we just take the union of all of them.
+We use functions from the
+\emph{\href{https://bioconductor.org/packages/3.11/scater}{scater}}
+package to do the actual heavy lifting of calculating the dimensionality
+reduction results. The \texttt{exists()} call will check whether any
+column selection is being transmitted to this panel; if not, it will
+just return a \texttt{plot.data} variable that contains all \texttt{NA}s
+such that an empty plot is created. If \texttt{col\_selected} does
+exist, it will contain a list of character vectors specifying the active
+and saved multiple selections that are being transmitted. For this
+particular example, we do not care about the distinction between
+active/saved selections so we just take the union of all of them.
 
-Of course, this is not quite the most efficient way to implement a plotting panel that involves recomputation.
-A better approach would be to cache the x/y coordinates and reuse them if only aesthetic parameters have changed,
-thus avoiding an unnecessary delay from recomputation.
-Doing so requires overriding \texttt{.renderOutput()} to take advantage of the cached contents of the plot,
-so we will omit that here for simplicity.
+Of course, this is not quite the most efficient way to implement a
+plotting panel that involves recomputation. A better approach would be
+to cache the x/y coordinates and reuse them if only aesthetic parameters
+have changed, thus avoiding an unnecessary delay from recomputation.
+Doing so requires overriding \texttt{.renderOutput()} to take advantage
+of the cached contents of the plot, so we will omit that here for
+simplicity.
 
-\hypertarget{finishing-touches}{%
-\section{Finishing touches}\label{finishing-touches}}
+\section{Finishing touches}\label{finishing-touches}
 
-For this particular panel class, an additional helpful feature is to override \texttt{.multiSelectionInvalidated}.
-This indicates that any brushes or lassos in our plot should be destroyed when we receive a new column selection.
-Doing so is the only sensible course of action as the reduced dimension coordinates for one set of samples have no obvious relationship to the coordinates for another set of samples;
-having old brushes or lassos hanging around would be of no benefit at best, and be misleading at worst.
+For this particular panel class, an additional helpful feature is to
+override \texttt{.multiSelectionInvalidated}. This indicates that any
+brushes or lassos in our plot should be destroyed when we receive a new
+column selection. Doing so is the only sensible course of action as the
+reduced dimension coordinates for one set of samples have no obvious
+relationship to the coordinates for another set of samples; having old
+brushes or lassos hanging around would be of no benefit at best, and be
+misleading at worst.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{setMethod}\NormalTok{(}\StringTok{".multiSelectionInvalidated"}\NormalTok{, }\StringTok{"DynRedDimPlot"}\NormalTok{, }\ControlFlowTok{function}\NormalTok{(x) }\OtherTok{TRUE}\NormalTok{)}
+\KeywordTok{setMethod}\NormalTok{(}\StringTok{".multiSelectionInvalidated"}\NormalTok{, }\StringTok{"DynReducedDimensionPlot"}\NormalTok{, }\ControlFlowTok{function}\NormalTok{(x) }\OtherTok{TRUE}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{in-action}{%
-\section{In action}\label{in-action}}
+\section{In action}\label{in-action}
 
-Let's put our new panel to the test.
-We use the \texttt{sce} object, preprocessed in a \protect\hyperlink{developing}{previous chapter}, including some precomputed dimensionality reduction results.
+Let's put our new panel to the test. We use the \texttt{sce} object,
+preprocessed in a \protect\hyperlink{developing}{previous chapter},
+including some precomputed dimensionality reduction results.
 
-The plan is to create a (fixed) reduced dimension plot that will transmit a multiple selection to our dynamic reduced dimension plot.
+The plan is to create a (fixed) reduced dimension plot that will
+transmit a multiple selection to our dynamic reduced dimension plot.
 This is as easy as:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{rdp <-}\StringTok{ }\KeywordTok{RedDimPlot}\NormalTok{(}\DataTypeTok{PanelId=}\NormalTok{1L)}
-\NormalTok{drdp <-}\StringTok{ }\KeywordTok{new}\NormalTok{(}\StringTok{"DynRedDimPlot"}\NormalTok{, }\DataTypeTok{SelectColSource=}\StringTok{"RedDimPlot1"}\NormalTok{)}
+\NormalTok{rdp <-}\StringTok{ }\KeywordTok{ReducedDimensionPlot}\NormalTok{(}\DataTypeTok{PanelId=}\NormalTok{1L)}
+\NormalTok{drdp <-}\StringTok{ }\KeywordTok{new}\NormalTok{(}\StringTok{"DynReducedDimensionPlot"}\NormalTok{, }\DataTypeTok{ColumnSelectionSource=}\StringTok{"ReducedDimensionPlot1"}\NormalTok{)}
 \NormalTok{app <-}\StringTok{ }\KeywordTok{iSEE}\NormalTok{(sce, }\DataTypeTok{initial=}\KeywordTok{list}\NormalTok{(rdp, drdp))}
 \end{Highlighting}
 \end{Shaded}
 
-Brushing at any location in \texttt{RedDimPlot1} will then trigger dynamically recompution of results in our \texttt{DynRedDimPlot}.
+Brushing at any location in \texttt{ReducedDimensionPlot1} will then
+trigger dynamically recompution of results in our
+\texttt{DynReducedDimensionPlot}.
 
-\hypertarget{dynamic-differential-expression}{%
-\chapter{Dynamic differential expression}\label{dynamic-differential-expression}}
+\chapter{Dynamic differential
+expression}\label{dynamic-differential-expression}
 
-\hypertarget{overview-2}{%
-\section{Overview}\label{overview-2}}
+\section{Overview}\label{overview-2}
 
-In this case study, we will create a panel class to dynamically compute differential expression (DE) statistics between the active sample-level selection and the other saved selections from a transmitting panel.
-We will present the results of this computation in a \texttt{DataTable} widget from the \emph{\href{https://CRAN.R-project.org/package=DT}{DT}} package, where each row is a gene and each column is a relevant statistic (\(p\)-value, FDR, log-fold changes, etc.).
+In this case study, we will create a panel class to dynamically compute
+differential expression (DE) statistics between the active sample-level
+selection and the other saved selections from a transmitting panel. We
+will present the results of this computation in a \texttt{DataTable}
+widget from the \emph{\href{https://CRAN.R-project.org/package=DT}{DT}}
+package, where each row is a gene and each column is a relevant
+statistic (\(p\)-value, FDR, log-fold changes, etc.).
 
-\hypertarget{class-basics-1}{%
-\section{Class basics}\label{class-basics-1}}
+\section{Class basics}\label{class-basics-1}
 
-First, we define the basics of our new \texttt{Panel} class.
-As our new class will be showing each gene as a row, we inherit from the \texttt{RowTable} virtual class.
-This automatically gives us access to all the functionality promised in the contract,
-including interface elements and observers to respond to multiple selections.
-We also add a slot specifying the log-fold change threshold to use in the null hypothesis.
+First, we define the basics of our new \texttt{Panel} class. As our new
+class will be showing each gene as a row, we inherit from the
+\texttt{RowTable} virtual class. This automatically gives us access to
+all the functionality promised in the contract, including interface
+elements and observers to respond to multiple selections. We also add a
+slot specifying the log-fold change threshold to use in the null
+hypothesis.
 
 Any new slots should come with validity methods, as shown below.
 
@@ -736,26 +893,29 @@ Any new slots should come with validity methods, as shown below.
 \end{Highlighting}
 \end{Shaded}
 
-It is also worthwhile specializing the \texttt{initialize()} method to provide a default for new parameters.
-We hard-code the \texttt{SelectColType} setting as we want to obtain all multiple selections from the transmitting panel,
-in order to be able to perform pairwise DE analyses between the various active and saved selections.
-(By comparison, the default of \texttt{"Active"} will only transmit the current active selection.)
+It is also worthwhile specializing the \texttt{initialize()} method to
+provide a default for new parameters. We hard-code the
+\texttt{ColumnSelectionType} setting as we want to obtain all multiple
+selections from the transmitting panel, in order to be able to perform
+pairwise DE analyses between the various active and saved selections.
+(By comparison, the default of \texttt{"Active"} will only transmit the
+current active selection.)
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{setMethod}\NormalTok{(}\StringTok{"initialize"}\NormalTok{, }\StringTok{"DGETable"}\NormalTok{, }
     \ControlFlowTok{function}\NormalTok{(.Object, }\DataTypeTok{LogFC=}\DecValTok{0}\NormalTok{, ...) }
 \NormalTok{\{}
-    \KeywordTok{callNextMethod}\NormalTok{(.Object, }\DataTypeTok{LogFC=}\NormalTok{LogFC, }\DataTypeTok{SelectColType=}\StringTok{"Union"}\NormalTok{, ...)}
+    \KeywordTok{callNextMethod}\NormalTok{(.Object, }\DataTypeTok{LogFC=}\NormalTok{LogFC, }\DataTypeTok{ColumnSelectionType=}\StringTok{"Union"}\NormalTok{, ...)}
 \NormalTok{\})}
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{setting-up-the-interface-1}{%
-\section{Setting up the interface}\label{setting-up-the-interface-1}}
+\section{Setting up the interface}\label{setting-up-the-interface-1}
 
-The most basic requirement is to define some methods that describe our new panel in the \texttt{iSEE()} interface.
-This includes defining the full name and desired default color for display purposes:
+The most basic requirement is to define some methods that describe our
+new panel in the \texttt{iSEE()} interface. This includes defining the
+full name and desired default color for display purposes:
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -765,8 +925,9 @@ This includes defining the full name and desired default color for display purpo
 \end{Highlighting}
 \end{Shaded}
 
-We also add interface elements to change the result type and the number of genes.
-This is most easily done by specializing the \texttt{.defineDataInterface} method:
+We also add interface elements to change the result type and the number
+of genes. This is most easily done by specializing the
+\texttt{.defineDataInterface} method:
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -781,14 +942,17 @@ This is most easily done by specializing the \texttt{.defineDataInterface} metho
 \end{Highlighting}
 \end{Shaded}
 
-As we discussed before, we \texttt{paste0} the name of our panel to the name of any parameter to ensure that the ID is unique to this instance of our panel.
+As we discussed before, we \texttt{paste0} the name of our panel to the
+name of any parameter to ensure that the ID is unique to this instance
+of our panel.
 
-\hypertarget{creating-the-observers-1}{%
-\section{Creating the observers}\label{creating-the-observers-1}}
+\section{Creating the observers}\label{creating-the-observers-1}
 
-We specialize \texttt{.createObservers} to define some observers to respond to changes in our new interface elements.
-Note the use of \texttt{callNextMethod()} to ensure that observers of the parent class are also created;
-this automatically ensures that we can respond to changes in parameters provided by \texttt{RowTable}.
+We specialize \texttt{.createObservers} to define some observers to
+respond to changes in our new interface elements. Note the use of
+\texttt{callNextMethod()} to ensure that observers of the parent class
+are also created; this automatically ensures that we can respond to
+changes in parameters provided by \texttt{RowTable}.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -806,17 +970,24 @@ this automatically ensures that we can respond to changes in parameters provided
 \end{Highlighting}
 \end{Shaded}
 
-The distinction between protected and unprotected parameters is less important for \texttt{Table}s;
-as long as the types of the columns do not change between renderings, any column or global selections (i.e., search terms) are usually still sensible.
+The distinction between protected and unprotected parameters is less
+important for \texttt{Table}s; as long as the types of the columns do
+not change between renderings, any column or global selections (i.e.,
+search terms) are usually still sensible.
 
-\hypertarget{making-the-table}{%
-\section{Making the table}\label{making-the-table}}
+\section{Making the table}\label{making-the-table}
 
-When working with a \texttt{RowTable} subclass, the easiest way to change plotting content to override the \texttt{.generateTable} method.
-This is expected to generate a \texttt{data.frame} in the evaluation environment, returning the commands required to do so.
-In this case, we want to perform one-sided \(t\)-tests between the active selection and any number of saved selections.
-We will use the \texttt{findMarkers()} function from \emph{\href{https://bioconductor.org/packages/3.11/scran}{scran}} to compute the desired statistics.
-This performs all pairwise comparisons, so is not as efficient as could be, but it will suffice for this demonstration.
+When working with a \texttt{RowTable} subclass, the easiest way to
+change plotting content to override the \texttt{.generateTable} method.
+This is expected to generate a \texttt{data.frame} in the evaluation
+environment, returning the commands required to do so. In this case, we
+want to perform one-sided \(t\)-tests between the active selection and
+any number of saved selections. We will use the \texttt{findMarkers()}
+function from
+\emph{\href{https://bioconductor.org/packages/3.11/scran}{scran}} to
+compute the desired statistics. This performs all pairwise comparisons,
+so is not as efficient as could be, but it will suffice for this
+demonstration.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -844,30 +1015,35 @@ This performs all pairwise comparisons, so is not as efficient as could be, but 
 \end{Highlighting}
 \end{Shaded}
 
-Readers may notice that we prefix internal variables with \texttt{.} in our commands.
-This ensures that they do not clash with global variables created by \texttt{iSEE()} itself
-(which is not an issue when running the app, but makes things difficult when the code is reported for tracking purposes).
+Readers may notice that we prefix internal variables with \texttt{.} in
+our commands. This ensures that they do not clash with global variables
+created by \texttt{iSEE()} itself (which is not an issue when running
+the app, but makes things difficult when the code is reported for
+tracking purposes).
 
-\hypertarget{finishing-touches-1}{%
-\section{Finishing touches}\label{finishing-touches-1}}
+\section{Finishing touches}\label{finishing-touches-1}
 
-By default, all \texttt{RowTable}s hide their multiple column selection parameter choices.
-This considers the typical use case where \texttt{RowTable}s respond to a selection of rows,
-rather than a selection of columns as in our \texttt{DGETable}.
-Thus, we need to flip this around so that the unresponsive row selection parameters are hidden in the interface
-while the useful column selection parameters are visible.
+By default, all \texttt{RowTable}s hide their multiple column selection
+parameter choices. This considers the typical use case where
+\texttt{RowTable}s respond to a selection of rows, rather than a
+selection of columns as in our \texttt{DGETable}. Thus, we need to flip
+this around so that the unresponsive row selection parameters are hidden
+in the interface while the useful column selection parameters are
+visible.
 
-We do so by specializing the \texttt{.hideInterface()} method,
-which returns \texttt{TRUE} to indicate that a particular interface element should be hidden.
-We do not ``un-hide'' \texttt{SelectColType} and \texttt{SelectColSaved} here;
-our tests are always performed between the active versus saved selection, so there is no effect from choosing the selection type.
+We do so by specializing the \texttt{.hideInterface()} method, which
+returns \texttt{TRUE} to indicate that a particular interface element
+should be hidden. We do not ``un-hide'' \texttt{ColumnSelectionType} and
+\texttt{ColumnSelectionSaved} here; our tests are always performed
+between the active versus saved selection, so there is no effect from
+choosing the selection type.
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{setMethod}\NormalTok{(}\StringTok{".hideInterface"}\NormalTok{, }\StringTok{"DGETable"}\NormalTok{, }\ControlFlowTok{function}\NormalTok{(x, field) \{}
-    \ControlFlowTok{if}\NormalTok{ (field }\OperatorTok{%in%}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"SelectRowSource"}\NormalTok{, }\StringTok{"SelectRowType"}\NormalTok{, }\StringTok{"SelectRowSaved"}\NormalTok{)) \{}
+    \ControlFlowTok{if}\NormalTok{ (field }\OperatorTok{%in%}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"RowSelectionSource"}\NormalTok{, }\StringTok{"RowSelectionType"}\NormalTok{, }\StringTok{"RowSelectionSaved"}\NormalTok{)) \{}
         \OtherTok{TRUE}
-\NormalTok{    \} }\ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{ (field }\OperatorTok{%in%}\StringTok{ "SelectColSource"}\NormalTok{) \{}
+\NormalTok{    \} }\ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{ (field }\OperatorTok{%in%}\StringTok{ "ColumnSelectionSource"}\NormalTok{) \{}
         \OtherTok{FALSE}
 \NormalTok{    \} }\ControlFlowTok{else}\NormalTok{ \{}
         \KeywordTok{callNextMethod}\NormalTok{()}
@@ -876,50 +1052,58 @@ our tests are always performed between the active versus saved selection, so the
 \end{Highlighting}
 \end{Shaded}
 
-A more advanced version of this panel class might consider responding to a row selection by only performing the DE analysis on the selected features.
-In such cases, we would not need to hide \texttt{SelectRowSource}, though we will leave that as an exercise for the curious.
+A more advanced version of this panel class might consider responding to
+a row selection by only performing the DE analysis on the selected
+features. In such cases, we would not need to hide
+\texttt{RowSelectionSource}, though we will leave that as an exercise
+for the curious.
 
-\hypertarget{in-action-1}{%
-\section{In action}\label{in-action-1}}
+\section{In action}\label{in-action-1}
 
-Let's put our new panel to the test.
-We use the \texttt{sce} object, preprocessed in a \protect\hyperlink{developing}{previous chapter}, including some precomputed dimensionality reduction results.
+Let's put our new panel to the test. We use the \texttt{sce} object,
+preprocessed in a \protect\hyperlink{developing}{previous chapter},
+including some precomputed dimensionality reduction results.
 
-The plan is to create a (fixed) reduced dimension plot that will transmit to our DGE table.
-Setting up the iSEE instance is as easy as:
+The plan is to create a (fixed) reduced dimension plot that will
+transmit to our DGE table. Setting up the iSEE instance is as easy as:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{rdp <-}\StringTok{ }\KeywordTok{RedDimPlot}\NormalTok{(}\DataTypeTok{PanelId=}\NormalTok{1L, }\DataTypeTok{SelectBoxOpen=}\OtherTok{TRUE}\NormalTok{)}
-\NormalTok{dget <-}\StringTok{ }\KeywordTok{new}\NormalTok{(}\StringTok{"DGETable"}\NormalTok{, }\DataTypeTok{SelectColSource=}\StringTok{"RedDimPlot1"}\NormalTok{, }\DataTypeTok{PanelWidth=}\NormalTok{8L)}
+\NormalTok{rdp <-}\StringTok{ }\KeywordTok{ReducedDimensionPlot}\NormalTok{(}\DataTypeTok{PanelId=}\NormalTok{1L, }\DataTypeTok{SelectionBoxOpen=}\OtherTok{TRUE}\NormalTok{)}
+\NormalTok{dget <-}\StringTok{ }\KeywordTok{new}\NormalTok{(}\StringTok{"DGETable"}\NormalTok{, }\DataTypeTok{ColumnSelectionSource=}\StringTok{"ReducedDimensionPlot1"}\NormalTok{, }\DataTypeTok{PanelWidth=}\NormalTok{8L)}
 \NormalTok{app <-}\StringTok{ }\KeywordTok{iSEE}\NormalTok{(sce, }\DataTypeTok{initial=}\KeywordTok{list}\NormalTok{(rdp, dget))}
 \end{Highlighting}
 \end{Shaded}
 
-Brushing (or lassoing) at any location and saving the selection will trigger dynamic recompution of results in our \texttt{DGETable}.
-We can repeat this with any number of saved selections.
+Brushing (or lassoing) at any location and saving the selection will
+trigger dynamic recompution of results in our \texttt{DGETable}. We can
+repeat this with any number of saved selections.
 
-\hypertarget{annotated-gene-list}{%
-\chapter{Annotated gene list}\label{annotated-gene-list}}
+\chapter{Annotated gene list}\label{annotated-gene-list}
 
-\hypertarget{overview-3}{%
-\section{Overview}\label{overview-3}}
+\section{Overview}\label{overview-3}
 
-When given a gene list, we often need to look up the function of the top genes in a search engine.
-This typically involves copy-pasting the gene name or ID into the search box and pressing Enter, which is a pain.
-Instead, we can automate this process in \emph{\href{https://bioconductor.org/packages/3.11/iSEE}{iSEE}} by creating an \textbf{annotated gene table}.
-We demonstrate by showing how we can dynamically look up annotation for each gene in the \texttt{rowData} of a \texttt{SummarizedExperiment}.
+When given a gene list, we often need to look up the function of the top
+genes in a search engine. This typically involves copy-pasting the gene
+name or ID into the search box and pressing Enter, which is a pain.
+Instead, we can automate this process in
+\emph{\href{https://bioconductor.org/packages/3.11/iSEE}{iSEE}} by
+creating an \textbf{annotated gene table}. We demonstrate by showing how
+we can dynamically look up annotation for each gene in the
+\texttt{rowData} of a \texttt{SummarizedExperiment}.
 
-\hypertarget{class-basics-2}{%
-\section{Class basics}\label{class-basics-2}}
+\section{Class basics}\label{class-basics-2}
 
-First, we define the basics of our new \texttt{Panel} class.
-Our new class will be showing the gene-level metadata, so we inherit from the \texttt{RowStatTable} class that does exactly this.
-We add some slots specifying which column of the table contains our gene IDs, the type of ID and the organism database to use.
+First, we define the basics of our new \texttt{Panel} class. Our new
+class will be showing the gene-level metadata, so we inherit from the
+\texttt{RowDataTable} class that does exactly this. We add some slots
+specifying which column of the table contains our gene IDs, the type of
+ID and the organism database to use.
 
-We specialize the validity method to check that the \texttt{IDColumn} is either a string or \texttt{NULL};
-if the latter, we assume that the ID is stored in the row name.
-We also add some cursory checks for the other parameters.
+We specialize the validity method to check that the \texttt{IDColumn} is
+either a string or \texttt{NULL}; if the latter, we assume that the ID
+is stored in the row name. We also add some cursory checks for the other
+parameters.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -951,7 +1135,8 @@ We also add some cursory checks for the other parameters.
 \end{Highlighting}
 \end{Shaded}
 
-We then specialize the initialize method to set reasonable defaults for these parameters.
+We then specialize the initialize method to set reasonable defaults for
+these parameters.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -964,8 +1149,7 @@ We then specialize the initialize method to set reasonable defaults for these pa
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{setting-up-the-interface-2}{%
-\section{Setting up the interface}\label{setting-up-the-interface-2}}
+\section{Setting up the interface}\label{setting-up-the-interface-2}
 
 We define the full name and desired default color for display purposes:
 
@@ -978,15 +1162,16 @@ We define the full name and desired default color for display purposes:
 \end{Shaded}
 
 We want to add another UI element for showing the gene-level annotation.
-This is achieved by specializing the \texttt{.defineOutput()} method as shown below;
-note the prefixing by the panel name to ensure that output element IDs from different panels are unique.
+This is achieved by specializing the \texttt{.defineOutput()} method as
+shown below; note the prefixing by the panel name to ensure that output
+element IDs from different panels are unique.
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{setMethod}\NormalTok{(}\StringTok{".defineOutput"}\NormalTok{, }\StringTok{"GeneAnnoTable"}\NormalTok{, }\ControlFlowTok{function}\NormalTok{(x, ...) \{}
 \NormalTok{    panel_name <-}\StringTok{ }\KeywordTok{.getEncodedName}\NormalTok{(x)}
     \KeywordTok{tagList}\NormalTok{(}
-        \KeywordTok{callNextMethod}\NormalTok{(), }\CommentTok{# Re-using RowStatTable's definition.}
+        \KeywordTok{callNextMethod}\NormalTok{(), }\CommentTok{# Re-using RowDataTable's definition.}
         \KeywordTok{uiOutput}\NormalTok{(}\KeywordTok{paste0}\NormalTok{(panel_name, }\StringTok{"_annotation"}\NormalTok{)),}
         \KeywordTok{hr}\NormalTok{()}
 \NormalTok{    )}
@@ -994,9 +1179,10 @@ note the prefixing by the panel name to ensure that output element IDs from diff
 \end{Highlighting}
 \end{Shaded}
 
-We also set up interface elements for changing the annotation parameters.
-We will put these elements in a separate ``Annotation parameters'' collapsible box,
-which is initialized in an opened or closed state depending on the \texttt{AnnoBoxOpen} slot.
+We also set up interface elements for changing the annotation
+parameters. We will put these elements in a separate ``Annotation
+parameters'' collapsible box, which is initialized in an opened or
+closed state depending on the \texttt{AnnoBoxOpen} slot.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1031,11 +1217,12 @@ which is initialized in an opened or closed state depending on the \texttt{AnnoB
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{creating-the-observers-2}{%
-\section{Creating the observers}\label{creating-the-observers-2}}
+\section{Creating the observers}\label{creating-the-observers-2}
 
-We specialize \texttt{.createObservers} to define some observers to respond to changes in our new interface elements.
-Note the use of \texttt{callNextMethod()} to ensure that observers of the parent class are also created.
+We specialize \texttt{.createObservers} to define some observers to
+respond to changes in our new interface elements. Note the use of
+\texttt{callNextMethod()} to ensure that observers of the parent class
+are also created.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1053,14 +1240,17 @@ Note the use of \texttt{callNextMethod()} to ensure that observers of the parent
 \end{Highlighting}
 \end{Shaded}
 
-We need to set up a rendering expression for the annotation element that responds to the selected gene.
-By using \texttt{.trackSingleSelection()}, we ensure that this UI element updates in response to changes in the table selection.
-We add a series of protective measures to avoid the application crashing due to missing organism packages or unmatched IDs.
+We need to set up a rendering expression for the annotation element that
+responds to the selected gene. By using
+\texttt{.trackSingleSelection()}, we ensure that this UI element updates
+in response to changes in the table selection. We add a series of
+protective measures to avoid the application crashing due to missing
+organism packages or unmatched IDs.
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{setMethod}\NormalTok{(}\StringTok{".renderOutput"}\NormalTok{, }\StringTok{"GeneAnnoTable"}\NormalTok{, }\ControlFlowTok{function}\NormalTok{(x, se, ..., output, pObjects, rObjects) \{}
-    \KeywordTok{callNextMethod}\NormalTok{() }\CommentTok{# Re-using RowStatTable's output rendering.}
+    \KeywordTok{callNextMethod}\NormalTok{() }\CommentTok{# Re-using RowDataTable's output rendering.}
 
 \NormalTok{    panel_name <-}\StringTok{ }\KeywordTok{.getEncodedName}\NormalTok{(x)}
 \NormalTok{    output[[}\KeywordTok{paste0}\NormalTok{(panel_name, }\StringTok{"_annotation"}\NormalTok{)]] <-}\StringTok{ }\KeywordTok{renderUI}\NormalTok{(\{}
@@ -1106,14 +1296,16 @@ We add a series of protective measures to avoid the application crashing due to 
 \end{Highlighting}
 \end{Shaded}
 
-Observant readers will note that the body of the rendering expression uses \texttt{instance} rather than \texttt{x}.
-This is intentional as it ensures that we are using the parameter settings from the current state of the app.
-If we used \texttt{x}, we would always be using the parameters from the initial state of the app, which is not what we want.
+Observant readers will note that the body of the rendering expression
+uses \texttt{instance} rather than \texttt{x}. This is intentional as it
+ensures that we are using the parameter settings from the current state
+of the app. If we used \texttt{x}, we would always be using the
+parameters from the initial state of the app, which is not what we want.
 
-\hypertarget{in-action-2}{%
-\section{In action}\label{in-action-2}}
+\section{In action}\label{in-action-2}
 
-Let's put our new panel to the test using the \texttt{sce} object, preprocessed in a \protect\hyperlink{developing}{previous chapter}.
+Let's put our new panel to the test using the \texttt{sce} object,
+preprocessed in a \protect\hyperlink{developing}{previous chapter}.
 
 Setting up the iSEE instance is as easy as:
 
@@ -1124,28 +1316,32 @@ Setting up the iSEE instance is as easy as:
 \end{Highlighting}
 \end{Shaded}
 
-Clicking on any row will bring up the Entrez annotation (if available) for that feature.
-It is probably best to click on some well-annotated genes as the set of RIKEN transcripts at the front don't have much annotation.
+Clicking on any row will bring up the Entrez annotation (if available)
+for that feature. It is probably best to click on some well-annotated
+genes as the set of RIKEN transcripts at the front don't have much
+annotation.
 
-\hypertarget{gene-ontology-table}{%
-\chapter{Gene ontology table}\label{gene-ontology-table}}
+\chapter{Gene ontology table}\label{gene-ontology-table}
 
-\hypertarget{overview-4}{%
-\section{Overview}\label{overview-4}}
+\section{Overview}\label{overview-4}
 
-Here, we will construct a table of GO terms where selection of a row in the table
-causes transmission of a multiple selection of gene names.
-The aim is to enable us to transmit multiple row selections to other panels based on their membership of a gene set.
-This is a fairly involved example of creating a \texttt{Panel} subclass as we cannot easily inherit from an existing subclass;
-rather, we need to provide all the methods ourselves.
+Here, we will construct a table of GO terms where selection of a row in
+the table causes transmission of a multiple selection of gene names. The
+aim is to enable us to transmit multiple row selections to other panels
+based on their membership of a gene set. This is a fairly involved
+example of creating a \texttt{Panel} subclass as we cannot easily
+inherit from an existing subclass; rather, we need to provide all the
+methods ourselves.
 
-\hypertarget{class-basics-3}{%
-\section{Class basics}\label{class-basics-3}}
+\section{Class basics}\label{class-basics-3}
 
-First, we define the basics of our new \texttt{GOTable} class.
-This inherits from the virtual base \texttt{Panel} class as it cannot meet any of the contractual requirements of the subclasses,
-what with the \texttt{DataTable} selection event triggering a multiple selection rather than a single selection.
-We add some slots to specify the feature ID type and the organism of interest as well as for \texttt{DataTable} parameters.
+First, we define the basics of our new \texttt{GOTable} class. This
+inherits from the virtual base \texttt{Panel} class as it cannot meet
+any of the contractual requirements of the subclasses, what with the
+\texttt{DataTable} selection event triggering a multiple selection
+rather than a single selection. We add some slots to specify the feature
+ID type and the organism of interest as well as for \texttt{DataTable}
+parameters.
 
 We also add some checks for these parameters.
 
@@ -1194,8 +1390,7 @@ We then specialize the initialize method to set reasonable defaults.
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{setting-up-the-interface-3}{%
-\section{Setting up the interface}\label{setting-up-the-interface-3}}
+\section{Setting up the interface}\label{setting-up-the-interface-3}
 
 We define the full name and desired default color for display purposes:
 
@@ -1207,8 +1402,12 @@ We define the full name and desired default color for display purposes:
 \end{Highlighting}
 \end{Shaded}
 
-We add our UI element for showing the gene set table, which is simply a \texttt{DataTable} object from the \emph{\href{https://CRAN.R-project.org/package=DT}{DT}} package.
-Note that \emph{\href{https://CRAN.R-project.org/package=shiny}{shiny}} also has a \texttt{dataTableOutput} function so care must be taken to disambiguate them.
+We add our UI element for showing the gene set table, which is simply a
+\texttt{DataTable} object from the
+\emph{\href{https://CRAN.R-project.org/package=DT}{DT}} package. Note
+that \emph{\href{https://CRAN.R-project.org/package=shiny}{shiny}} also
+has a \texttt{dataTableOutput} function so care must be taken to
+disambiguate them.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1241,13 +1440,15 @@ We set up interface elements for changing the annotation parameters.
 \end{Highlighting}
 \end{Shaded}
 
-Our implementation will be a pure transmitter, i.e., it will not respond to row or column selections from other panels.
-To avoid confusion, we can hide all selection parameter UI elements by specializing the \texttt{.hideInterface()} method:
+Our implementation will be a pure transmitter, i.e., it will not respond
+to row or column selections from other panels. To avoid confusion, we
+can hide all selection parameter UI elements by specializing the
+\texttt{.hideInterface()} method:
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{setMethod}\NormalTok{(}\StringTok{".hideInterface"}\NormalTok{, }\StringTok{"GOTable"}\NormalTok{, }\ControlFlowTok{function}\NormalTok{(x, field) \{}
-    \ControlFlowTok{if}\NormalTok{ (field }\OperatorTok{%in%}\StringTok{ "SelectBoxOpen"}\NormalTok{) \{}
+    \ControlFlowTok{if}\NormalTok{ (field }\OperatorTok{%in%}\StringTok{ "SelectionBoxOpen"}\NormalTok{) \{}
         \OtherTok{TRUE}
 \NormalTok{    \} }\ControlFlowTok{else}\NormalTok{ \{}
         \KeywordTok{callNextMethod}\NormalTok{()}
@@ -1256,13 +1457,15 @@ To avoid confusion, we can hide all selection parameter UI elements by specializ
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{generating-the-output}{%
-\section{Generating the output}\label{generating-the-output}}
+\section{Generating the output}\label{generating-the-output}
 
-We actually generate the output by specializing the \texttt{.generateOutput()} function,
-using the \emph{\href{https://bioconductor.org/packages/3.11/GO.db}{GO.db}} package to create a table of GO terms and their definitions.
-We also store the number of available genes in the \texttt{contents} -
-this will be used later to compute the percentage of all genes in a given gene set.
+We actually generate the output by specializing the
+\texttt{.generateOutput()} function, using the
+\emph{\href{https://bioconductor.org/packages/3.11/GO.db}{GO.db}}
+package to create a table of GO terms and their definitions. We also
+store the number of available genes in the \texttt{contents} - this will
+be used later to compute the percentage of all genes in a given gene
+set.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1281,18 +1484,23 @@ this will be used later to compute the percentage of all genes in a given gene s
 \end{Highlighting}
 \end{Shaded}
 
-We don't actually depend on any parameters of \texttt{x} itself to generate this table.
-However, one could imagine a more complex case where the \texttt{GOTable} itself responds to a multiple row selection,
-e.g., by subsetting to the gene sets that contain genes in the selected row.
+We don't actually depend on any parameters of \texttt{x} itself to
+generate this table. However, one could imagine a more complex case
+where the \texttt{GOTable} itself responds to a multiple row selection,
+e.g., by subsetting to the gene sets that contain genes in the selected
+row.
 
-\hypertarget{creating-the-observers-3}{%
-\section{Creating the observers}\label{creating-the-observers-3}}
+\section{Creating the observers}\label{creating-the-observers-3}
 
-We specialize \texttt{.createObservers} to define some observers to respond to changes in our new interface elements.
-This also involves creating an observer to respond to a change in the selection of a \texttt{DataTable} row,
-calling \texttt{.requestActiveSelectionUpdate()} to trigger changes in panels that are receiving the multiple row selection.
-(We set up observers for the search fields as well, as a courtesy to restore them properly upon re-rendering.)
-Note the use of \texttt{callNextMethod()} to ensure that observers of the parent class are also created.
+We specialize \texttt{.createObservers} to define some observers to
+respond to changes in our new interface elements. This also involves
+creating an observer to respond to a change in the selection of a
+\texttt{DataTable} row, calling \texttt{.requestActiveSelectionUpdate()}
+to trigger changes in panels that are receiving the multiple row
+selection. (We set up observers for the search fields as well, as a
+courtesy to restore them properly upon re-rendering.) Note the use of
+\texttt{callNextMethod()} to ensure that observers of the parent class
+are also created.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1349,10 +1557,15 @@ Note the use of \texttt{callNextMethod()} to ensure that observers of the parent
 \end{Highlighting}
 \end{Shaded}
 
-We set up a rendering expression for the output table by specializing \texttt{.renderOutput()}.
-This uses the \texttt{renderDataTable()} function from the \emph{\href{https://CRAN.R-project.org/package=DT}{DT}} package
-(again, this has a similar-but-not-identical function in \emph{\href{https://CRAN.R-project.org/package=shiny}{shiny}}, so be careful which one you import.)
-Some effort is involved in making sure that the output table responds to the memorized parameter values of our \texttt{GOTable} panel.
+We set up a rendering expression for the output table by specializing
+\texttt{.renderOutput()}. This uses the \texttt{renderDataTable()}
+function from the
+\emph{\href{https://CRAN.R-project.org/package=DT}{DT}} package (again,
+this has a similar-but-not-identical function in
+\emph{\href{https://CRAN.R-project.org/package=shiny}{shiny}}, so be
+careful which one you import.) Some effort is involved in making sure
+that the output table responds to the memorized parameter values of our
+\texttt{GOTable} panel.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1395,12 +1608,13 @@ Some effort is involved in making sure that the output table responds to the mem
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{handling-selections}{%
-\section{Handling selections}\label{handling-selections}}
+\section{Handling selections}\label{handling-selections}
 
-Now for the most important bit - configuring the \texttt{GOTable} to transmit a multiple row selection to other panels.
-This is achieved by specializing a series of \texttt{.multiSelection*()} methods.
-The first is the \texttt{.multiSelectionDimension()}, which controls the dimension being transmitted:
+Now for the most important bit - configuring the \texttt{GOTable} to
+transmit a multiple row selection to other panels. This is achieved by
+specializing a series of \texttt{.multiSelection*()} methods. The first
+is the \texttt{.multiSelectionDimension()}, which controls the dimension
+being transmitted:
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1408,10 +1622,16 @@ The first is the \texttt{.multiSelectionDimension()}, which controls the dimensi
 \end{Highlighting}
 \end{Shaded}
 
-The next most important method is the \texttt{.multiSelectionCommands()}, which tells \texttt{iSEE()} how to create the multiple row selection from the selected \texttt{DataTable} row.
-It is expected to return a vector of commands that, when evaluated, creates a character vector of row names for transmission.
-This has an option (\texttt{index}) to differentiate between active and saved selections, though the latter case is not relevant to our \texttt{GOTable} so we will simply ignore it.
-We also need to protect against cases where the requested GO term is not found, upon which we simply return an empty character vector.
+The next most important method is the
+\texttt{.multiSelectionCommands()}, which tells \texttt{iSEE()} how to
+create the multiple row selection from the selected \texttt{DataTable}
+row. It is expected to return a vector of commands that, when evaluated,
+creates a character vector of row names for transmission. This has an
+option (\texttt{index}) to differentiate between active and saved
+selections, though the latter case is not relevant to our
+\texttt{GOTable} so we will simply ignore it. We also need to protect
+against cases where the requested GO term is not found, upon which we
+simply return an empty character vector.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1429,9 +1649,11 @@ We also need to protect against cases where the requested GO term is not found, 
 \end{Highlighting}
 \end{Shaded}
 
-We also define some generics to indicate whether a \texttt{DataTable} row is currently selected, and how to delete that selection.
-For the latter, we replace the selected row with an empty string to indicate that no selection has been made,
-consistent with the actions of our observer in \texttt{.createObservers()}.
+We also define some generics to indicate whether a \texttt{DataTable}
+row is currently selected, and how to delete that selection. For the
+latter, we replace the selected row with an empty string to indicate
+that no selection has been made, consistent with the actions of our
+observer in \texttt{.createObservers()}.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1450,10 +1672,12 @@ consistent with the actions of our observer in \texttt{.createObservers()}.
 \end{Highlighting}
 \end{Shaded}
 
-Finally, we define a method to determine the total number of available genes.
-The default is to use the number of rows of the \texttt{data.frame} used in the \texttt{datatable()} call,
-but that would not be right for us as it represents the number of gene sets.
-Instead, we use the availability information that we previously stored in the \texttt{contents} during \texttt{.generateOutput()}.
+Finally, we define a method to determine the total number of available
+genes. The default is to use the number of rows of the
+\texttt{data.frame} used in the \texttt{datatable()} call, but that
+would not be right for us as it represents the number of gene sets.
+Instead, we use the availability information that we previously stored
+in the \texttt{contents} during \texttt{.generateOutput()}.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1463,22 +1687,23 @@ Instead, we use the availability information that we previously stored in the \t
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{in-action-3}{%
-\section{In action}\label{in-action-3}}
+\section{In action}\label{in-action-3}
 
-Let's put our new panel to the test using the \texttt{sce} object, preprocessed in a \protect\hyperlink{developing}{previous chapter}.
+Let's put our new panel to the test using the \texttt{sce} object,
+preprocessed in a \protect\hyperlink{developing}{previous chapter}.
 
 Setting up the iSEE instance is as easy as:
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{got <-}\StringTok{ }\KeywordTok{new}\NormalTok{(}\StringTok{"GOTable"}\NormalTok{, }\DataTypeTok{PanelWidth=}\NormalTok{8L)}
-\NormalTok{rst <-}\StringTok{ }\KeywordTok{RowStatTable}\NormalTok{(}\DataTypeTok{SelectRowSource=}\StringTok{"GOTable1"}\NormalTok{)}
+\NormalTok{rst <-}\StringTok{ }\KeywordTok{RowDataTable}\NormalTok{(}\DataTypeTok{RowSelectionSource=}\StringTok{"GOTable1"}\NormalTok{)}
 \NormalTok{app <-}\StringTok{ }\KeywordTok{iSEE}\NormalTok{(sce, }\DataTypeTok{initial=}\KeywordTok{list}\NormalTok{(got, rst))}
 \end{Highlighting}
 \end{Shaded}
 
-Clicking on any row in the \texttt{GOTable} will subset \texttt{RowTable1} to only those genes in the corresponding GO term.
+Clicking on any row in the \texttt{GOTable} will subset
+\texttt{RowTable1} to only those genes in the corresponding GO term.
 
 \bibliography{book.bib,packages.bib}
 

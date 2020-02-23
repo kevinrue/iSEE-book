@@ -24,7 +24,7 @@
 <meta name="author" content="Kevin Rue-Albrecht, Federico Marini, Charlotte Soneson, and Aaron Lun" />
 
 
-<meta name="date" content="2020-02-08" />
+<meta name="date" content="2020-02-23" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -53,66 +53,41 @@
 
 
 <style type="text/css">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
-}
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(title);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-    color: #aaaaaa;
-  }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
-div.sourceCode
-  {  }
-@media screen {
-a.sourceLine::before { text-decoration: underline; }
-}
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #7d9029; } /* Attribute */
-code span.bn { color: #40a070; } /* BaseN */
-code span.bu { } /* BuiltIn */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4070a0; } /* Char */
-code span.cn { color: #880000; } /* Constant */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #40a070; } /* Float */
-code span.fu { color: #06287e; } /* Function */
-code span.im { } /* Import */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.op { color: #666666; } /* Operator */
-code span.ot { color: #007020; } /* Other */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.st { color: #4070a0; } /* String */
-code span.va { color: #19177c; } /* Variable */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
 </style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
@@ -142,7 +117,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="1.7" data-path="panels.html"><a href="panels.html#the-columntable-and-rowtable-panel-families"><i class="fa fa-check"></i><b>1.7</b> The ColumnTable and RowTable panel families</a></li>
 <li class="chapter" data-level="1.8" data-path="panels.html"><a href="panels.html#built-in-columntable-panel-classes"><i class="fa fa-check"></i><b>1.8</b> Built-in ColumnTable panel classes</a></li>
 <li class="chapter" data-level="1.9" data-path="panels.html"><a href="panels.html#built-in-rowtable-panel-classes"><i class="fa fa-check"></i><b>1.9</b> Built-in RowTable panel classes</a></li>
-<li class="chapter" data-level="1.10" data-path="panels.html"><a href="panels.html#heatmapplot-class"><i class="fa fa-check"></i><b>1.10</b> The HeatMapPlot panel class</a></li>
+<li class="chapter" data-level="1.10" data-path="panels.html"><a href="panels.html#complexheatmapplot-class"><i class="fa fa-check"></i><b>1.10</b> The ComplexHeatmapPlot panel class</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="api.html"><a href="api.html"><i class="fa fa-check"></i><b>2</b> The panel API</a><ul>
 <li class="chapter" data-level="2.1" data-path="api.html"><a href="api.html#cachecommoninfo"><i class="fa fa-check"></i><b>2.1</b> .cacheCommonInfo</a></li>
@@ -220,62 +195,48 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h1><span class="header-section-number">Chapter 1</span> Panel classes</h1>
 <div id="overview" class="section level2">
 <h2><span class="header-section-number">1.1</span> Overview</h2>
-<p>The types of panels available to compose an <em><a href="https://bioconductor.org/packages/3.11/iSEE">iSEE</a></em> app are defined as a hierarchy of S4 classes.</p>
+<p>The types of builtin panels available to compose an <em><a href="https://bioconductor.org/packages/3.11/iSEE">iSEE</a></em> app are defined as a hierarchy of S4 classes.</p>
 <!-- TODO Replace the bullet list below by a figure, like a filesystem tree. -->
 <ul>
-<li><code>Panel</code><sup>*</sup>
+<li><code>Panel</code> <i class="fa fa-eye-slash"></i></li>
+<li><code>DotPlot</code> <i class="fa fa-eye-slash"></i>
 <ul>
-<li><code>DotPlot</code><sup>*</sup>
-<ul>
-<li><code>ColumnDotPlot</code><sup>*</sup>
-<ul>
-<li><code>RedDimPlot</code></li>
-<li><code>ColDataPlot</code></li>
-<li><code>FeatAssayPlot</code></li>
-</ul></li>
-<li><code>RowDotPlot</code><sup>*</sup>
-<ul>
+<li><code>ColumnDotPlot</code> <i class="fa fa-eye-slash"></i></li>
+<li><code>ReducedDimensionPlot</code></li>
+<li><code>ColumnDataPlot</code></li>
+<li><code>FeatureAssayPlot</code></li>
+<li><code>RowDotPlot</code> <i class="fa fa-eye-slash"></i></li>
 <li><code>RowDataPlot</code></li>
-<li><code>SampAssayPlot</code></li>
+<li><code>SampleAssayPlot</code></li>
 </ul></li>
-</ul></li>
-<li><code>Table</code><sup>*</sup>
+<li><code>Table</code> <i class="fa fa-eye-slash"></i>
 <ul>
-<li><code>RowTable</code><sup>*</sup>
-<ul>
-<li><code>RowStatTable</code></li>
+<li><code>RowTable</code> <i class="fa fa-eye-slash"></i></li>
+<li><code>RowDataTable</code></li>
+<li><code>ColumnTable</code> <i class="fa fa-eye-slash"></i></li>
+<li><code>ColDataTable</code></li>
 </ul></li>
-<li><code>ColumnTable</code><sup>*</sup>
-<ul>
-<li><code>ColStatTable</code></li>
-</ul></li>
-</ul></li>
-<li><code>HeatMapPlot</code></li>
-</ul></li>
+<li><code>ComplexHeatmapPlot</code></li>
 </ul>
-<p>Some of those classes are “virtual” (indicated by <sup>*</sup>), meaning that they cannot be directly instanciated as panels in the GUI.
-Instead, virtual panel classes define families of panels that share groups of properties.</p>
-<p>Virtual classes are meant to be used as the parent of one or more concrete classes.
-In contrast, concrete classes must define fully-functional panels that can be embedded in a GUI, interact with other panels, receive and process data, and generate an output such as a plot or a table, accompanied by a code chunk to display in the code tracker for reproducibility.</p>
+<p>Some of those classes are “virtual” (indicated by <i class="fa fa-eye-slash"></i>), meaning that they cannot be directly instanciated as panels in the GUI. Instead, virtual panel classes define families of panels that share groups of properties. As such, virtual classes are meant to be used as the parent of concrete classes that share the associated properties.</p>
+<p>In contrast, concrete classes must define fully-functional panels that can be embedded in a GUI, interact with other panels, receive and process data, and generate an output such as a plot or a table, accompanied by the associated R code to display in the code tracker for reproducibility.</p>
 </div>
 <div id="the-panel-class" class="section level2">
 <h2><span class="header-section-number">1.2</span> The Panel class</h2>
-<p>The top-most class is called <code>Panel</code>.
-It is a virtual class that defines the core properties common to any panel - existing or future - that may be displayed in the interface.</p>
-<p>Refer to <code>help("Panel-class")</code> for more information about the slots and methods provided by this core class.</p>
+<p>The top-most class is called <code>Panel</code>. It is a virtual class that defines the core properties common to any panel - existing or future - that may be displayed in the interface.</p>
+<p>Refer to <code>help(&quot;Panel-class&quot;)</code> for more information about the slots and methods provided by this class.</p>
 </div>
 <div id="the-dotplot-and-table-panel-families" class="section level2">
 <h2><span class="header-section-number">1.3</span> The DotPlot and Table panel families</h2>
-<p>The <code>Panel</code> virtual class is directly derived into two major virtual sub-classes:</p>
+<p>The virtual class <code>Panel</code> is directly derived into two major virtual sub-classes:</p>
 <ul>
 <li><code>DotPlot</code></li>
 <li><code>Table</code></li>
 </ul>
 <p>Those classes introduce properties that are specific to distinct subsets of panel types.</p>
-<p>The <code>DotPlot</code> class introduces parameters specific to panels where the output is a <code>ggplot</code> object and each row in the data-frame is represented as a point in a plot.</p>
-<p>The <code>Table</code> class introduces parameters specific to panels where the main output is a data-frame directly displayed as a table in the GUI.</p>
-<p>In addition, the <code>HeatMapPlot</code> class defines a special concrete panel class that directly extends the <code>Panel</code> class, as it introduces a set of parameters distinct from both the <code>DotPlot</code> and <code>Table</code> panel families.
-This panel type is described in further details in a separate section <a href="panels.html#heatmapplot-class">below</a>.</p>
+<p>The class <code>DotPlot</code> introduces parameters specific to panels where the output is a <code>ggplot</code> object and each row in the data-frame is represented as a point in a plot. Refer to <code>help(&quot;DotPlot-class&quot;)</code> for more information.</p>
+<p>The class <code>Table</code> introduces parameters specific to panels where the main output is a data-frame directly displayed as a table in the GUI. Refer to <code>help(&quot;Table-class&quot;)</code> for more information.</p>
+<p>As a special case, the class <code>ComplexHeatmapPlot</code> defines a concrete panel class that directly extends the class <code>Panel</code>, as it introduces a set of parameters distinct from both the <code>DotPlot</code> and <code>Table</code> panel families. This panel class is described in further details in the section <a href="panels.html#complexheatmapplot-class">The ComplexHeatmapPlot panel class</a>.</p>
 <!-- TODO: properties introduced by the DotPlot class -->
 <!-- TODO: properties introduced by the Table class -->
 </div>
@@ -286,14 +247,14 @@ This panel type is described in further details in a separate section <a href="p
 </div>
 <div id="built-in-columndotplot-panel-classes" class="section level2">
 <h2><span class="header-section-number">1.5</span> Built-in ColumnDotPlot panel classes</h2>
-<!-- TODO: properties introduced by the RedDimPlot class -->
-<!-- TODO: properties introduced by the ColDataPlot class -->
-<!-- TODO: properties introduced by the FeatAssayPlot class -->
+<!-- TODO: properties introduced by the ReducedDimensionPlot class -->
+<!-- TODO: properties introduced by the ColumnDataPlot class -->
+<!-- TODO: properties introduced by the FeatureAssayPlot class -->
 </div>
 <div id="built-in-rowdotplot-panel-classes" class="section level2">
 <h2><span class="header-section-number">1.6</span> Built-in RowDotPlot panel classes</h2>
 <!-- TODO: properties introduced by the RowDataPlot class -->
-<!-- TODO: properties introduced by the SampAssayPlot class -->
+<!-- TODO: properties introduced by the SampleAssayPlot class -->
 </div>
 <div id="the-columntable-and-rowtable-panel-families" class="section level2">
 <h2><span class="header-section-number">1.7</span> The ColumnTable and RowTable panel families</h2>
@@ -302,16 +263,16 @@ This panel type is described in further details in a separate section <a href="p
 </div>
 <div id="built-in-columntable-panel-classes" class="section level2">
 <h2><span class="header-section-number">1.8</span> Built-in ColumnTable panel classes</h2>
-<!-- TODO: properties introduced by the RowStatTable class -->
+<!-- TODO: properties introduced by the RowDataTable class -->
 </div>
 <div id="built-in-rowtable-panel-classes" class="section level2">
 <h2><span class="header-section-number">1.9</span> Built-in RowTable panel classes</h2>
-<!-- TODO: properties introduced by the ColStatTable class -->
+<!-- TODO: properties introduced by the ColDataTable class -->
 </div>
-<div id="heatmapplot-class" class="section level2">
-<h2><span class="header-section-number">1.10</span> The HeatMapPlot panel class</h2>
-<p>This type of panel introduces parameters specific to panels where the output is a heat map, with each row representing a feature and each column representing a sample in the <code>se</code> object.</p>
-<!-- TODO: properties introduced by the HeatMapPlot class -->
+<div id="complexheatmapplot-class" class="section level2">
+<h2><span class="header-section-number">1.10</span> The ComplexHeatmapPlot panel class</h2>
+<p>This type of panel introduces parameters specific to panels where the output is a <code>Heatmap</code> object from the <em><a href="https://bioconductor.org/packages/3.11/ComplexHeatmap">ComplexHeatmap</a></em> package. In this panel, each row represents a feature and each column represents a sample in the <code>se</code> object.</p>
+<!-- TODO: properties introduced by the ComplexHeatmapPlot class -->
 
 </div>
 </div>
@@ -376,7 +337,7 @@ gitbook.start({
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    var src = "true";
+    var src = "";
     if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
     if (location.protocol !== "file:")
       if (/^https?:/.test(src))
