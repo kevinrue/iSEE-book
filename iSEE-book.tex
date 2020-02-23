@@ -148,43 +148,63 @@ defined as a hierarchy of S4 classes.
 \begin{itemize}
 \tightlist
 \item
-  \texttt{Panel} 
-\item
-  \texttt{DotPlot}
+  \texttt{Panel}
 
   \begin{itemize}
   \tightlist
   \item
-    \texttt{ColumnDotPlot} 
-  \item
-    \texttt{ReducedDimensionPlot}
-  \item
-    \texttt{ColumnDataPlot}
-  \item
-    \texttt{FeatureAssayPlot}
-  \item
-    \texttt{RowDotPlot} 
-  \item
-    \texttt{RowDataPlot}
-  \item
-    \texttt{SampleAssayPlot}
-  \end{itemize}
-\item
-  \texttt{Table}
+    \texttt{DotPlot}
 
-  \begin{itemize}
-  \tightlist
+    \begin{itemize}
+    \tightlist
+    \item
+      \texttt{ColumnDotPlot}
+
+      \begin{itemize}
+      \tightlist
+      \item
+        \texttt{ReducedDimensionPlot}
+      \item
+        \texttt{ColumnDataPlot}
+      \item
+        \texttt{FeatureAssayPlot}
+      \end{itemize}
+    \item
+      \texttt{RowDotPlot}
+
+      \begin{itemize}
+      \tightlist
+      \item
+        \texttt{RowDataPlot}
+      \item
+        \texttt{SampleAssayPlot}
+      \end{itemize}
+    \end{itemize}
   \item
-    \texttt{RowTable} 
+    \texttt{Table}
+
+    \begin{itemize}
+    \tightlist
+    \item
+      \texttt{RowTable}
+
+      \begin{itemize}
+      \tightlist
+      \item
+        \texttt{RowDataTable}
+      \end{itemize}
+    \item
+      \texttt{ColumnTable}
+
+      \begin{itemize}
+      \tightlist
+      \item
+        \texttt{ColDataTable}
+      \end{itemize}
+    \end{itemize}
   \item
-    \texttt{RowDataTable}
-  \item
-    \texttt{ColumnTable} 
-  \item
-    \texttt{ColDataTable}
+    \texttt{ComplexHeatmapPlot}
   \end{itemize}
-\item
-  \texttt{ComplexHeatmapPlot}
 \end{itemize}
 
 Some of those classes are ``virtual'' (indicated by ), meaning that they

@@ -198,25 +198,35 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>The types of builtin panels available to compose an <em><a href="https://bioconductor.org/packages/3.11/iSEE">iSEE</a></em> app are defined as a hierarchy of S4 classes.</p>
 <!-- TODO Replace the bullet list below by a figure, like a filesystem tree. -->
 <ul>
-<li><code>Panel</code> <i class="fa fa-eye-slash"></i></li>
+<li><code>Panel</code> <i class="fa fa-eye-slash"></i>
+<ul>
 <li><code>DotPlot</code> <i class="fa fa-eye-slash"></i>
 <ul>
-<li><code>ColumnDotPlot</code> <i class="fa fa-eye-slash"></i></li>
+<li><code>ColumnDotPlot</code> <i class="fa fa-eye-slash"></i>
+<ul>
 <li><code>ReducedDimensionPlot</code></li>
 <li><code>ColumnDataPlot</code></li>
 <li><code>FeatureAssayPlot</code></li>
-<li><code>RowDotPlot</code> <i class="fa fa-eye-slash"></i></li>
+</ul></li>
+<li><code>RowDotPlot</code> <i class="fa fa-eye-slash"></i>
+<ul>
 <li><code>RowDataPlot</code></li>
 <li><code>SampleAssayPlot</code></li>
 </ul></li>
+</ul></li>
 <li><code>Table</code> <i class="fa fa-eye-slash"></i>
 <ul>
-<li><code>RowTable</code> <i class="fa fa-eye-slash"></i></li>
+<li><code>RowTable</code> <i class="fa fa-eye-slash"></i>
+<ul>
 <li><code>RowDataTable</code></li>
-<li><code>ColumnTable</code> <i class="fa fa-eye-slash"></i></li>
+</ul></li>
+<li><code>ColumnTable</code> <i class="fa fa-eye-slash"></i>
+<ul>
 <li><code>ColDataTable</code></li>
 </ul></li>
+</ul></li>
 <li><code>ComplexHeatmapPlot</code></li>
+</ul></li>
 </ul>
 <p>Some of those classes are “virtual” (indicated by <i class="fa fa-eye-slash"></i>), meaning that they cannot be directly instanciated as panels in the GUI. Instead, virtual panel classes define families of panels that share groups of properties. As such, virtual classes are meant to be used as the parent of concrete classes that share the associated properties.</p>
 <p>In contrast, concrete classes must define fully-functional panels that can be embedded in a GUI, interact with other panels, receive and process data, and generate an output such as a plot or a table, accompanied by the associated R code to display in the code tracker for reproducibility.</p>
