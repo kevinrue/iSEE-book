@@ -33,7 +33,7 @@ In contrast, concrete classes must define fully-functional panels that can be em
 The top-most class is called `Panel`.
 It is a virtual class that defines the core properties common to any panel - existing or future - that may be displayed in the interface.
 
-Refer to `help("Panel-class")` for more information about the slots and methods provided by this class.
+Refer to `help("Panel-class", "iSEE")` for more information about the slots and methods provided by this class.
 
 ## The DotPlot and Table panel families
 
@@ -45,10 +45,10 @@ The virtual class `Panel` is directly derived into two major virtual sub-classes
 Those classes introduce properties that are specific to distinct subsets of panel types.
 
 The class `DotPlot` introduces parameters specific to panels where the output is a `ggplot` object and each row in the data-frame is represented as a point in a plot.
-Refer to `help("DotPlot-class")` for more information.
+Refer to `help("DotPlot-class", "iSEE")` for more information.
 
 The class `Table` introduces parameters specific to panels where the main output is a data-frame directly displayed as a table in the GUI.
-Refer to `help("Table-class")` for more information.
+Refer to `help("Table-class", "iSEE")` for more information.
 
 As a special case, the class `ComplexHeatmapPlot` defines a concrete panel class that directly extends the class `Panel`, as it introduces a set of parameters distinct from both the `DotPlot` and `Table` panel families.
 This panel class is described in further details in the section [The ComplexHeatmapPlot panel class](#complexheatmapplot-class).

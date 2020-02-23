@@ -32,7 +32,7 @@ This function is called within `.renderOutput()`, which is triggered by app obse
 
 The method `.generateDotPlot()` has access to the parameters for a given panel instance, and uses information available in the panel evaluation environment to generate and evaluate the plotting commands that ultimately produce the `ggplot` object to display in the panel.
 
-Refer to the **"Generating the ggplot object"** section of `help(".generateDotPlot")` for more information.
+Refer to the **"Generating the ggplot object"** section of `help(".generateDotPlot", "iSEE")` for more information.
 
 <!-- TODO: Table panels -->
 

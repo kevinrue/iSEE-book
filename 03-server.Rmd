@@ -46,12 +46,12 @@ This can be either in the call to `iSEE(se)` or using other mechanisms of data u
 The internal function `iSEE:::.initialize_server()` takes the `se` object and the list holding reactive values used to trigger re-rendering of the GUI, as described in the section [Reactive objects](#robjects).
 
 The very first step invokes the internal function `checkColormapCompatibility()`.
-This function takes the `se` object and the optioanl `colormap` argument provided to `iSEE()`, and carries out a number of compatibility checks between the two objects.
+This function takes the `se` object and the optional argument `iSEE(colormap)`, and carries out a number of compatibility checks between the two objects.
 The function collects a character vector of incompatibility issues that are displayed - if any - as warning notifications in GUI when the app is launched.
 
 <!-- TODO: something about setting up memory, once the current TEST code is replaced. -->
 
-Next, the internal function `iSEE:::.prepare_SE()` calls the method `.cacheCommonInfo()` on each type of panel present provided to `iSEE(initial)` and `iSEE(extra)`, to precompute and cache information relevant to all the types of panels that will be available in that app instance.
+Next, the internal function `iSEE:::.prepare_SE()` calls the method `.cacheCommonInfo()` on each type of panel present provided to the arguments `iSEE(initial)` and `iSEE(extra)`, to precompute and cache information relevant to all the types of panels that will be available in that app instance.
 
 Shortly after, the internal function `iSEE:::.setup_initial_state()` calls the method `.refineParameters` on each panel instance provided to `iSEE(initial)`, to ensure that all the panels present in the GUI when the app is launched are initialized with valid parameters; any invalid parameter is replaced with sensible values for the given `se` object.
 
