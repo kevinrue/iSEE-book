@@ -225,8 +225,8 @@ The top-most class is called \texttt{Panel}. It is a virtual class that
 defines the core properties common to any panel - existing or future -
 that may be displayed in the interface.
 
-Refer to \texttt{help("Panel-class")} for more information about the
-slots and methods provided by this class.
+Refer to \texttt{help("Panel-class",\ "iSEE")} for more information
+about the slots and methods provided by this class.
 
 \section{The DotPlot and Table panel
 families}\label{the-dotplot-and-table-panel-families}
@@ -248,11 +248,12 @@ of panel types.
 The class \texttt{DotPlot} introduces parameters specific to panels
 where the output is a \texttt{ggplot} object and each row in the
 data-frame is represented as a point in a plot. Refer to
-\texttt{help("DotPlot-class")} for more information.
+\texttt{help("DotPlot-class",\ "iSEE")} for more information.
 
 The class \texttt{Table} introduces parameters specific to panels where
 the main output is a data-frame directly displayed as a table in the
-GUI. Refer to \texttt{help("Table-class")} for more information.
+GUI. Refer to \texttt{help("Table-class",\ "iSEE")} for more
+information.
 
 As a special case, the class \texttt{ComplexHeatmapPlot} defines a
 concrete panel class that directly extends the class \texttt{Panel}, as
@@ -352,7 +353,7 @@ that ultimately produce the \texttt{ggplot} object to display in the
 panel.
 
 Refer to the \textbf{``Generating the ggplot object''} section of
-\texttt{help(".generateDotPlot")} for more information.
+\texttt{help(".generateDotPlot",\ "iSEE")} for more information.
 
 \chapter{The app server}\label{server}
 
@@ -590,7 +591,8 @@ the data-frame that contains one row per data point to display in
 \texttt{DotPlot} panels.
 
 Readers should refer to the \textbf{``Generating the ggplot object''}
-section of \texttt{help(".generateDotPlot")} for more information.
+section of \texttt{help(".generateDotPlot",\ "iSEE")} for more
+information.
 
 As an example, we overwrite the method \texttt{.generateDotPlot()} for
 the new class \texttt{RedDimHexPlot} to simply show the number of data

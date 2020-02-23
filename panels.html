@@ -234,7 +234,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div id="the-panel-class" class="section level2">
 <h2><span class="header-section-number">1.2</span> The Panel class</h2>
 <p>The top-most class is called <code>Panel</code>. It is a virtual class that defines the core properties common to any panel - existing or future - that may be displayed in the interface.</p>
-<p>Refer to <code>help(&quot;Panel-class&quot;)</code> for more information about the slots and methods provided by this class.</p>
+<p>Refer to <code>help(&quot;Panel-class&quot;, &quot;iSEE&quot;)</code> for more information about the slots and methods provided by this class.</p>
 </div>
 <div id="the-dotplot-and-table-panel-families" class="section level2">
 <h2><span class="header-section-number">1.3</span> The DotPlot and Table panel families</h2>
@@ -244,8 +244,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li><code>Table</code></li>
 </ul>
 <p>Those classes introduce properties that are specific to distinct subsets of panel types.</p>
-<p>The class <code>DotPlot</code> introduces parameters specific to panels where the output is a <code>ggplot</code> object and each row in the data-frame is represented as a point in a plot. Refer to <code>help(&quot;DotPlot-class&quot;)</code> for more information.</p>
-<p>The class <code>Table</code> introduces parameters specific to panels where the main output is a data-frame directly displayed as a table in the GUI. Refer to <code>help(&quot;Table-class&quot;)</code> for more information.</p>
+<p>The class <code>DotPlot</code> introduces parameters specific to panels where the output is a <code>ggplot</code> object and each row in the data-frame is represented as a point in a plot. Refer to <code>help(&quot;DotPlot-class&quot;, &quot;iSEE&quot;)</code> for more information.</p>
+<p>The class <code>Table</code> introduces parameters specific to panels where the main output is a data-frame directly displayed as a table in the GUI. Refer to <code>help(&quot;Table-class&quot;, &quot;iSEE&quot;)</code> for more information.</p>
 <p>As a special case, the class <code>ComplexHeatmapPlot</code> defines a concrete panel class that directly extends the class <code>Panel</code>, as it introduces a set of parameters distinct from both the <code>DotPlot</code> and <code>Table</code> panel families. This panel class is described in further details in the section <a href="panels.html#complexheatmapplot-class">The ComplexHeatmapPlot panel class</a>.</p>
 <!-- TODO: properties introduced by the DotPlot class -->
 <!-- TODO: properties introduced by the Table class -->

@@ -213,7 +213,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>Each panel type that derives from the virtual class <code>DotPlot</code> must define - or inherit - a signature for the method <code>.generateDotPlot()</code>.</p>
 <p>This function is called within <code>.renderOutput()</code>, which is triggered by app observers when the value of the input widgets are changed by users, or when a new panel is added to the GUI.</p>
 <p>The method <code>.generateDotPlot()</code> has access to the parameters for a given panel instance, and uses information available in the panel evaluation environment to generate and evaluate the plotting commands that ultimately produce the <code>ggplot</code> object to display in the panel.</p>
-<p>Refer to the <strong>“Generating the ggplot object”</strong> section of <code>help(&quot;.generateDotPlot&quot;)</code> for more information.</p>
+<p>Refer to the <strong>“Generating the ggplot object”</strong> section of <code>help(&quot;.generateDotPlot&quot;, &quot;iSEE&quot;)</code> for more information.</p>
 <!-- TODO: Table panels -->
 <!-- TODO: Heatmap panels -->
 
