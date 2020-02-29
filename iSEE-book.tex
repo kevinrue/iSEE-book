@@ -148,36 +148,70 @@ defined as a hierarchy of S4 classes.
 \begin{itemize}
 \tightlist
 \item
-  \texttt{Panel} \O
-  - \texttt{DotPlot} \O
-   - \texttt{ColumnDotPlot} \O
-   - \texttt{ReducedDimensionPlot} - \texttt{ColumnDataPlot} -
-  \texttt{FeatureAssayPlot} - \texttt{RowDotPlot} \O
-   - \texttt{RowDataPlot} - \texttt{SampleAssayPlot}
+  \texttt{Panel} \(\emptyset\)
 
   \begin{itemize}
   \tightlist
   \item
-    \texttt{Table} \O
-    - \texttt{RowTable} \O
-     - \texttt{RowDataTable}
+    \texttt{DotPlot} \(\emptyset\)
 
     \begin{itemize}
     \tightlist
     \item
-      \texttt{ColumnTable} \O
-      - \texttt{ColDataTable}
+      \texttt{ColumnDotPlot} \(\emptyset\)
+
+      \begin{itemize}
+      \tightlist
+      \item
+        \texttt{ReducedDimensionPlot}
+      \item
+        \texttt{ColumnDataPlot}
+      \item
+        \texttt{FeatureAssayPlot}
+      \end{itemize}
+    \item
+      \texttt{RowDotPlot} \(\emptyset\)
+
+      \begin{itemize}
+      \tightlist
+      \item
+        \texttt{RowDataPlot}
+      \item
+        \texttt{SampleAssayPlot}
+      \end{itemize}
+    \end{itemize}
+  \item
+    \texttt{Table} \(\emptyset\)
+
+    \begin{itemize}
+    \tightlist
+    \item
+      \texttt{RowTable} \(\emptyset\)
+
+      \begin{itemize}
+      \tightlist
+      \item
+        \texttt{RowDataTable}
+      \end{itemize}
+    \item
+      \texttt{ColumnTable} \(\emptyset\)
+
+      \begin{itemize}
+      \tightlist
+      \item
+        \texttt{ColDataTable}
+      \end{itemize}
     \end{itemize}
   \item
     \texttt{ComplexHeatmapPlot}
   \end{itemize}
 \end{itemize}
 
-Some of those classes are ``virtual'' (indicated by \O), meaning that
-they cannot be directly instanciated as panels in the GUI. Instead,
-virtual panel classes define families of panels that share groups of
-properties. As such, virtual classes are meant to be used as the parent
-of concrete classes that share the associated properties.
+Some of those classes are ``virtual'' (indicated by \(\emptyset\)),
+meaning that they cannot be directly instanciated as panels in the GUI.
+Instead, virtual panel classes define families of panels that share
+groups of properties. As such, virtual classes are meant to be used as
+the parent of concrete classes that share the associated properties.
 
 In contrast, concrete classes must define fully-functional panels that
 can be embedded in a GUI, interact with other panels, receive and
