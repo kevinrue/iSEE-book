@@ -1,28 +1,32 @@
 # Panel classes {#panels}
 
+```{r, include=FALSE}
+source("R/symbols.R")
+```
+
 ## Overview
 
 The types of builtin panels available to compose an `r Biocpkg("iSEE")` app are defined as a hierarchy of S4 classes.
 
 <!-- TODO Replace the bullet list below by a figure, like a filesystem tree. -->
 
-- `Panel` <i class="fa fa-eye-slash"></i>
-    - `DotPlot` <i class="fa fa-eye-slash"></i>
-        - `ColumnDotPlot` <i class="fa fa-eye-slash"></i>
+- `Panel` `r .virtual_panel_symbol`
+    - `DotPlot` `r .virtual_panel_symbol`
+        - `ColumnDotPlot` `r .virtual_panel_symbol`
             - `ReducedDimensionPlot`
             - `ColumnDataPlot`
             - `FeatureAssayPlot`
-        - `RowDotPlot` <i class="fa fa-eye-slash"></i>
+        - `RowDotPlot` `r .virtual_panel_symbol`
             - `RowDataPlot`
             - `SampleAssayPlot`
-    - `Table` <i class="fa fa-eye-slash"></i>
-        - `RowTable` <i class="fa fa-eye-slash"></i>
+    - `Table` `r .virtual_panel_symbol`
+        - `RowTable` `r .virtual_panel_symbol`
             - `RowDataTable`
-        - `ColumnTable` <i class="fa fa-eye-slash"></i>
+        - `ColumnTable` `r .virtual_panel_symbol`
             - `ColDataTable`
     - `ComplexHeatmapPlot`
 
-Some of those classes are "virtual" (indicated by <i class="fa fa-eye-slash"></i>), meaning that they cannot be directly instanciated as panels in the GUI.
+Some of those classes are "virtual" (indicated by `r .virtual_panel_symbol`), meaning that they cannot be directly instanciated as panels in the GUI.
 Instead, virtual panel classes define families of panels that share groups of properties.
 As such, virtual classes are meant to be used as the parent of concrete classes that share the associated properties.
 
