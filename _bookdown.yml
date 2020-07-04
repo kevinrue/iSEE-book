@@ -3,3 +3,13 @@ delete_merged_file: true
 language:
   ui:
     chapter_name: "Chapter "
+rmd_files: ["index.Rmd",
+    "classes.Rmd",
+    "generics.Rmd",
+    "app-state.Rmd",
+    "hex-dimred.Rmd",
+    "adaptive-dimred.Rmd",
+    "de-table.Rmd",
+    "anno-table.Rmd",
+    "go-table.Rmd",
+    "references.Rmd"]
