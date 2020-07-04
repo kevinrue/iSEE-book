@@ -650,23 +650,22 @@ It provides functionality to specify the features to be shown, which assay to sh
 \end{verbatim}
 
 \hypertarget{api}{%
-\chapter{The panel API}\label{api}}
+\chapter{Panel generics}\label{api}}
 
 \hypertarget{overview}{%
 \section{Overview}\label{overview}}
 
-This chapter provides a list of all of the entry points into the \texttt{Panel} API provided by \emph{\href{https://bioconductor.org/packages/3.11/iSEE}{iSEE}}.
-Do not be intimidated; it is rare that it is necessary to define methods for all of the generics listed here.
+This chapter lists of all generics provided by \emph{\href{https://bioconductor.org/packages/3.11/iSEE}{iSEE}} to implement class-specific behaviors.
+For each generic, we will show its signature and all available methods implemented for subclasses.
+Do not be intimidated; it is rare that it is necessary to define methods for all of the generics shown here.
 If your class inherits from an existing \texttt{Panel} subclass, many of these methods will be implemented for free, and all you have to do is to override a handful of methods to achieve the desired customization.
-
 We recommend skimming over this chapter on the first read to get a feel for the available entry points into the \texttt{Panel} API.
 Once you have a better idea of what your class needs to do, you can obtain exhaustive documentation about each generic in the usual way, e.g., \texttt{?.defineInterface}.
-For each generic, we will also show all available methods implemented for subclasses - see the class documentation for more details for specific methods.
 
-\hypertarget{setting-up-parameters}{%
-\section{Setting up parameters}\label{setting-up-parameters}}
+\hypertarget{parameter-set-up}{%
+\section{Parameter set-up}\label{parameter-set-up}}
 
-\texttt{.cacheCommonInfo()} caches common values to be used for all instances of a particular panel class.
+\href{https://isee.github.io/iSEE/reference/setup-generics.html}{\texttt{.cacheCommonInfo()}} caches common values to be used for all instances of a particular panel class.
 These cached values can be used to, e.g., populate the UI or set up constants to be used in the panel's output.
 This avoids potentially costly re-calculations throughout the lifetime of the \texttt{iSEE()} application.
 
@@ -681,8 +680,8 @@ This avoids potentially costly re-calculations throughout the lifetime of the \t
 ## 
 ## function (x, se) 
 ## standardGeneric(".cacheCommonInfo")
-## <bytecode: 0x7f9c5a10a468>
-## <environment: 0x7f9c5a129968>
+## <bytecode: 0x7fc704e92270>
+## <environment: 0x7fc704eb17e0>
 ## Methods may be defined for arguments: x, se
 ## Use  showMethods(".cacheCommonInfo")  for currently available ones.
 \end{verbatim}
@@ -705,7 +704,7 @@ This avoids potentially costly re-calculations throughout the lifetime of the \t
 ## x="RowDotPlot"
 \end{verbatim}
 
-\texttt{.refineParameters()} edits the parameters of a panel to ensure that they are valid.
+\href{https://isee.github.io/iSEE/reference/setup-generics.html}{\texttt{.refineParameters()}} edits the parameters of a panel to ensure that they are valid.
 For example, we may need to restrict the choices of a selectize element to some pre-defined possibilities.
 This is run for each panel during the \texttt{iSEE()} application set-up to validate the user-supplied panel configuration.
 
@@ -720,8 +719,8 @@ This is run for each panel during the \texttt{iSEE()} application set-up to vali
 ## 
 ## function (x, se) 
 ## standardGeneric(".refineParameters")
-## <bytecode: 0x7f9c597ce630>
-## <environment: 0x7f9c5981db30>
+## <bytecode: 0x7fc7045333c0>
+## <environment: 0x7fc7045749b0>
 ## Methods may be defined for arguments: x, se
 ## Use  showMethods(".refineParameters")  for currently available ones.
 \end{verbatim}
@@ -753,7 +752,10 @@ This is run for each panel during the \texttt{iSEE()} application set-up to vali
 \hypertarget{defining-the-user-interface}{%
 \section{Defining the user interface}\label{defining-the-user-interface}}
 
-\texttt{.defineInterface()} defines the user interface (UI) for a panel, defining all HTML widgets required to modify parameters.
+\hypertarget{in-general}{%
+\subsection{In general}\label{in-general}}
+
+\href{https://isee.github.io/iSEE/reference/interface-generics.html}{\texttt{.defineInterface()}} defines the user interface (UI) for a panel, defining all HTML widgets required to modify parameters.
 Parameters should be bundled into collapsible boxes according to their approximate purpose.
 This generic provides the most general mechanism for controlling the panel's interface.
 
@@ -768,8 +770,8 @@ This generic provides the most general mechanism for controlling the panel's int
 ## 
 ## function (x, se, select_info) 
 ## standardGeneric(".defineInterface")
-## <bytecode: 0x7f9c59e895f8>
-## <environment: 0x7f9c59e95e48>
+## <bytecode: 0x7fc704c186b0>
+## <environment: 0x7fc704c22ff0>
 ## Methods may be defined for arguments: x, se, select_info
 ## Use  showMethods(".defineInterface")  for currently available ones.
 \end{verbatim}
@@ -788,7 +790,7 @@ This generic provides the most general mechanism for controlling the panel's int
 ## x="RowDotPlot"
 \end{verbatim}
 
-\texttt{.defineDataInterface()} defines the UI for modifying all data-related parameters in a given panel.
+\href{https://isee.github.io/iSEE/reference/interface-generics.html}{\texttt{.defineDataInterface()}} defines the UI for modifying all data-related parameters in a given panel.
 Such parameters are fundamental to the interpretation of the panel's output, as opposed to their aesthetic counterparts.
 This generic allows developers to fine-tune the data UI for subclasses without reimplementing the parent class' \texttt{.defineInterface()}, especially if we wish to re-use the parent's UI for aesthetic parameters.
 
@@ -803,8 +805,8 @@ This generic allows developers to fine-tune the data UI for subclasses without r
 ## 
 ## function (x, se, select_info) 
 ## standardGeneric(".defineDataInterface")
-## <bytecode: 0x7f9c59ee63e8>
-## <environment: 0x7f9c59f41f08>
+## <bytecode: 0x7fc704c6f590>
+## <environment: 0x7fc704cd03b8>
 ## Methods may be defined for arguments: x, se, select_info
 ## Use  showMethods(".defineDataInterface")  for currently available ones.
 \end{verbatim}
@@ -826,7 +828,7 @@ This generic allows developers to fine-tune the data UI for subclasses without r
 ## x="SampleAssayPlot"
 \end{verbatim}
 
-\texttt{.hideInterface()} determines whether certain UI elements should be hidden from the user.
+\href{https://isee.github.io/iSEE/reference/interface-generics.html}{\texttt{.hideInterface()}} determines whether certain UI elements should be hidden from the user.
 This allows subclasses to hide easily inappropriate or irrelevant parts of the parent's UI without redefining \texttt{.defineInterface()}.
 For example, we can remove row selection UI elements for panels that only accept column selections.
 
@@ -841,8 +843,8 @@ For example, we can remove row selection UI elements for panels that only accept
 ## 
 ## function (x, field) 
 ## standardGeneric(".hideInterface")
-## <bytecode: 0x7f9c599b4208>
-## <environment: 0x7f9c599e1a18>
+## <bytecode: 0x7fc70470cf98>
+## <environment: 0x7fc704736898>
 ## Methods may be defined for arguments: x, field
 ## Use  showMethods(".hideInterface")  for currently available ones.
 \end{verbatim}
@@ -866,10 +868,10 @@ For example, we can remove row selection UI elements for panels that only accept
 ## x="Table"
 \end{verbatim}
 
-\hypertarget{defining-the-dotplot-visual-interface}{%
-\section{\texorpdfstring{Defining the \texttt{DotPlot} visual interface}{Defining the DotPlot visual interface}}\label{defining-the-dotplot-visual-interface}}
+\hypertarget{the-dotplot-visual-interface}{%
+\subsection{\texorpdfstring{The \texttt{DotPlot} visual interface}{The DotPlot visual interface}}\label{the-dotplot-visual-interface}}
 
-\texttt{.defineVisualColorInterface()} defines the UI for color-related visual parameters in a \texttt{DotPlot} subclass.
+\href{https://isee.github.io/iSEE/reference/visual-parameters-generics.html}{\texttt{.defineVisualColorInterface()}} defines the UI for color-related visual parameters in a \texttt{DotPlot} subclass.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -882,8 +884,8 @@ For example, we can remove row selection UI elements for panels that only accept
 ## 
 ## function (x, se, select_info) 
 ## standardGeneric(".defineVisualColorInterface")
-## <bytecode: 0x7f9c59da5128>
-## <environment: 0x7f9c59dded38>
+## <bytecode: 0x7fc704b343a0>
+## <environment: 0x7fc704b700c8>
 ## Methods may be defined for arguments: x, se, select_info
 ## Use  showMethods(".defineVisualColorInterface")  for currently available ones.
 \end{verbatim}
@@ -900,7 +902,7 @@ For example, we can remove row selection UI elements for panels that only accept
 ## x="RowDotPlot"
 \end{verbatim}
 
-\texttt{.defineVisualFacetInterface()} defines the UI for facet-related visual parameters in a \texttt{DotPlot} subclass.
+\href{https://isee.github.io/iSEE/reference/visual-parameters-generics.html}{\texttt{.defineVisualFacetInterface()}} defines the UI for facet-related visual parameters in a \texttt{DotPlot} subclass.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -913,8 +915,8 @@ For example, we can remove row selection UI elements for panels that only accept
 ## 
 ## function (x, se) 
 ## standardGeneric(".defineVisualFacetInterface")
-## <bytecode: 0x7f9c59d6e440>
-## <environment: 0x7f9c59d7e1c8>
+## <bytecode: 0x7fc704aff7d0>
+## <environment: 0x7fc704b0b648>
 ## Methods may be defined for arguments: x, se
 ## Use  showMethods(".defineVisualFacetInterface")  for currently available ones.
 \end{verbatim}
@@ -931,7 +933,7 @@ For example, we can remove row selection UI elements for panels that only accept
 ## x="RowDotPlot"
 \end{verbatim}
 
-\texttt{.defineVisualShapeInterface()} defines the UI for shape-related visual parameters in a \texttt{DotPlot} subclass.
+\href{https://isee.github.io/iSEE/reference/visual-parameters-generics.html}{\texttt{.defineVisualShapeInterface()}} defines the UI for shape-related visual parameters in a \texttt{DotPlot} subclass.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -944,8 +946,8 @@ For example, we can remove row selection UI elements for panels that only accept
 ## 
 ## function (x, se) 
 ## standardGeneric(".defineVisualShapeInterface")
-## <bytecode: 0x7f9c59c65530>
-## <environment: 0x7f9c59c75920>
+## <bytecode: 0x7fc7049ed930>
+## <environment: 0x7fc7049f60b0>
 ## Methods may be defined for arguments: x, se
 ## Use  showMethods(".defineVisualShapeInterface")  for currently available ones.
 \end{verbatim}
@@ -962,7 +964,7 @@ For example, we can remove row selection UI elements for panels that only accept
 ## x="RowDotPlot"
 \end{verbatim}
 
-\texttt{.defineVisualSizeInterface()} defines the UI for size-related visual parameters in a \texttt{DotPlot} subclass.
+\href{https://isee.github.io/iSEE/reference/visual-parameters-generics.html}{\texttt{.defineVisualSizeInterface()}} defines the UI for size-related visual parameters in a \texttt{DotPlot} subclass.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -975,8 +977,8 @@ For example, we can remove row selection UI elements for panels that only accept
 ## 
 ## function (x, se) 
 ## standardGeneric(".defineVisualSizeInterface")
-## <bytecode: 0x7f9c59c38218>
-## <environment: 0x7f9c59c43cd8>
+## <bytecode: 0x7fc7049ade98>
+## <environment: 0x7fc7049bb958>
 ## Methods may be defined for arguments: x, se
 ## Use  showMethods(".defineVisualSizeInterface")  for currently available ones.
 \end{verbatim}
@@ -993,7 +995,7 @@ For example, we can remove row selection UI elements for panels that only accept
 ## x="RowDotPlot"
 \end{verbatim}
 
-\texttt{.defineVisualTextInterface()} defines the UI for text-related visual parameters in a \texttt{DotPlot} subclass.
+\href{https://isee.github.io/iSEE/reference/visual-parameters-generics.html}{\texttt{.defineVisualTextInterface()}} defines the UI for text-related visual parameters in a \texttt{DotPlot} subclass.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1006,8 +1008,8 @@ For example, we can remove row selection UI elements for panels that only accept
 ## 
 ## function (x, se) 
 ## standardGeneric(".defineVisualTextInterface")
-## <bytecode: 0x7f9c59b9d548>
-## <environment: 0x7f9c59ba2710>
+## <bytecode: 0x7fc704907bc8>
+## <environment: 0x7fc704912ca0>
 ## Methods may be defined for arguments: x, se
 ## Use  showMethods(".defineVisualTextInterface")  for currently available ones.
 \end{verbatim}
@@ -1023,7 +1025,7 @@ For example, we can remove row selection UI elements for panels that only accept
 ## x="DotPlot"
 \end{verbatim}
 
-\texttt{.defineVisualOtherInterface()} defines the UI for other visual parameters in a \texttt{DotPlot} subclass.
+\href{https://isee.github.io/iSEE/reference/visual-parameters-generics.html}{\texttt{.defineVisualOtherInterface()}} defines the UI for other visual parameters in a \texttt{DotPlot} subclass.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1036,8 +1038,8 @@ For example, we can remove row selection UI elements for panels that only accept
 ## 
 ## function (x) 
 ## standardGeneric(".defineVisualOtherInterface")
-## <bytecode: 0x7f9c59cb5760>
-## <environment: 0x7f9c59cbba00>
+## <bytecode: 0x7fc704a3be00>
+## <environment: 0x7fc704a3e190>
 ## Methods may be defined for arguments: x
 ## Use  showMethods(".defineVisualOtherInterface")  for currently available ones.
 \end{verbatim}
@@ -1059,7 +1061,7 @@ Of course, if we have already specialized \texttt{.defineInterface()}, then ther
 \hypertarget{creating-observers}{%
 \section{Creating observers}\label{creating-observers}}
 
-\texttt{.createObservers()} sets up Shiny observers for the current session.
+\href{https://isee.github.io/iSEE/reference/observer-generics.html}{\texttt{.createObservers()}} sets up Shiny observers for the current session.
 This is the workhorse function to ensure that the panel actually responds to user input.
 Developers can define arbitrarily complex observer logic here as long as it is self-contained within a single panel.
 (Interactive mechanics that involve communication between panels is handled elsewhere.)
@@ -1077,8 +1079,8 @@ Developers can define arbitrarily complex observer logic here as long as it is s
 ## {
 ##     standardGeneric(".createObservers")
 ## }
-## <bytecode: 0x7f9c59fa28a0>
-## <environment: 0x7f9c5a025ac0>
+## <bytecode: 0x7fc704d32d50>
+## <environment: 0x7fc704dab8c8>
 ## Methods may be defined for arguments: x, se, input, session, pObjects, rObjects
 ## Use  showMethods(".createObservers")  for currently available ones.
 \end{verbatim}
@@ -1109,7 +1111,10 @@ Developers can define arbitrarily complex observer logic here as long as it is s
 \hypertarget{defining-panel-outputs}{%
 \section{Defining panel outputs}\label{defining-panel-outputs}}
 
-\texttt{.defineOutput()} defines the interface element containing the visual output of the panel.
+\hypertarget{in-general-1}{%
+\subsection{In general}\label{in-general-1}}
+
+\href{https://isee.github.io/iSEE/reference/output-generics.html}{\texttt{.defineOutput()}} defines the interface element containing the visual output of the panel.
 Examples include \texttt{plotOutput()} for plots or \texttt{dataTableOutput()} for tables.
 Note that this generic only defines the output in the \texttt{iSEE()} interface; it does not control the rendering.
 
@@ -1126,8 +1131,8 @@ Note that this generic only defines the output in the \texttt{iSEE()} interface;
 ## {
 ##     standardGeneric(".defineOutput")
 ## }
-## <bytecode: 0x7f9c59e3f7d0>
-## <environment: 0x7f9c59e65048>
+## <bytecode: 0x7fc704bdf050>
+## <environment: 0x7fc704bf6100>
 ## Methods may be defined for arguments: x
 ## Use  showMethods(".defineOutput")  for currently available ones.
 \end{verbatim}
@@ -1145,7 +1150,7 @@ Note that this generic only defines the output in the \texttt{iSEE()} interface;
 ## x="Table"
 \end{verbatim}
 
-\texttt{.renderOutput()} assigns a reactive expression to populate the output interface element with content.
+\href{https://isee.github.io/iSEE/reference/output-generics.html}{\texttt{.renderOutput()}} assigns a reactive expression to populate the output interface element with content.
 This is usually as simple as calling functions like \texttt{renderPlotOutput()} with an appropriate rendering expression containing a call to \texttt{.retrieveOutput()}.
 
 \begin{Shaded}
@@ -1161,8 +1166,8 @@ This is usually as simple as calling functions like \texttt{renderPlotOutput()} 
 ## {
 ##     standardGeneric(".renderOutput")
 ## }
-## <bytecode: 0x7f9c59727190>
-## <environment: 0x7f9c5973baf8>
+## <bytecode: 0x7fc704489f20>
+## <environment: 0x7fc70449a978>
 ## Methods may be defined for arguments: x, se, output, pObjects, rObjects
 ## Use  showMethods(".renderOutput")  for currently available ones.
 \end{verbatim}
@@ -1181,7 +1186,7 @@ This is usually as simple as calling functions like \texttt{renderPlotOutput()} 
 ## x="Table"
 \end{verbatim}
 
-\texttt{.generateOutput()} actually generates the panel output, be it a plot or table or something more exotic.
+\href{https://isee.github.io/iSEE/reference/output-generics.html}{\texttt{.generateOutput()}} actually generates the panel output, be it a plot or table or something more exotic.
 This is usually the real function that does all the work, being called by \texttt{.retrieveOutput()} prior to rendering the output.
 Some effort is required here to ensure that the commands used to generate the output are also captured.
 
@@ -1198,8 +1203,8 @@ Some effort is required here to ensure that the commands used to generate the ou
 ## {
 ##     standardGeneric(".generateOutput")
 ## }
-## <bytecode: 0x7f9c59a4c9b0>
-## <environment: 0x7f9c59a93430>
+## <bytecode: 0x7fc7047a3740>
+## <environment: 0x7fc7047e62b0>
 ## Methods may be defined for arguments: x, se, all_memory, all_contents
 ## Use  showMethods(".generateOutput")  for currently available ones.
 \end{verbatim}
@@ -1217,7 +1222,7 @@ Some effort is required here to ensure that the commands used to generate the ou
 ## x="Table"
 \end{verbatim}
 
-\texttt{.exportOutput()} converts the panel output into a form that is downloadable, such as a PDF file for plots or CSVs for tables.
+\href{https://isee.github.io/iSEE/reference/output-generics.html}{\texttt{.exportOutput()}} converts the panel output into a form that is downloadable, such as a PDF file for plots or CSVs for tables.
 This is called whenever the user requests a download of the panel outputs.
 
 \begin{Shaded}
@@ -1233,8 +1238,8 @@ This is called whenever the user requests a download of the panel outputs.
 ## {
 ##     standardGeneric(".exportOutput")
 ## }
-## <bytecode: 0x7f9c59b7cc50>
-## <environment: 0x7f9c59b87e78>
+## <bytecode: 0x7fc7048eb1e0>
+## <environment: 0x7fc7048f24f8>
 ## Methods may be defined for arguments: x, se, all_memory, all_contents
 ## Use  showMethods(".exportOutput")  for currently available ones.
 \end{verbatim}
@@ -1252,10 +1257,10 @@ This is called whenever the user requests a download of the panel outputs.
 ## x="Table"
 \end{verbatim}
 
-\hypertarget{controlling-dotplot-plotting}{%
-\section{\texorpdfstring{Controlling \texttt{DotPlot} plotting}{Controlling DotPlot plotting}}\label{controlling-dotplot-plotting}}
+\hypertarget{for-dotplots}{%
+\subsection{\texorpdfstring{For \texttt{DotPlot}s}{For DotPlots}}\label{for-dotplots}}
 
-\texttt{.generateDotPlot()} creates the \texttt{ggplot} object for \texttt{DotPlot} subclasses.
+\href{https://isee.github.io/iSEE/reference/plot-generics.html}{\texttt{.generateDotPlot()}} creates the \texttt{ggplot} object for \texttt{DotPlot} subclasses.
 This is called internally by the \texttt{DotPlot} method for \texttt{.generateOutput()} to create the relevant output.
 Developers of \texttt{DotPlot} subclasses can specialize this generic to avoid having to reimplement \texttt{.generateOutput()} (and the associated data management therein).
 
@@ -1270,8 +1275,8 @@ Developers of \texttt{DotPlot} subclasses can specialize this generic to avoid h
 ## 
 ## function (x, labels, envir) 
 ## standardGeneric(".generateDotPlot")
-## <bytecode: 0x7f9c59b054a0>
-## <environment: 0x7f9c59b104a8>
+## <bytecode: 0x7fc704864320>
+## <environment: 0x7fc704871238>
 ## Methods may be defined for arguments: x, labels, envir
 ## Use  showMethods(".generateDotPlot")  for currently available ones.
 \end{verbatim}
@@ -1287,7 +1292,7 @@ Developers of \texttt{DotPlot} subclasses can specialize this generic to avoid h
 ## x="DotPlot"
 \end{verbatim}
 
-\texttt{.generateDotPlotData()} creates the \texttt{data.frame} that is used by \texttt{.generateDotPlot()}.
+\href{https://isee.github.io/iSEE/reference/plot-generics.html}{\texttt{.generateDotPlotData()}} creates the \texttt{data.frame} that is used by \texttt{.generateDotPlot()}.
 This allows developers to change the data setup for a \texttt{DotPlot} subclass without having to even specialize \texttt{.generateDotPlot()}, provided they are happy with the default \texttt{DotPlot} aesthetics.
 
 \begin{Shaded}
@@ -1301,8 +1306,8 @@ This allows developers to change the data setup for a \texttt{DotPlot} subclass 
 ## 
 ## function (x, envir) 
 ## standardGeneric(".generateDotPlotData")
-## <bytecode: 0x7f9c59ac5350>
-## <environment: 0x7f9c59aeab70>
+## <bytecode: 0x7fc7048280e0>
+## <environment: 0x7fc70484d900>
 ## Methods may be defined for arguments: x, envir
 ## Use  showMethods(".generateDotPlotData")  for currently available ones.
 \end{verbatim}
@@ -1322,7 +1327,7 @@ This allows developers to change the data setup for a \texttt{DotPlot} subclass 
 ## x="SampleAssayPlot"
 \end{verbatim}
 
-\texttt{.prioritizeDotPlotData()} determines how points should be prioritized during overplotting.
+\href{https://isee.github.io/iSEE/reference/plot-generics.html}{\texttt{.prioritizeDotPlotData()}} determines how points should be prioritized during overplotting.
 This usually doesn't need to be specialized.
 
 \begin{Shaded}
@@ -1336,8 +1341,8 @@ This usually doesn't need to be specialized.
 ## 
 ## function (x, envir) 
 ## standardGeneric(".prioritizeDotPlotData")
-## <bytecode: 0x7f9c598304e0>
-## <environment: 0x7f9c59837f90>
+## <bytecode: 0x7fc70458b270>
+## <environment: 0x7fc70458ee10>
 ## Methods may be defined for arguments: x, envir
 ## Use  showMethods(".prioritizeDotPlotData")  for currently available ones.
 \end{verbatim}
@@ -1353,7 +1358,7 @@ This usually doesn't need to be specialized.
 ## x="DotPlot"
 \end{verbatim}
 
-\texttt{.colorByNoneDotPlotField()} and \texttt{.colorByNoneDotPlotScale()} define the default color scale when \texttt{ColorBy="None"}.
+\href{https://isee.github.io/iSEE/reference/plot-generics.html}{\texttt{.colorByNoneDotPlotField()}} and \href{https://isee.github.io/iSEE/reference/plot-generics.html}{\texttt{.colorByNoneDotPlotScale()}} define the default color scale when \texttt{ColorBy="None"}.
 This usually doesn't need to be specialized.
 
 \begin{Shaded}
@@ -1367,8 +1372,8 @@ This usually doesn't need to be specialized.
 ## 
 ## function (x) 
 ## standardGeneric(".colorByNoneDotPlotField")
-## <bytecode: 0x7f9c5a090f78>
-## <environment: 0x7f9c5a094ae0>
+## <bytecode: 0x7fc704e16e28>
+## <environment: 0x7fc704e1e990>
 ## Methods may be defined for arguments: x
 ## Use  showMethods(".colorByNoneDotPlotField")  for currently available ones.
 \end{verbatim}
@@ -1395,8 +1400,8 @@ This usually doesn't need to be specialized.
 ## 
 ## function (x) 
 ## standardGeneric(".colorByNoneDotPlotScale")
-## <bytecode: 0x7f9c5a0736b0>
-## <environment: 0x7f9c5a0772f8>
+## <bytecode: 0x7fc704df9560>
+## <environment: 0x7fc704dff1a8>
 ## Methods may be defined for arguments: x
 ## Use  showMethods(".colorByNoneDotPlotScale")  for currently available ones.
 \end{verbatim}
@@ -1412,10 +1417,10 @@ This usually doesn't need to be specialized.
 ## x="DotPlot"
 \end{verbatim}
 
-\hypertarget{controlling-metadata-dot-plotting}{%
-\section{Controlling metadata dot plotting}\label{controlling-metadata-dot-plotting}}
+\hypertarget{for-metadata-dotplots}{%
+\subsection{\texorpdfstring{For metadata \texttt{DotPlot}s}{For metadata DotPlots}}\label{for-metadata-dotplots}}
 
-\texttt{.allowableYAxisChoices()} and \texttt{.allowableXAxisChoices()} specifies the acceptable fields to put on the x- or y-axes of \texttt{ColumnDataPlot} or \texttt{RowDataPlot} subclasses.
+\href{https://isee.github.io/iSEE/reference/metadata-plot-generics.html}{\texttt{.allowableYAxisChoices()}} and \href{https://isee.github.io/iSEE/reference/metadata-plot-generics.html}{\texttt{.allowableXAxisChoices()}} specifies the acceptable fields to put on the x- or y-axes of \texttt{ColumnDataPlot} or \texttt{RowDataPlot} subclasses.
 This is typically used to constrain the choices for customized panels that only accept certain column names or types.
 For example, a hypothetical MA plot panel would only accept log-fold changes on the y-axis.
 
@@ -1430,8 +1435,8 @@ For example, a hypothetical MA plot panel would only accept log-fold changes on 
 ## 
 ## function (x, se) 
 ## standardGeneric(".allowableYAxisChoices")
-## <bytecode: 0x7f9c5a1573d8>
-## <environment: 0x7f9c5a15bdc0>
+## <bytecode: 0x7fc704edb288>
+## <environment: 0x7fc704eddc70>
 ## Methods may be defined for arguments: x, se
 ## Use  showMethods(".allowableYAxisChoices")  for currently available ones.
 \end{verbatim}
@@ -1459,8 +1464,8 @@ For example, a hypothetical MA plot panel would only accept log-fold changes on 
 ## 
 ## function (x, se) 
 ## standardGeneric(".allowableXAxisChoices")
-## <bytecode: 0x7f9c5a274928>
-## <environment: 0x7f9c5271a1a0>
+## <bytecode: 0x7fc7051d1ee0>
+## <environment: 0x7fc70534a1f0>
 ## Methods may be defined for arguments: x, se
 ## Use  showMethods(".allowableXAxisChoices")  for currently available ones.
 \end{verbatim}
@@ -1477,10 +1482,10 @@ For example, a hypothetical MA plot panel would only accept log-fold changes on 
 ## x="RowDataPlot"
 \end{verbatim}
 
-\hypertarget{controlling-table-tables}{%
-\section{\texorpdfstring{Controlling \texttt{Table} tables}{Controlling Table tables}}\label{controlling-table-tables}}
+\hypertarget{for-tables}{%
+\subsection{\texorpdfstring{For \texttt{Table}s}{For Tables}}\label{for-tables}}
 
-\texttt{.generateTable()} creates the \texttt{data.frame} that is rendered into the table widget for \texttt{Table} subclasses.
+\href{https://isee.github.io/iSEE/reference/table-generics.html}{\texttt{.generateTable()}} creates the \texttt{data.frame} that is rendered into the table widget for \texttt{Table} subclasses.
 Each row of the \texttt{data.frame} is generally expected to correspond to a row or column of the dataset.
 If this is specialized, there is usually no need to specialize \texttt{.generateOutput()}.
 
@@ -1495,8 +1500,8 @@ If this is specialized, there is usually no need to specialize \texttt{.generate
 ## 
 ## function (x, envir) 
 ## standardGeneric(".generateTable")
-## <bytecode: 0x7f9c599fab00>
-## <environment: 0x7f9c59a06470>
+## <bytecode: 0x7fc704753890>
+## <environment: 0x7fc70475d200>
 ## Methods may be defined for arguments: x, envir
 ## Use  showMethods(".generateTable")  for currently available ones.
 \end{verbatim}
@@ -1513,10 +1518,13 @@ If this is specialized, there is usually no need to specialize \texttt{.generate
 ## x="RowDataTable"
 \end{verbatim}
 
-\hypertarget{handling-multiple-selections}{%
-\section{Handling multiple selections}\label{handling-multiple-selections}}
+\hypertarget{handling-selections}{%
+\section{Handling selections}\label{handling-selections}}
 
-\texttt{.multiSelectionDimension()} specifies whether the panel transmits multiple selections along the rows or columns.
+\hypertarget{multiple}{%
+\subsection{Multiple}\label{multiple}}
+
+\href{https://isee.github.io/iSEE/reference/multi-select-generics.html}{\texttt{.multiSelectionDimension()}} specifies whether the panel transmits multiple selections along the rows or columns.
 It can also be used to indicate that the panel does not transmit anything.
 
 \begin{Shaded}
@@ -1530,8 +1538,8 @@ It can also be used to indicate that the panel does not transmit anything.
 ## 
 ## function (x) 
 ## standardGeneric(".multiSelectionDimension")
-## <bytecode: 0x7f9c598ec828>
-## <environment: 0x7f9c598f7890>
+## <bytecode: 0x7fc7046475b8>
+## <environment: 0x7fc70464c710>
 ## Methods may be defined for arguments: x
 ## Use  showMethods(".multiSelectionDimension")  for currently available ones.
 \end{verbatim}
@@ -1551,7 +1559,7 @@ It can also be used to indicate that the panel does not transmit anything.
 ## x="RowTable"
 \end{verbatim}
 
-\texttt{.multiSelectionActive()} returns the parameters that define the ``active'' multiple selection in the current panel.
+\href{https://isee.github.io/iSEE/reference/multi-select-generics.html}{\texttt{.multiSelectionActive()}} returns the parameters that define the ``active'' multiple selection in the current panel.
 This is defined as the selection that the user can actively change by interacting with the panel.
 (In contrast, the ``saved'' selections are fixed and can only be deleted.)
 
@@ -1566,8 +1574,8 @@ This is defined as the selection that the user can actively change by interactin
 ## 
 ## function (x) 
 ## standardGeneric(".multiSelectionActive")
-## <bytecode: 0x7f9c59974be0>
-## <environment: 0x7f9c5997f430>
+## <bytecode: 0x7fc7046cfbd8>
+## <environment: 0x7fc7046d62b0>
 ## Methods may be defined for arguments: x
 ## Use  showMethods(".multiSelectionActive")  for currently available ones.
 \end{verbatim}
@@ -1585,7 +1593,7 @@ This is defined as the selection that the user can actively change by interactin
 ## x="Table"
 \end{verbatim}
 
-\texttt{.multiSelectionCommands()} creates the character vector of row or column names for a multiple selection in the current panel.
+\href{https://isee.github.io/iSEE/reference/multi-select-generics.html}{\texttt{.multiSelectionCommands()}} creates the character vector of row or column names for a multiple selection in the current panel.
 More specifically, it returns the commands that will then be evaluated to generate such character vectors.
 The identity of the selected rows/columns will ultimately be transmitted to other panels to affect their behavior.
 
@@ -1600,8 +1608,8 @@ The identity of the selected rows/columns will ultimately be transmitted to othe
 ## 
 ## function (x, index) 
 ## standardGeneric(".multiSelectionCommands")
-## <bytecode: 0x7f9c599110b0>
-## <environment: 0x7f9c5991bcf0>
+## <bytecode: 0x7fc70466be40>
+## <environment: 0x7fc704670b70>
 ## Methods may be defined for arguments: x, index
 ## Use  showMethods(".multiSelectionCommands")  for currently available ones.
 \end{verbatim}
@@ -1618,7 +1626,7 @@ The identity of the selected rows/columns will ultimately be transmitted to othe
 ## x="Table"
 \end{verbatim}
 
-\texttt{.multiSelectionAvailable()} reports how many total points are available for selection in the current panel.
+\href{https://isee.github.io/iSEE/reference/multi-select-generics.html}{\texttt{.multiSelectionAvailable()}} reports how many total points are available for selection in the current panel.
 This is used for reporting ``percent selected'' statistics below each panel.
 
 \begin{Shaded}
@@ -1632,8 +1640,8 @@ This is used for reporting ``percent selected'' statistics below each panel.
 ## 
 ## function (x, contents) 
 ## standardGeneric(".multiSelectionAvailable")
-## <bytecode: 0x7f9c599536d0>
-## <environment: 0x7f9c599570b0>
+## <bytecode: 0x7fc7046a8550>
+## <environment: 0x7fc7046afe40>
 ## Methods may be defined for arguments: x, contents
 ## Use  showMethods(".multiSelectionAvailable")  for currently available ones.
 \end{verbatim}
@@ -1649,7 +1657,7 @@ This is used for reporting ``percent selected'' statistics below each panel.
 ## x="Panel"
 \end{verbatim}
 
-\texttt{.multiSelectionClear()} eliminates the active multiple selection in the current panel.
+\href{https://isee.github.io/iSEE/reference/multi-select-generics.html}{\texttt{.multiSelectionClear()}} eliminates the active multiple selection in the current panel.
 This is used to wipe selections in response to changes to the plot content that cause those selections to be invalid.
 
 \begin{Shaded}
@@ -1663,8 +1671,8 @@ This is used to wipe selections in response to changes to the plot content that 
 ## 
 ## function (x) 
 ## standardGeneric(".multiSelectionClear")
-## <bytecode: 0x7f9c59932828>
-## <environment: 0x7f9c5993d0e8>
+## <bytecode: 0x7fc70468d5b8>
+## <environment: 0x7fc704695e78>
 ## Methods may be defined for arguments: x
 ## Use  showMethods(".multiSelectionClear")  for currently available ones.
 \end{verbatim}
@@ -1681,7 +1689,7 @@ This is used to wipe selections in response to changes to the plot content that 
 ## x="Panel"
 \end{verbatim}
 
-\texttt{.multiSelectionRestricted()} indicates whether the current panel's data should be restricted to the rows/columns that it receives from an incoming multiple selection.
+\href{https://isee.github.io/iSEE/reference/multi-select-generics.html}{\texttt{.multiSelectionRestricted()}} indicates whether the current panel's data should be restricted to the rows/columns that it receives from an incoming multiple selection.
 This is used to determine how changes in the upstream transmitters should propagate through to the current panel's children.
 
 \begin{Shaded}
@@ -1695,8 +1703,8 @@ This is used to determine how changes in the upstream transmitters should propag
 ## 
 ## function (x) 
 ## standardGeneric(".multiSelectionRestricted")
-## <bytecode: 0x7f9c598a8fd0>
-## <environment: 0x7f9c598aff58>
+## <bytecode: 0x7fc704605d60>
+## <environment: 0x7fc704608dd8>
 ## Methods may be defined for arguments: x
 ## Use  showMethods(".multiSelectionRestricted")  for currently available ones.
 \end{verbatim}
@@ -1713,7 +1721,7 @@ This is used to determine how changes in the upstream transmitters should propag
 ## x="Panel"
 \end{verbatim}
 
-\texttt{.multiSelectionInvalidated()} indicates whether the current panel is invalidated when it receives a new multiple selection.
+\href{https://isee.github.io/iSEE/reference/multi-select-generics.html}{\texttt{.multiSelectionInvalidated()}} indicates whether the current panel is invalidated when it receives a new multiple selection.
 This usually doesn't need to be specialized.
 
 \begin{Shaded}
@@ -1727,8 +1735,8 @@ This usually doesn't need to be specialized.
 ## 
 ## function (x) 
 ## standardGeneric(".multiSelectionInvalidated")
-## <bytecode: 0x7f9c598c2358>
-## <environment: 0x7f9c598c9eb0>
+## <bytecode: 0x7fc70461d0e8>
+## <environment: 0x7fc704622d30>
 ## Methods may be defined for arguments: x
 ## Use  showMethods(".multiSelectionInvalidated")  for currently available ones.
 \end{verbatim}
@@ -1744,10 +1752,10 @@ This usually doesn't need to be specialized.
 ## x="Panel"
 \end{verbatim}
 
-\hypertarget{handling-single-selections}{%
-\section{Handling single selections}\label{handling-single-selections}}
+\hypertarget{single}{%
+\subsection{Single}\label{single}}
 
-\texttt{.singleSelectionDimension()} specifies whether the panel transmits single selections of a row or column.
+\href{https://isee.github.io/iSEE/reference/single-select-generics.html}{\texttt{.singleSelectionDimension()}} specifies whether the panel transmits single selections of a row or column.
 It can also be used to indicate that the panel does not transmit anything.
 
 \begin{Shaded}
@@ -1761,8 +1769,8 @@ It can also be used to indicate that the panel does not transmit anything.
 ## 
 ## function (x) 
 ## standardGeneric(".singleSelectionDimension")
-## <bytecode: 0x7f9c596f5548>
-## <environment: 0x7f9c596fcf60>
+## <bytecode: 0x7fc7044583c8>
+## <environment: 0x7fc704461cf0>
 ## Methods may be defined for arguments: x
 ## Use  showMethods(".singleSelectionDimension")  for currently available ones.
 \end{verbatim}
@@ -1782,7 +1790,7 @@ It can also be used to indicate that the panel does not transmit anything.
 ## x="RowTable"
 \end{verbatim}
 
-\texttt{.singleSelectionValue()} determines the row or column that has been selected in the current panel.
+\href{https://isee.github.io/iSEE/reference/single-select-generics.html}{\texttt{.singleSelectionValue()}} determines the row or column that has been selected in the current panel.
 The identity of the row/column is passed onto other panels to affect their behavior.
 
 \begin{Shaded}
@@ -1796,8 +1804,8 @@ The identity of the row/column is passed onto other panels to affect their behav
 ## 
 ## function (x, pObjects) 
 ## standardGeneric(".singleSelectionValue")
-## <bytecode: 0x7f9c5967d200>
-## <environment: 0x7f9c59682c18>
+## <bytecode: 0x7fc7043e3f90>
+## <environment: 0x7fc7043e99a8>
 ## Methods may be defined for arguments: x, pObjects
 ## Use  showMethods(".singleSelectionValue")  for currently available ones.
 \end{verbatim}
@@ -1814,7 +1822,7 @@ The identity of the row/column is passed onto other panels to affect their behav
 ## x="Table"
 \end{verbatim}
 
-\texttt{.singleSelectionSlots()} determines how the current panel should respond to single selections from other panels.
+\href{https://isee.github.io/iSEE/reference/single-select-generics.html}{\texttt{.singleSelectionSlots()}} determines how the current panel should respond to single selections from other panels.
 This will also automatically set up some of the more difficult observers if sufficient information is supplied by the class.
 
 \begin{Shaded}
@@ -1828,8 +1836,8 @@ This will also automatically set up some of the more difficult observers if suff
 ## 
 ## function (x, pObjects) 
 ## standardGeneric(".singleSelectionValue")
-## <bytecode: 0x7f9c5967d200>
-## <environment: 0x7f9c59682c18>
+## <bytecode: 0x7fc7043e3f90>
+## <environment: 0x7fc7043e99a8>
 ## Methods may be defined for arguments: x, pObjects
 ## Use  showMethods(".singleSelectionValue")  for currently available ones.
 \end{verbatim}
