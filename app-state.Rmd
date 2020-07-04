@@ -1,76 +1,58 @@
-# The app server {#server}
+# Application state {#server}
 
-## Reactive objects {#robjects}
+```{r, echo=FALSE, results="hide"}
+knitr::opts_chunk$set(error=FALSE, warning=FALSE, message=FALSE)
+suppressPackageStartupMessages(library(BiocStyle))
+suppressPackageStartupMessages(library(iSEE))
+```
 
-<!-- TODO
-A general description of the purpose of reactive values in rObjects would probably be enough.
-I don't think developers need details about each individual value.
+## Overview
 
-Some examples values manually collected from iSEE-main.R:
-- rerender
-- rerendered
-- paste0(mode, id)
-- paste0(mode, id, "_", .panelLinkInfo)
-- paste0(mode, id, "_", .panelGeneralInfo)
-- paste0(mode, id, "_", .selectMultiSaved)
-- paste0(mode, id, "_repopulated")
-- paste0(mode, id, "_reactivated")
-- paste0(mode, id, "_resaved")
--->
+`r Biocpkg("iSEE")` uses global variables to keep track of the application state and to trigger reactive expressions.
+These are passed in the ubiquitous `pObjects` and `rObjects` arguments for non-reactive and reactive variables, respectively.
+Both of these values have pass-by-reference semantics, meaning that any modifications to their contents within functions will persist outside of the function scope.
+`r Biocpkg("iSEE")` provides several functions to facilitate the interactions with these objects.
 
-## Persistent (non-reactive) objects
+## Updating parameters
 
-<!-- TODO
-A description of the purpose of pObjects.
-In particular, memory and coordinates are key to highlight, although they will be described in further details in dedicated sections.
+The application memory is a list of `Panel` instances in `pObjects$memory` that captures the current state of the `r Biocpkg("iSEE")` application.
+Conceptually, one should be able to extract this list from a running application, pass it to the `initial=` argument of the `iSEE()` function and expect to recover the same state.
+All modifications to the state should be recorded in the memory, meaning that observer expressions will commonly contain code like:
 
-Some examples:
-- memory
-- counter
-- commands
-- coordinates
-- cached_info
-- .voiceActivePanel
--->
+```r
+pObjects$memory[[panel_name]][[param_name]] <- new_value
+```
 
-## The app memory {#memory}
+By itself, modifying the application memory will not trigger any further actions.
+The memory is too complex to be treated as a reactive value as it would affect too many downstream observers.
+Instead, we provide the `.requestUpdate()` function to indicate to the application that a particular panel needs to be updated.
+This sets a flag in `rObjects` that will eventually trigger re-rendering of the specified panel.
 
-The app `memory` is a list of instances created from available panel classes and currently visible in the GUI.
-The order of panel instances in `memory` directly reflects their order in the GUI.
+The `.requestCleanUpdate()` function provides a variant of this approach where the panel should be updated _and_ any active or saved multiple selections should be wiped.
+This is useful for dealing with changes to "protected" parameters that modify the panel contents such that any selection parameters are no longer relevant (e.g., invalidating brushes when the plot coordinates change).
+Yet another variant is the `.requestActiveSelectionUpdate()` function, which indicates whether a panel's active multiple selection has changed; this should be used in the observer expression that responds to the panel's multiple selection mechanism.
 
-## Initialization of the app server
+The two-step process of memory modification and calling `.requestUpdate()` is facilitated by functions like `.createUnprotectedParameterObservers()`, which sets up simple observers for parameter modifications.
+However, more complex observers will have to do this manually.
 
-The app server is initialized as soon as a valid `se` object is provided.
-This can be either in the call to `iSEE(se)` or using other mechanisms of data upload at runtime within the app (e.g., `fileInput` UI widgets when `iSEE()` is called without providing the `se` argument).
+## Using the memory
 
-The internal function `iSEE:::.initialize_server()` takes the `se` object and the list holding reactive values used to trigger re-rendering of the GUI, as described in the section [Reactive objects](#robjects).
+In a similar vein, expressions to render output should _never_ touch the Shiny `input` object directly.
+(Indeed, `.renderOutput()` does not even have access to the `input`.)
+As all parameter changes pass through the memory, the updated values of each parameter should also be retrieved from memory.
+This involves extracting the desired `Panel` from `pObjects$memory` in methods for generics like `.createObservers()` that rely on pass-by-reference semantics for correct evaluation of reactive expressions.
+Other generics that are not setting up reactive expressions can directly extract values from the supplied `Panel` object.
 
-The very first step invokes the internal function `checkColormapCompatibility()`.
-This function takes the `se` object and the optional argument `iSEE(colormap)`, and carries out a number of compatibility checks between the two objects.
-The function collects a character vector of incompatibility issues that are displayed - if any - as warning notifications in GUI when the app is launched.
+Each `Panel` object can be treated as a list of panel parameters.
+Retrieving values is as simple as using the `[[` operator with the name of the parameter.
+Direct slot access should be avoided, consistent with best practice for S4 programming.
 
-<!-- TODO: something about setting up memory, once the current TEST code is replaced. -->
+## Responding to events
 
-Next, the internal function `iSEE:::.prepare_SE()` calls the method `.cacheCommonInfo()` on each type of panel present provided to the arguments `iSEE(initial)` and `iSEE(extra)`, to precompute and cache information relevant to all the types of panels that will be available in that app instance.
+Developers can respond to events by calling functions like `.trackUpdate()` within an observer or rendering expression.
+For example, `.trackUpdate()` will trigger re-evaluation of its context if the panel is updated by `.requestUpdate()`.
+Other variants like `.trackMultiSelection()` will trigger re-evaluation upon changes to the panel's multiple selections.
+This is mostly intended for panels that need to synchronize updates to multiple output elements.
+Developers should only use these functions to track updates to the same panel for which the observer/rendering expression is written; management of communication across panels is outside of the scope of these expressions.
 
-Shortly after, the internal function `iSEE:::.setup_initial_state()` calls the method `.refineParameters` on each panel instance provided to `iSEE(initial)`, to ensure that all the panels present in the GUI when the app is launched are initialized with valid parameters; any invalid parameter is replaced with sensible values for the given `se` object.
 
-<!-- TODO: something about .define_reservoir -->
-
-<!-- TODO: something, once we deal with user-supplied panel IDs -->
-
-The internal function `iSEE:::.create_persistent_objects()` executes the initialization of persistent (non-reactive) objects:
-
-- the app `memory` (see the section [The app memory](#memory))
-- the app `reservoir`, which stores one instance of panel type available for this app instance
-- the app `counter` is used to track the number of panels previously created for each type, and to assign an increasing identifier to new panel instances
-- the app `commands` stores the list of code chunks to display in the code tracker, to reproduce each panel output
-- the app `contents` stores the list of data point coordinates selectable in each panel instance^[Data points downsampled for rendering speed performance remain selectable, even though they are not visible in the plot.]
-<!-- TODO: something about varname -->
-<!-- TODO: something about aesthetics_links -->
-<!-- TODO: something about selection_links -->
-- the identifier of the panel under the control of speech recognition
-
-<!-- TODO: something about rObjects -->
-
-<!-- TODO: something about the various kinds of observers -->
