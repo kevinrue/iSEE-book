@@ -1,103 +1,163 @@
 # Panel classes {#panels}
 
-```{r, include=FALSE}
-source("R/symbols.R")
+```{r, echo=FALSE, results="hide"}
+knitr::opts_chunk$set(error=FALSE, warning=FALSE, message=FALSE)
+suppressPackageStartupMessages(library(BiocStyle))
+suppressPackageStartupMessages(library(iSEE))
+class_link <- function(x) sprintf("[`%s`](https://isee.github.io/iSEE/reference/%s-class.html)", x, x)
 ```
 
 ## Overview
 
-The types of builtin panels available to compose an `r Biocpkg("iSEE")` app are defined as a hierarchy of S4 classes.
+This chapter provides a list of all of the classes that are implemented by the core `r Biocpkg("iSEE")` package.
+Each class comes with its specialized implementations of methods for various generics described in Chapter \@ref(api).
+Thus, it is often possible for developers to inherit from one of these classes to get most of the methods implemented "for free".
+The classes themselves are either virtual or concrete; the latter can be created and used directly in an `iSEE()` application, while the former can only be used as a parent of a concrete subclass.
+Here, we will provide a brief summary of each class along with a listing of its available slots.
+Readers should refer to the documentation for each class (links below) for more details.
 
-<!-- TODO Replace the bullet list below by a figure, like a filesystem tree. -->
+## Virtual classes
 
-- `Panel` `r .virtual_panel_symbol`
-    - `DotPlot` `r .virtual_panel_symbol`
-        - `ColumnDotPlot` `r .virtual_panel_symbol`
-            - `ReducedDimensionPlot`
-            - `ColumnDataPlot`
-            - `FeatureAssayPlot`
-        - `RowDotPlot` `r .virtual_panel_symbol`
-            - `RowDataPlot`
-            - `SampleAssayPlot`
-    - `Table` `r .virtual_panel_symbol`
-        - `RowTable` `r .virtual_panel_symbol`
-            - `RowDataTable`
-        - `ColumnTable` `r .virtual_panel_symbol`
-            - `ColDataTable`
-    - `ComplexHeatmapPlot`
+### `Panel` 
 
-Some of those classes are "virtual" (indicated by `r .virtual_panel_symbol`), meaning that they cannot be directly instanciated as panels in the GUI.
-Instead, virtual panel classes define families of panels that share groups of properties.
-As such, virtual classes are meant to be used as the parent of concrete classes that share the associated properties.
+The `r class_link("Panel")` class is the base class for all `r Biocpkg("iSEE")` panels.
+It provides functionality to control general panel parameters such as the panel width and height.
+It also controls the transmission of multiple row/column selections across panels.
 
-In contrast, concrete classes must define fully-functional panels that can be embedded in a GUI, interact with other panels, receive and process data, and generate an output such as a plot or a table, accompanied by the associated R code to display in the code tracker for reproducibility.
+```{r}
+slotNames(getClass("Panel"))
+```
 
-## The Panel class
+### `DotPlot`
 
-The top-most class is called `Panel`.
-It is a virtual class that defines the core properties common to any panel - existing or future - that may be displayed in the interface.
+The `r class_link("DotPlot")` class inherits from the `Panel` class and is the base class for dot-based plots.
+This refers to all plots where each row or column is represented by no more than one dot/point on the plot.
+It provides functionality to create the plot, control the aesthetics of the points and to manage the brush/lasso selection.
 
-Refer to `help("Panel-class", "iSEE")` for more information about the slots and methods provided by this class.
+```{r}
+slotNames(getClass("DotPlot"))
+```
 
-## The DotPlot and Table panel families
+### `ColumnDotPlot`
 
-The virtual class `Panel` is directly derived into two major virtual sub-classes:
+The `r class_link("ColumnDotPlot")` class inherits from the `DotPlot` class and represents all per-column dot plots.
+This refers to all plots where each column is represented by no more than one dot/point on the plot.
+It provides functionality to manage `colData` fields for modifying the plot aesthetics.
+It is also restricted to receiving and transmitting column identities in single and multiple selections.
 
-- `DotPlot`
-- `Table`
+```{r}
+slotNames(getClass("ColumnDotPlot"))
+```
 
-Those classes introduce properties that are specific to distinct subsets of panel types.
+### `RowDotPlot`
 
-The class `DotPlot` introduces parameters specific to panels where the output is a `ggplot` object and each row in the data-frame is represented as a point in a plot.
-Refer to `help("DotPlot-class", "iSEE")` for more information.
+The `r class_link("RowDotPlot")` class inherits from the `DotPlot` class and represents all per-row dot plots.
+This refers to all plots where each row is represented by no more than one dot/point on the plot.
+It provides functionality to manage `rowData` fields for modifying the plot aesthetics.
+It is also restricted to receiving and transmitting row identities in single and multiple selections.
 
-The class `Table` introduces parameters specific to panels where the main output is a data-frame directly displayed as a table in the GUI.
-Refer to `help("Table-class", "iSEE")` for more information.
+```{r}
+slotNames(getClass("RowDotPlot"))
+```
 
-As a special case, the class `ComplexHeatmapPlot` defines a concrete panel class that directly extends the class `Panel`, as it introduces a set of parameters distinct from both the `DotPlot` and `Table` panel families.
-This panel class is described in further details in the section [The ComplexHeatmapPlot panel class](#complexheatmapplot-class).
+### `Table`
 
-<!-- TODO: properties introduced by the DotPlot class -->
+The `r class_link("Table")` class inherits from the `Panel` class and represents all tables rendered using `r CRANpkg("DT")`.
+Each row of the table is expected to correspond to a row or column of the `SummarizedExperiment`.
+This class provides functionality to render the `DT::datatable` widget, monitor single selections and apply search filters.
 
-<!-- TODO: properties introduced by the Table class -->
+```{r}
+slotNames(getClass("Table"))
+```
 
-## The ColumnDotPlot and RowDotPlot panel families
+### `ColumnTable`
 
-<!-- TODO: properties introduced by the ColumnDotPlot class -->
+The `r class_link("ColumnTable")` class inherits from the `Table` class and represents all tables where the rows correspond to columns of the `SummarizedExperiment`.
+Instances of this class can only transmit single and multiple selections on columns.
 
-<!-- TODO: properties introduced by the RowDotPlot class -->
+```{r}
+slotNames(getClass("ColumnTable"))
+```
 
-## Built-in ColumnDotPlot panel classes
+### `RowTable`
 
-<!-- TODO: properties introduced by the ReducedDimensionPlot class -->
+The `r class_link("RowTable")` class inherits from the `Table` class and represents all tables where the rows correspond to rows of the `SummarizedExperiment`.
+Instances of this class can only transmit single and multiple selections on rows.
 
-<!-- TODO: properties introduced by the ColumnDataPlot class -->
+```{r}
+slotNames(getClass("RowTable"))
+```
 
-<!-- TODO: properties introduced by the FeatureAssayPlot class -->
+## Concrete classes
 
-## Built-in RowDotPlot panel classes
+### `ReducedDimensionPlot`
 
-<!-- TODO: properties introduced by the RowDataPlot class -->
+The `r class_link("ReducedDimensionPlot")` class inherits from the `ColumnDotPlot` class and plots reduced dimension coordinates from an entry of the `reducedDims` in a `SingleCellExperiment`.
+It provides functionality to choose the result and extract the relevant entry in preparation for plotting.
 
-<!-- TODO: properties introduced by the SampleAssayPlot class -->
+```{r}
+slotNames(getClass("ReducedDimensionPlot"))
+```
 
-## The ColumnTable and RowTable panel families
+### `FeatureAssayPlot`
 
-<!-- TODO: properties introduced by the ColumnTable class -->
+The `r class_link("FeatureAssayPlot")` class inherits from the `ColumnDotPlot` class and plots the assay values for a feature across all samples, using an entry of the `assays()` from any `SummarizedExperiment` object.
+It provides functionality to choose the feature of interest and any associated variable to plot on the x-axis, as well as a method to extract the relevant pieces of data in preparation for plotting.
 
-<!-- TODO: properties introduced by the RowTable class -->
+```{r}
+slotNames(getClass("FeatureAssayPlot"))
+```
 
-## Built-in ColumnTable panel classes
+### `ColumnDataPlot`
 
-<!-- TODO: properties introduced by the RowDataTable class -->
+The `r class_link("ColumnDataPlot")` class inherits from the `ColumnDotPlot` class and plots `colData` variables by themselves or against each other.
+It provides functionality to choose and extract the variables to plot.
 
-## Built-in RowTable panel classes
+```{r}
+slotNames(getClass("ColumnDataPlot"))
+```
 
-<!-- TODO: properties introduced by the ColDataTable class -->
+### `SampleAssayPlot`
 
-## The ComplexHeatmapPlot panel class {#complexheatmapplot-class}
+The `r class_link("SampleAssayPlot")` class inherits from the `RowDotPlot` class and plots the assay values for a sample across all features, using an entry of the `assays()` from any `SummarizedExperiment` object.
+It provides functionality to choose the sample of interest and any associated variable to plot on the x-axis, as well as a method to extract the relevant pieces of data in preparation for plotting.
 
-This type of panel introduces parameters specific to panels where the output is a `Heatmap` object from the `r Biocpkg("ComplexHeatmap")` package.
-In this panel, each row represents a feature and each column represents a sample in the `se` object.
+```{r}
+slotNames(getClass("FeatureAssayPlot"))
+```
 
-<!-- TODO: properties introduced by the ComplexHeatmapPlot class -->
+### `RowDataPlot`
+
+The `r class_link("RowDataPlot")` class inherits from the `RowDotPlot` class and plots `rowData` variables by themselves or against each other.
+It provides functionality to choose and extract the variables to plot.
+
+```{r}
+slotNames(getClass("RowDataPlot"))
+```
+
+### `ColumnDataTable`
+
+The `r class_link("ColumnDataTable")` class inherits from the `ColumnTable` class and shows the contents of the `colData` in a table.
+It provides functionality to extract the `colData` in preparation for rendering.
+
+```{r}
+slotNames(getClass("ColumnDataTable"))
+```
+
+### `RowDataTable`
+
+The `r class_link("RowDataTable")` class inherits from the `RowTable` class and shows the contents of the `rowData` in a table.
+It provides functionality to extract the `rowData` in preparation for rendering.
+
+```{r}
+slotNames(getClass("RowDataTable"))
+```
+
+### `ComplexHeatmapPlot`
+
+The `r class_link("ComplexHeatmapPlot")` class inherits from the `Panel` class and creates a heatmap from assay values using the `r Biocpkg("ComplexHeatmap")` package.
+It provides functionality to specify the features to be shown, which assay to show, transformations to be applied, and which metadata variables to display as row and column heatmap annotations.
+
+```{r}
+slotNames(getClass("ComplexHeatmapPlot"))
+```
