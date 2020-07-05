@@ -525,6 +525,7 @@ We set up an <code>iSEE</code> instance where clicking on any row in the <code>G
 <div class="sourceCode" id="cb218"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb218-1"><a href="gene-ontology-table.html#cb218-1"></a>got &lt;-<span class="st"> </span><span class="kw">GOTable</span>(<span class="dt">PanelWidth=</span>8L, <span class="dt">Selected=</span><span class="st">&quot;GO:0007049&quot;</span>, <span class="dt">Search=</span><span class="st">&quot;^cell cycle&quot;</span>)</span>
 <span id="cb218-2"><a href="gene-ontology-table.html#cb218-2"></a>rst &lt;-<span class="st"> </span><span class="kw">RowDataTable</span>(<span class="dt">RowSelectionSource=</span><span class="st">&quot;GOTable1&quot;</span>)</span>
 <span id="cb218-3"><a href="gene-ontology-table.html#cb218-3"></a>app &lt;-<span class="st"> </span><span class="kw">iSEE</span>(sce, <span class="dt">initial=</span><span class="kw">list</span>(got, rst))</span></code></pre></div>
+<p><img src="screenshots/go-table.png" width="100%" /></p>
 
 </div>
 </div>
