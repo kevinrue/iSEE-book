@@ -11,8 +11,8 @@ options(digits = 4)
 Here, we will construct a table of GO terms where selection of a row in the table 
 causes transmission of a multiple selection of gene names.
 The aim is to enable us to transmit multiple row selections to other panels based on their membership of a gene set.
-This is a fairly involved example of creating a `Panel` subclass as we cannot easily inherit from an existing subclass;
-rather, we need to provide all the methods ourselves.
+This is a fairly involved example of creating a `Panel` subclass as we cannot easily inherit from an existing subclass; rather, we need to provide all the methods ourselves.
+Readers may also be interested in the fully fledged version of the proposed class in `r Biocpkg("iSEEu")`.
 
 ## Class basics 
 
@@ -21,7 +21,7 @@ This inherits from the virtual base `Panel` class as it cannot meet any of the c
 what with the `DataTable` selection event triggering a multiple selection rather than a single selection.
 We add some slots to specify the feature ID type and the organism of interest as well as for `DataTable` parameters.
 
-```{r, echo=FALSE}
+```{r}
 library(iSEE)
 library(S4Vectors)
 setClass("GOTable", contains="Panel",
@@ -65,7 +65,7 @@ setValidity2("GOTable", function(object) {
 })
 ```
 
-We then specialize the initialize method to set reasonable defaults. 
+We then specialize the initialize method to set reasonable defaults and create an approprpiate constructor. 
 
 ```{r}
 setMethod("initialize", "GOTable", function(.Object, 
@@ -76,6 +76,8 @@ setMethod("initialize", "GOTable", function(.Object,
         Selected=Selected, Search=Search, 
         SearchColumns=SearchColumns, ...)
 })
+
+GOTable <- function(...) new("GOTable", ...)
 ```
 
 ## Setting up the interface
@@ -148,7 +150,8 @@ setMethod(".generateOutput", "GOTable", function(x, se, ..., all_memory, all_con
     eval(parse(text=commands), envir=envir)
     list(
         commands=list(commands), 
-        contents=list(table=envir$tab, available=nrow(se))
+        contents=list(table=envir$tab, available=nrow(se)),
+        varname="tab"
     )
 })
 ```
@@ -163,7 +166,6 @@ We specialize `.createObservers` to define some observers to respond to changes 
 This also involves creating an observer to respond to a change in the selection of a `DataTable` row,
 calling `.requestActiveSelectionUpdate()` to trigger changes in panels that are receiving the multiple row selection.
 (We set up observers for the search fields as well, as a courtesy to restore them properly upon re-rendering.) 
-Note the use of `callNextMethod()` to ensure that observers of the parent class are also created.
 
 ```{r}
 setMethod(".createObservers", "GOTable",
@@ -193,8 +195,8 @@ setMethod(".createObservers", "GOTable",
             return(NULL)
         }
         pObjects$memory[[panel_name]][["Selected"]] <- chosen
-        .requestActiveSelectionUpdate(panel_name, rObjects, update_output=FALSE)
-    }, ignoreNULL=FALSE)
+        .requestActiveSelectionUpdate(panel_name, session, pObjects, rObjects, update_output=FALSE)
+    }, ignoreInit=TRUE, ignoreNULL=FALSE)
 
     # Observer for the search field:
     search_field <- paste0(panel_name, "_search")
@@ -218,6 +220,9 @@ setMethod(".createObservers", "GOTable",
 })
 ```
 
+Note the use of `callNextMethod()` to ensure that observers of the parent class are created.
+We also set `ignoreInit=TRUE` to avoid problems from `ignoreNULL=TRUE` when the observer is initialized before the table is rendered; otherwise, the `NULL` selection prior to table rendering will wipe out any initial setting for the `Selected` slot.
+
 We set up a rendering expression for the output table by specializing `.renderOutput()`.
 This uses the `renderDataTable()` function from the `r BiocStyle::CRANpkg("DT")` package
 (again, this has a similar-but-not-identical function in `r BiocStyle::CRANpkg("shiny")`, so be careful which one you import.)
@@ -234,7 +239,6 @@ setMethod(".renderOutput", "GOTable", function(x, se, ..., output, pObjects, rOb
 
         t.out <- .retrieveOutput(panel_name, se, pObjects, rObjects)
         full_tab <- t.out$contents$table
-        pObjects$varname[[panel_name]] <- "tab"
 
         chosen <- param_choices[["Selected"]]
         search <- param_choices[["Search"]]
@@ -323,18 +327,15 @@ setMethod(".multiSelectionAvailable", "GOTable", function(x, contents) {
 
 ## In action
 
-Let's put our new panel to the test using the `sce` object, preprocessed in a [previous chapter](#developing).
-
 ```{r, include=FALSE}
 sce <- readRDS("sce.rds")
 ```
 
-Setting up the iSEE instance is as easy as:
+Let's put our new panel to the test using the `sce` object from Chapter \@ref(developing).
+We set up an `iSEE` instance where clicking on any row in the `GOTable` will subset `RowTable1` to only those genes in the corresponding GO term.
 
 ```{r}
-got <- new("GOTable", PanelWidth=8L)
+got <- GOTable(PanelWidth=8L, Selected="GO:0007049", Search="^cell cycle")
 rst <- RowDataTable(RowSelectionSource="GOTable1")
 app <- iSEE(sce, initial=list(got, rst))
 ```
-
-Clicking on any row in the `GOTable` will subset `RowTable1` to only those genes in the corresponding GO term.
