@@ -397,8 +397,8 @@ This is provided as a <code>SingleCellExperiment</code> on which we compute the 
 <p>We now set up an <code>iSEE()</code> instance with the hexbin and standard plots for showing reduced dimension results.
 We can see the obvious visual differences in the aesthetics between plots as well as the changes to the user interface.</p>
 <div class="sourceCode" id="cb178"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb178-1"><a href="developing.html#cb178-1"></a>app &lt;-<span class="st"> </span><span class="kw">iSEE</span>(sce, <span class="dt">initial=</span><span class="kw">list</span>(</span>
-<span id="cb178-2"><a href="developing.html#cb178-2"></a>    <span class="kw">ReducedDimensionPlot</span>(<span class="dt">Type=</span><span class="st">&quot;TSNE&quot;</span>, <span class="dt">VisualBoxOpen=</span><span class="ot">TRUE</span>, <span class="dt">VisualChoices=</span><span class="st">&quot;Size&quot;</span>),</span>
-<span id="cb178-3"><a href="developing.html#cb178-3"></a>    <span class="kw">RedDimHexPlot</span>(<span class="dt">Type=</span><span class="st">&quot;TSNE&quot;</span>, <span class="dt">VisualBoxOpen=</span><span class="ot">TRUE</span>, <span class="dt">VisualChoices=</span><span class="st">&quot;Size&quot;</span>)</span>
+<span id="cb178-2"><a href="developing.html#cb178-2"></a>    <span class="kw">ReducedDimensionPlot</span>(<span class="dt">Type=</span><span class="st">&quot;TSNE&quot;</span>, <span class="dt">VisualBoxOpen=</span><span class="ot">TRUE</span>, <span class="dt">VisualChoices=</span><span class="st">&quot;Size&quot;</span>, <span class="dt">PanelWidth=</span>6L),</span>
+<span id="cb178-3"><a href="developing.html#cb178-3"></a>    <span class="kw">RedDimHexPlot</span>(<span class="dt">Type=</span><span class="st">&quot;TSNE&quot;</span>, <span class="dt">VisualBoxOpen=</span><span class="ot">TRUE</span>, <span class="dt">VisualChoices=</span><span class="st">&quot;Size&quot;</span>, <span class="dt">PanelWidth=</span>6L)</span>
 <span id="cb178-4"><a href="developing.html#cb178-4"></a>))</span></code></pre></div>
 <p><img src="screenshots/hex-dimred.png" width="100%" /></p>
 
