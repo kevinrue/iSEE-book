@@ -198,8 +198,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5.3" data-path="reduced-dimension-hexbin-plot.html"><a href="reduced-dimension-hexbin-plot.html#setting-up-the-interface"><i class="fa fa-check"></i><b>5.3</b> Setting up the interface</a></li>
 <li class="chapter" data-level="5.4" data-path="reduced-dimension-hexbin-plot.html"><a href="reduced-dimension-hexbin-plot.html#creating-the-observers"><i class="fa fa-check"></i><b>5.4</b> Creating the observers</a></li>
 <li class="chapter" data-level="5.5" data-path="dynamic-reduced-dimensions.html"><a href="dynamic-reduced-dimensions.html#making-the-plot"><i class="fa fa-check"></i><b>5.5</b> Making the plot</a></li>
-<li class="chapter" data-level="5.6" data-path="dynamic-reduced-dimensions.html"><a href="dynamic-reduced-dimensions.html#finishing-touches"><i class="fa fa-check"></i><b>5.6</b> Finishing touches</a></li>
-<li class="chapter" data-level="5.7" data-path="reduced-dimension-hexbin-plot.html"><a href="reduced-dimension-hexbin-plot.html#in-action"><i class="fa fa-check"></i><b>5.7</b> In action</a></li>
+<li class="chapter" data-level="5.6" data-path="reduced-dimension-hexbin-plot.html"><a href="reduced-dimension-hexbin-plot.html#in-action"><i class="fa fa-check"></i><b>5.6</b> In action</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="dynamic-differential-expression.html"><a href="dynamic-differential-expression.html"><i class="fa fa-check"></i><b>6</b> Dynamic differential expression</a><ul>
 <li class="chapter" data-level="6.1" data-path="panels.html"><a href="panels.html#overview"><i class="fa fa-check"></i><b>6.1</b> Overview</a></li>
@@ -207,8 +206,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="6.3" data-path="reduced-dimension-hexbin-plot.html"><a href="reduced-dimension-hexbin-plot.html#setting-up-the-interface"><i class="fa fa-check"></i><b>6.3</b> Setting up the interface</a></li>
 <li class="chapter" data-level="6.4" data-path="reduced-dimension-hexbin-plot.html"><a href="reduced-dimension-hexbin-plot.html#creating-the-observers"><i class="fa fa-check"></i><b>6.4</b> Creating the observers</a></li>
 <li class="chapter" data-level="6.5" data-path="dynamic-differential-expression.html"><a href="dynamic-differential-expression.html#making-the-table"><i class="fa fa-check"></i><b>6.5</b> Making the table</a></li>
-<li class="chapter" data-level="6.6" data-path="dynamic-reduced-dimensions.html"><a href="dynamic-reduced-dimensions.html#finishing-touches"><i class="fa fa-check"></i><b>6.6</b> Finishing touches</a></li>
-<li class="chapter" data-level="6.7" data-path="reduced-dimension-hexbin-plot.html"><a href="reduced-dimension-hexbin-plot.html#in-action"><i class="fa fa-check"></i><b>6.7</b> In action</a></li>
+<li class="chapter" data-level="6.6" data-path="reduced-dimension-hexbin-plot.html"><a href="reduced-dimension-hexbin-plot.html#in-action"><i class="fa fa-check"></i><b>6.6</b> In action</a></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="annotated-gene-list.html"><a href="annotated-gene-list.html"><i class="fa fa-check"></i><b>7</b> Annotated gene list</a><ul>
 <li class="chapter" data-level="7.1" data-path="panels.html"><a href="panels.html#overview"><i class="fa fa-check"></i><b>7.1</b> Overview</a></li>
@@ -268,17 +266,30 @@ In this case, to create a panel that inherits all the functionality of the <code
 We will call the new class <code>RedDimHexPlot</code>, adding an extra parameter to control the resolution of the hexbins.</p>
 <div class="sourceCode" id="cb168"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb168-1"><a href="reduced-dimension-hexbin-plot.html#cb168-1"></a><span class="kw">setClass</span>(<span class="st">&quot;RedDimHexPlot&quot;</span>, <span class="dt">contains=</span><span class="st">&quot;ReducedDimensionPlot&quot;</span>, </span>
 <span id="cb168-2"><a href="reduced-dimension-hexbin-plot.html#cb168-2"></a>    <span class="dt">slots=</span><span class="kw">c</span>(<span class="dt">BinResolution=</span><span class="st">&quot;numeric&quot;</span>))</span></code></pre></div>
+<p>Any new slots should come with validity methods, as shown below.</p>
+<div class="sourceCode" id="cb169"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb169-1"><a href="reduced-dimension-hexbin-plot.html#cb169-1"></a><span class="kw">library</span>(S4Vectors)</span>
+<span id="cb169-2"><a href="reduced-dimension-hexbin-plot.html#cb169-2"></a><span class="kw">setValidity2</span>(<span class="st">&quot;RedDimHexPlot&quot;</span>, <span class="cf">function</span>(object) {</span>
+<span id="cb169-3"><a href="reduced-dimension-hexbin-plot.html#cb169-3"></a>    msg &lt;-<span class="st"> </span><span class="kw">character</span>(<span class="dv">0</span>)</span>
+<span id="cb169-4"><a href="reduced-dimension-hexbin-plot.html#cb169-4"></a></span>
+<span id="cb169-5"><a href="reduced-dimension-hexbin-plot.html#cb169-5"></a>    <span class="cf">if</span> (<span class="kw">length</span>(val &lt;-<span class="st"> </span>object[[<span class="st">&quot;BinResolution&quot;</span>]])<span class="op">!=</span>1L <span class="op">||</span><span class="st"> </span>val <span class="op">&lt;=</span><span class="st"> </span><span class="dv">0</span>) {</span>
+<span id="cb169-6"><a href="reduced-dimension-hexbin-plot.html#cb169-6"></a>        msg &lt;-<span class="st"> </span><span class="kw">c</span>(msg, <span class="st">&quot;&#39;BinResolution&#39; must be a positive number&quot;</span>)</span>
+<span id="cb169-7"><a href="reduced-dimension-hexbin-plot.html#cb169-7"></a>    }</span>
+<span id="cb169-8"><a href="reduced-dimension-hexbin-plot.html#cb169-8"></a>    <span class="cf">if</span> (<span class="kw">length</span>(msg)) {</span>
+<span id="cb169-9"><a href="reduced-dimension-hexbin-plot.html#cb169-9"></a>        <span class="kw">return</span>(msg)</span>
+<span id="cb169-10"><a href="reduced-dimension-hexbin-plot.html#cb169-10"></a>    }</span>
+<span id="cb169-11"><a href="reduced-dimension-hexbin-plot.html#cb169-11"></a>    <span class="ot">TRUE</span></span>
+<span id="cb169-12"><a href="reduced-dimension-hexbin-plot.html#cb169-12"></a>})</span></code></pre></div>
 <p>We specialize the <code>initialize()</code> method to provide a default for the new parameter.
 We also define a constructor function to make it easier to create a new instance.</p>
-<div class="sourceCode" id="cb169"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb169-1"><a href="reduced-dimension-hexbin-plot.html#cb169-1"></a><span class="kw">setMethod</span>(<span class="st">&quot;initialize&quot;</span>, <span class="st">&quot;RedDimHexPlot&quot;</span>,</span>
-<span id="cb169-2"><a href="reduced-dimension-hexbin-plot.html#cb169-2"></a>    <span class="cf">function</span>(.Object, <span class="dt">BinResolution=</span><span class="dv">100</span>, ...)</span>
-<span id="cb169-3"><a href="reduced-dimension-hexbin-plot.html#cb169-3"></a>{</span>
-<span id="cb169-4"><a href="reduced-dimension-hexbin-plot.html#cb169-4"></a>    <span class="kw">callNextMethod</span>(.Object, <span class="dt">BinResolution=</span>BinResolution, ...)</span>
-<span id="cb169-5"><a href="reduced-dimension-hexbin-plot.html#cb169-5"></a>})</span>
-<span id="cb169-6"><a href="reduced-dimension-hexbin-plot.html#cb169-6"></a></span>
-<span id="cb169-7"><a href="reduced-dimension-hexbin-plot.html#cb169-7"></a>RedDimHexPlot &lt;-<span class="st"> </span><span class="cf">function</span>(...) {</span>
-<span id="cb169-8"><a href="reduced-dimension-hexbin-plot.html#cb169-8"></a>    <span class="kw">new</span>(<span class="st">&quot;RedDimHexPlot&quot;</span>, ...)</span>
-<span id="cb169-9"><a href="reduced-dimension-hexbin-plot.html#cb169-9"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb170"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb170-1"><a href="reduced-dimension-hexbin-plot.html#cb170-1"></a><span class="kw">setMethod</span>(<span class="st">&quot;initialize&quot;</span>, <span class="st">&quot;RedDimHexPlot&quot;</span>,</span>
+<span id="cb170-2"><a href="reduced-dimension-hexbin-plot.html#cb170-2"></a>    <span class="cf">function</span>(.Object, <span class="dt">BinResolution=</span><span class="dv">100</span>, ...)</span>
+<span id="cb170-3"><a href="reduced-dimension-hexbin-plot.html#cb170-3"></a>{</span>
+<span id="cb170-4"><a href="reduced-dimension-hexbin-plot.html#cb170-4"></a>    <span class="kw">callNextMethod</span>(.Object, <span class="dt">BinResolution=</span>BinResolution, ...)</span>
+<span id="cb170-5"><a href="reduced-dimension-hexbin-plot.html#cb170-5"></a>})</span>
+<span id="cb170-6"><a href="reduced-dimension-hexbin-plot.html#cb170-6"></a></span>
+<span id="cb170-7"><a href="reduced-dimension-hexbin-plot.html#cb170-7"></a>RedDimHexPlot &lt;-<span class="st"> </span><span class="cf">function</span>(...) {</span>
+<span id="cb170-8"><a href="reduced-dimension-hexbin-plot.html#cb170-8"></a>    <span class="kw">new</span>(<span class="st">&quot;RedDimHexPlot&quot;</span>, ...)</span>
+<span id="cb170-9"><a href="reduced-dimension-hexbin-plot.html#cb170-9"></a>}</span></code></pre></div>
 <p>At this point, we can already create and use instances of this new panel class in <em><a href="https://bioconductor.org/packages/3.11/iSEE">iSEE</a></em> apps.
 However, that would not be very exciting as instances of this new panel class would behave exactly like the those of the parent <code>ReducedDimensionPlot</code> class.
 Let’s define a few more methods to introduce some more relevant differences in behavior.</p>
@@ -287,108 +298,115 @@ Let’s define a few more methods to introduce some more relevant differences in
 <h2><span class="header-section-number">4.3</span> Setting up the interface</h2>
 <p>Currently, instances of our new class are indistinguishable from the parent <code>ReducedDimensionPlot</code> in the <code>iSEE</code> interface.
 To differentiate our new class, we create a method for the <code>.fullName()</code> generic to show a different name.</p>
-<div class="sourceCode" id="cb170"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb170-1"><a href="reduced-dimension-hexbin-plot.html#cb170-1"></a><span class="kw">setMethod</span>(<span class="st">&quot;.fullName&quot;</span>, <span class="st">&quot;RedDimHexPlot&quot;</span>, <span class="cf">function</span>(x) <span class="st">&quot;Reduced dimension hexagonal plot&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb171"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb171-1"><a href="reduced-dimension-hexbin-plot.html#cb171-1"></a><span class="kw">setMethod</span>(<span class="st">&quot;.fullName&quot;</span>, <span class="st">&quot;RedDimHexPlot&quot;</span>, <span class="cf">function</span>(x) <span class="st">&quot;Reduced dimension hexagonal plot&quot;</span>)</span></code></pre></div>
 <p>While we’re here, we might as well give the panel a different color as well.</p>
-<div class="sourceCode" id="cb171"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb171-1"><a href="reduced-dimension-hexbin-plot.html#cb171-1"></a><span class="kw">setMethod</span>(<span class="st">&quot;.panelColor&quot;</span>, <span class="st">&quot;RedDimHexPlot&quot;</span>, <span class="cf">function</span>(x) <span class="st">&quot;#AA5500&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb172"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb172-1"><a href="reduced-dimension-hexbin-plot.html#cb172-1"></a><span class="kw">setMethod</span>(<span class="st">&quot;.panelColor&quot;</span>, <span class="st">&quot;RedDimHexPlot&quot;</span>, <span class="cf">function</span>(x) <span class="st">&quot;#AA5500&quot;</span>)</span></code></pre></div>
 <p>We also override aspects of the user interface to add a parameter to modify the bin resolution.
 Here, we place a <code>numericInput</code> widget into the set of parameters controlling the size aesthetics.</p>
-<div class="sourceCode" id="cb172"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb172-1"><a href="reduced-dimension-hexbin-plot.html#cb172-1"></a><span class="kw">setMethod</span>(<span class="st">&quot;.defineVisualSizeInterface&quot;</span>, <span class="st">&quot;RedDimHexPlot&quot;</span>, <span class="cf">function</span>(x) {</span>
-<span id="cb172-2"><a href="reduced-dimension-hexbin-plot.html#cb172-2"></a>    plot_name &lt;-<span class="st"> </span><span class="kw">.getEncodedName</span>(x)</span>
-<span id="cb172-3"><a href="reduced-dimension-hexbin-plot.html#cb172-3"></a>    <span class="kw">tagList</span>(</span>
-<span id="cb172-4"><a href="reduced-dimension-hexbin-plot.html#cb172-4"></a>        <span class="kw">numericInput</span>(</span>
-<span id="cb172-5"><a href="reduced-dimension-hexbin-plot.html#cb172-5"></a>            <span class="kw">paste0</span>(plot_name, <span class="st">&quot;_&quot;</span>, <span class="st">&quot;BinResolution&quot;</span>), <span class="dt">label=</span><span class="st">&quot;Bin resolution:&quot;</span>,</span>
-<span id="cb172-6"><a href="reduced-dimension-hexbin-plot.html#cb172-6"></a>            <span class="dt">min=</span><span class="dv">1</span>, <span class="dt">value=</span>x[[<span class="st">&quot;BinResolution&quot;</span>]], <span class="dt">step =</span> <span class="dv">1</span>)</span>
-<span id="cb172-7"><a href="reduced-dimension-hexbin-plot.html#cb172-7"></a>    )</span>
-<span id="cb172-8"><a href="reduced-dimension-hexbin-plot.html#cb172-8"></a>})</span></code></pre></div>
+<div class="sourceCode" id="cb173"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb173-1"><a href="reduced-dimension-hexbin-plot.html#cb173-1"></a><span class="kw">setMethod</span>(<span class="st">&quot;.defineVisualSizeInterface&quot;</span>, <span class="st">&quot;RedDimHexPlot&quot;</span>, <span class="cf">function</span>(x) {</span>
+<span id="cb173-2"><a href="reduced-dimension-hexbin-plot.html#cb173-2"></a>    plot_name &lt;-<span class="st"> </span><span class="kw">.getEncodedName</span>(x)</span>
+<span id="cb173-3"><a href="reduced-dimension-hexbin-plot.html#cb173-3"></a>    <span class="kw">tagList</span>(</span>
+<span id="cb173-4"><a href="reduced-dimension-hexbin-plot.html#cb173-4"></a>        <span class="kw">numericInput</span>(</span>
+<span id="cb173-5"><a href="reduced-dimension-hexbin-plot.html#cb173-5"></a>            <span class="kw">paste0</span>(plot_name, <span class="st">&quot;_&quot;</span>, <span class="st">&quot;BinResolution&quot;</span>), <span class="dt">label=</span><span class="st">&quot;Bin resolution:&quot;</span>,</span>
+<span id="cb173-6"><a href="reduced-dimension-hexbin-plot.html#cb173-6"></a>            <span class="dt">min=</span><span class="dv">1</span>, <span class="dt">value=</span>x[[<span class="st">&quot;BinResolution&quot;</span>]], <span class="dt">step =</span> <span class="dv">1</span>)</span>
+<span id="cb173-7"><a href="reduced-dimension-hexbin-plot.html#cb173-7"></a>    )</span>
+<span id="cb173-8"><a href="reduced-dimension-hexbin-plot.html#cb173-8"></a>})</span></code></pre></div>
 <p>Conversely, some other aspects of the UI are now irrelevant because we are no longer showing individual points.
 This includes the shape of the points, point-related downsampling and a variety of other aesthetic features.
 Thus, we hide or disable them to avoid cluttering the interface.</p>
-<div class="sourceCode" id="cb173"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb173-1"><a href="reduced-dimension-hexbin-plot.html#cb173-1"></a><span class="kw">setMethod</span>(<span class="st">&quot;.hideInterface&quot;</span>, <span class="st">&quot;RedDimHexPlot&quot;</span>, <span class="cf">function</span>(x, field) {</span>
-<span id="cb173-2"><a href="reduced-dimension-hexbin-plot.html#cb173-2"></a>    <span class="cf">if</span> (field <span class="op">==</span><span class="st"> &quot;Downsample&quot;</span>) <span class="ot">TRUE</span> <span class="cf">else</span> <span class="kw">callNextMethod</span>()</span>
-<span id="cb173-3"><a href="reduced-dimension-hexbin-plot.html#cb173-3"></a>})</span>
-<span id="cb173-4"><a href="reduced-dimension-hexbin-plot.html#cb173-4"></a></span>
-<span id="cb173-5"><a href="reduced-dimension-hexbin-plot.html#cb173-5"></a><span class="kw">setMethod</span>(<span class="st">&quot;.defineVisualShapeInterface&quot;</span>, <span class="st">&quot;RedDimHexPlot&quot;</span>, <span class="cf">function</span>(x) {</span>
-<span id="cb173-6"><a href="reduced-dimension-hexbin-plot.html#cb173-6"></a>    <span class="ot">NULL</span></span>
-<span id="cb173-7"><a href="reduced-dimension-hexbin-plot.html#cb173-7"></a>})</span>
-<span id="cb173-8"><a href="reduced-dimension-hexbin-plot.html#cb173-8"></a></span>
-<span id="cb173-9"><a href="reduced-dimension-hexbin-plot.html#cb173-9"></a><span class="kw">setMethod</span>(<span class="st">&quot;.defineVisualOtherInterface&quot;</span>, <span class="st">&quot;RedDimHexPlot&quot;</span>, <span class="cf">function</span>(x) {</span>
-<span id="cb173-10"><a href="reduced-dimension-hexbin-plot.html#cb173-10"></a>    <span class="ot">NULL</span></span>
-<span id="cb173-11"><a href="reduced-dimension-hexbin-plot.html#cb173-11"></a>})</span></code></pre></div>
+<div class="sourceCode" id="cb174"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb174-1"><a href="reduced-dimension-hexbin-plot.html#cb174-1"></a><span class="kw">setMethod</span>(<span class="st">&quot;.hideInterface&quot;</span>, <span class="st">&quot;RedDimHexPlot&quot;</span>, <span class="cf">function</span>(x, field) {</span>
+<span id="cb174-2"><a href="reduced-dimension-hexbin-plot.html#cb174-2"></a>    <span class="cf">if</span> (field <span class="op">==</span><span class="st"> &quot;Downsample&quot;</span>) <span class="ot">TRUE</span> <span class="cf">else</span> <span class="kw">callNextMethod</span>()</span>
+<span id="cb174-3"><a href="reduced-dimension-hexbin-plot.html#cb174-3"></a>})</span>
+<span id="cb174-4"><a href="reduced-dimension-hexbin-plot.html#cb174-4"></a></span>
+<span id="cb174-5"><a href="reduced-dimension-hexbin-plot.html#cb174-5"></a><span class="kw">setMethod</span>(<span class="st">&quot;.defineVisualShapeInterface&quot;</span>, <span class="st">&quot;RedDimHexPlot&quot;</span>, <span class="cf">function</span>(x) {</span>
+<span id="cb174-6"><a href="reduced-dimension-hexbin-plot.html#cb174-6"></a>    <span class="ot">NULL</span></span>
+<span id="cb174-7"><a href="reduced-dimension-hexbin-plot.html#cb174-7"></a>})</span>
+<span id="cb174-8"><a href="reduced-dimension-hexbin-plot.html#cb174-8"></a></span>
+<span id="cb174-9"><a href="reduced-dimension-hexbin-plot.html#cb174-9"></a><span class="kw">setMethod</span>(<span class="st">&quot;.defineVisualOtherInterface&quot;</span>, <span class="st">&quot;RedDimHexPlot&quot;</span>, <span class="cf">function</span>(x) {</span>
+<span id="cb174-10"><a href="reduced-dimension-hexbin-plot.html#cb174-10"></a>    <span class="ot">NULL</span></span>
+<span id="cb174-11"><a href="reduced-dimension-hexbin-plot.html#cb174-11"></a>})</span></code></pre></div>
 </div>
 <div id="creating-the-observers" class="section level2">
 <h2><span class="header-section-number">4.4</span> Creating the observers</h2>
 <p>The only new UI element we added was the widget to control the bin resolution.
 Thus, the only new observer that needs to be added is the one that respects to this element.
 Note the use of <code>callNextMethod()</code> to ensure that the observers for the parent class are also instantiated.</p>
-<div class="sourceCode" id="cb174"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb174-1"><a href="reduced-dimension-hexbin-plot.html#cb174-1"></a><span class="kw">setMethod</span>(<span class="st">&quot;.createObservers&quot;</span>, <span class="st">&quot;RedDimHexPlot&quot;</span>, <span class="cf">function</span>(x, se, input, session, pObjects, rObjects) {</span>
-<span id="cb174-2"><a href="reduced-dimension-hexbin-plot.html#cb174-2"></a>    <span class="kw">callNextMethod</span>()</span>
-<span id="cb174-3"><a href="reduced-dimension-hexbin-plot.html#cb174-3"></a></span>
-<span id="cb174-4"><a href="reduced-dimension-hexbin-plot.html#cb174-4"></a>    plot_name &lt;-<span class="st"> </span><span class="kw">.getEncodedName</span>(x)</span>
-<span id="cb174-5"><a href="reduced-dimension-hexbin-plot.html#cb174-5"></a></span>
-<span id="cb174-6"><a href="reduced-dimension-hexbin-plot.html#cb174-6"></a>    <span class="kw">.createProtectedParameterObservers</span>(plot_name,</span>
-<span id="cb174-7"><a href="reduced-dimension-hexbin-plot.html#cb174-7"></a>        <span class="dt">fields=</span><span class="kw">c</span>(<span class="st">&quot;BinResolution&quot;</span>),</span>
-<span id="cb174-8"><a href="reduced-dimension-hexbin-plot.html#cb174-8"></a>        <span class="dt">input=</span>input, <span class="dt">pObjects=</span>pObjects, <span class="dt">rObjects=</span>rObjects)</span>
-<span id="cb174-9"><a href="reduced-dimension-hexbin-plot.html#cb174-9"></a></span>
-<span id="cb174-10"><a href="reduced-dimension-hexbin-plot.html#cb174-10"></a>    <span class="kw">invisible</span>(<span class="ot">NULL</span>)</span>
-<span id="cb174-11"><a href="reduced-dimension-hexbin-plot.html#cb174-11"></a>})</span></code></pre></div>
+<div class="sourceCode" id="cb175"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb175-1"><a href="reduced-dimension-hexbin-plot.html#cb175-1"></a><span class="kw">setMethod</span>(<span class="st">&quot;.createObservers&quot;</span>, <span class="st">&quot;RedDimHexPlot&quot;</span>, <span class="cf">function</span>(x, se, input, session, pObjects, rObjects) {</span>
+<span id="cb175-2"><a href="reduced-dimension-hexbin-plot.html#cb175-2"></a>    <span class="kw">callNextMethod</span>()</span>
+<span id="cb175-3"><a href="reduced-dimension-hexbin-plot.html#cb175-3"></a></span>
+<span id="cb175-4"><a href="reduced-dimension-hexbin-plot.html#cb175-4"></a>    plot_name &lt;-<span class="st"> </span><span class="kw">.getEncodedName</span>(x)</span>
+<span id="cb175-5"><a href="reduced-dimension-hexbin-plot.html#cb175-5"></a></span>
+<span id="cb175-6"><a href="reduced-dimension-hexbin-plot.html#cb175-6"></a>    <span class="kw">.createProtectedParameterObservers</span>(plot_name,</span>
+<span id="cb175-7"><a href="reduced-dimension-hexbin-plot.html#cb175-7"></a>        <span class="dt">fields=</span><span class="kw">c</span>(<span class="st">&quot;BinResolution&quot;</span>),</span>
+<span id="cb175-8"><a href="reduced-dimension-hexbin-plot.html#cb175-8"></a>        <span class="dt">input=</span>input, <span class="dt">pObjects=</span>pObjects, <span class="dt">rObjects=</span>rObjects)</span>
+<span id="cb175-9"><a href="reduced-dimension-hexbin-plot.html#cb175-9"></a></span>
+<span id="cb175-10"><a href="reduced-dimension-hexbin-plot.html#cb175-10"></a>    <span class="kw">invisible</span>(<span class="ot">NULL</span>)</span>
+<span id="cb175-11"><a href="reduced-dimension-hexbin-plot.html#cb175-11"></a>})</span></code></pre></div>
 </div>
 <div id="generating-the-plot" class="section level2">
 <h2><span class="header-section-number">4.5</span> Generating the plot</h2>
 <p>We create a method for the <code>.generateDotPlot()</code> generic to implement our hexbinning strategy.
 The contract for this generic guarantees that our method can immediately rely on the <code>plot.data</code> data-frame that is computed by methods defined for the parent <code>ReducedDimensionPlot</code> class.
 We also use the precomputed aesthetic <code>labels</code> associated with each column of <code>plot.data</code>, while setting a fixed label <code>"Count"</code> for the <code>fill</code> aesthetic associated with the count of observation in each hexagonal bin.</p>
-<div class="sourceCode" id="cb175"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb175-1"><a href="reduced-dimension-hexbin-plot.html#cb175-1"></a><span class="kw">library</span>(ggplot2)</span>
-<span id="cb175-2"><a href="reduced-dimension-hexbin-plot.html#cb175-2"></a><span class="kw">setMethod</span>(<span class="st">&quot;.generateDotPlot&quot;</span>, <span class="st">&quot;RedDimHexPlot&quot;</span>, <span class="cf">function</span>(x, labels, envir) {</span>
-<span id="cb175-3"><a href="reduced-dimension-hexbin-plot.html#cb175-3"></a>    plot_cmds &lt;-<span class="st"> </span><span class="kw">list</span>()</span>
-<span id="cb175-4"><a href="reduced-dimension-hexbin-plot.html#cb175-4"></a>    plot_cmds[[<span class="st">&quot;ggplot&quot;</span>]] &lt;-<span class="st"> &quot;dot.plot &lt;- ggplot() +&quot;</span></span>
-<span id="cb175-5"><a href="reduced-dimension-hexbin-plot.html#cb175-5"></a>    </span>
-<span id="cb175-6"><a href="reduced-dimension-hexbin-plot.html#cb175-6"></a>    <span class="co"># Adding hexbins to the plot.</span></span>
-<span id="cb175-7"><a href="reduced-dimension-hexbin-plot.html#cb175-7"></a>    plot_cmds[[<span class="st">&quot;hex&quot;</span>]] &lt;-<span class="st"> &quot;geom_hex(aes(X, Y), plot.data) +&quot;</span></span>
-<span id="cb175-8"><a href="reduced-dimension-hexbin-plot.html#cb175-8"></a>    plot_cmds[[<span class="st">&quot;labs&quot;</span>]] &lt;-<span class="st"> &quot;labs(fill=&#39;Count&#39;) +&quot;</span></span>
-<span id="cb175-9"><a href="reduced-dimension-hexbin-plot.html#cb175-9"></a>    plot_cmds[[<span class="st">&quot;labs&quot;</span>]] &lt;-<span class="st"> </span><span class="kw">sprintf</span>(</span>
-<span id="cb175-10"><a href="reduced-dimension-hexbin-plot.html#cb175-10"></a>        <span class="st">&quot;labs(x=&#39;%s&#39;, y=&#39;%s&#39;, title=&#39;%s&#39;, fill=&#39;%s&#39;) +&quot;</span>,</span>
-<span id="cb175-11"><a href="reduced-dimension-hexbin-plot.html#cb175-11"></a>        labels<span class="op">$</span>X, labels<span class="op">$</span>Y, labels<span class="op">$</span>title, <span class="st">&quot;Count&quot;</span></span>
-<span id="cb175-12"><a href="reduced-dimension-hexbin-plot.html#cb175-12"></a>        )</span>
-<span id="cb175-13"><a href="reduced-dimension-hexbin-plot.html#cb175-13"></a>    plot_cmds[[<span class="st">&quot;theme_base&quot;</span>]] &lt;-<span class="st"> &quot;theme_bw() +&quot;</span></span>
-<span id="cb175-14"><a href="reduced-dimension-hexbin-plot.html#cb175-14"></a>    plot_cmds[[<span class="st">&quot;theme_legend&quot;</span>]] &lt;-<span class="st"> &quot;theme(legend.position = &#39;bottom&#39;)&quot;</span></span>
-<span id="cb175-15"><a href="reduced-dimension-hexbin-plot.html#cb175-15"></a></span>
-<span id="cb175-16"><a href="reduced-dimension-hexbin-plot.html#cb175-16"></a>    <span class="co"># Adding a faceting command, if applicable.</span></span>
-<span id="cb175-17"><a href="reduced-dimension-hexbin-plot.html#cb175-17"></a>    facet_cmd &lt;-<span class="st"> </span><span class="kw">.addFacets</span>(x)</span>
-<span id="cb175-18"><a href="reduced-dimension-hexbin-plot.html#cb175-18"></a>    <span class="cf">if</span> (<span class="kw">length</span>(facet_cmd)) {</span>
-<span id="cb175-19"><a href="reduced-dimension-hexbin-plot.html#cb175-19"></a>        N &lt;-<span class="st"> </span><span class="kw">length</span>(plot_cmds)</span>
-<span id="cb175-20"><a href="reduced-dimension-hexbin-plot.html#cb175-20"></a>        plot_cmds[[N]] &lt;-<span class="st"> </span><span class="kw">paste</span>(plot_cmds[[N]], <span class="st">&quot;+&quot;</span>)</span>
-<span id="cb175-21"><a href="reduced-dimension-hexbin-plot.html#cb175-21"></a>        plot_cmds &lt;-<span class="st"> </span><span class="kw">c</span>(plot_cmds, facet_cmd)</span>
-<span id="cb175-22"><a href="reduced-dimension-hexbin-plot.html#cb175-22"></a>    }</span>
-<span id="cb175-23"><a href="reduced-dimension-hexbin-plot.html#cb175-23"></a></span>
-<span id="cb175-24"><a href="reduced-dimension-hexbin-plot.html#cb175-24"></a>    <span class="co"># Adding self-brushing boxes, if they exist.</span></span>
-<span id="cb175-25"><a href="reduced-dimension-hexbin-plot.html#cb175-25"></a>    plot_cmds &lt;-<span class="st"> </span><span class="kw">.addMultiSelectionPlotCommands</span>(x,</span>
-<span id="cb175-26"><a href="reduced-dimension-hexbin-plot.html#cb175-26"></a>        <span class="dt">envir=</span>envir, <span class="dt">commands=</span>plot_cmds)</span>
-<span id="cb175-27"><a href="reduced-dimension-hexbin-plot.html#cb175-27"></a></span>
-<span id="cb175-28"><a href="reduced-dimension-hexbin-plot.html#cb175-28"></a>    gg_plot &lt;-<span class="st"> </span><span class="kw">.textEval</span>(plot_cmds, envir)</span>
-<span id="cb175-29"><a href="reduced-dimension-hexbin-plot.html#cb175-29"></a></span>
-<span id="cb175-30"><a href="reduced-dimension-hexbin-plot.html#cb175-30"></a>    <span class="kw">list</span>(<span class="dt">plot=</span>gg_plot, <span class="dt">commands=</span>plot_cmds)</span>
-<span id="cb175-31"><a href="reduced-dimension-hexbin-plot.html#cb175-31"></a>})</span></code></pre></div>
+<div class="sourceCode" id="cb176"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb176-1"><a href="reduced-dimension-hexbin-plot.html#cb176-1"></a><span class="kw">library</span>(ggplot2)</span>
+<span id="cb176-2"><a href="reduced-dimension-hexbin-plot.html#cb176-2"></a><span class="kw">setMethod</span>(<span class="st">&quot;.generateDotPlot&quot;</span>, <span class="st">&quot;RedDimHexPlot&quot;</span>, <span class="cf">function</span>(x, labels, envir) {</span>
+<span id="cb176-3"><a href="reduced-dimension-hexbin-plot.html#cb176-3"></a>    plot_cmds &lt;-<span class="st"> </span><span class="kw">list</span>()</span>
+<span id="cb176-4"><a href="reduced-dimension-hexbin-plot.html#cb176-4"></a>    plot_cmds[[<span class="st">&quot;ggplot&quot;</span>]] &lt;-<span class="st"> &quot;dot.plot &lt;- ggplot() +&quot;</span></span>
+<span id="cb176-5"><a href="reduced-dimension-hexbin-plot.html#cb176-5"></a>    </span>
+<span id="cb176-6"><a href="reduced-dimension-hexbin-plot.html#cb176-6"></a>    <span class="co"># Adding hexbins to the plot.</span></span>
+<span id="cb176-7"><a href="reduced-dimension-hexbin-plot.html#cb176-7"></a>    plot_cmds[[<span class="st">&quot;hex&quot;</span>]] &lt;-<span class="st"> &quot;geom_hex(aes(X, Y), plot.data) +&quot;</span></span>
+<span id="cb176-8"><a href="reduced-dimension-hexbin-plot.html#cb176-8"></a>    plot_cmds[[<span class="st">&quot;labs&quot;</span>]] &lt;-<span class="st"> &quot;labs(fill=&#39;Count&#39;) +&quot;</span></span>
+<span id="cb176-9"><a href="reduced-dimension-hexbin-plot.html#cb176-9"></a>    plot_cmds[[<span class="st">&quot;labs&quot;</span>]] &lt;-<span class="st"> </span><span class="kw">sprintf</span>(</span>
+<span id="cb176-10"><a href="reduced-dimension-hexbin-plot.html#cb176-10"></a>        <span class="st">&quot;labs(x=&#39;%s&#39;, y=&#39;%s&#39;, title=&#39;%s&#39;, fill=&#39;%s&#39;) +&quot;</span>,</span>
+<span id="cb176-11"><a href="reduced-dimension-hexbin-plot.html#cb176-11"></a>        labels<span class="op">$</span>X, labels<span class="op">$</span>Y, labels<span class="op">$</span>title, <span class="st">&quot;Count&quot;</span></span>
+<span id="cb176-12"><a href="reduced-dimension-hexbin-plot.html#cb176-12"></a>        )</span>
+<span id="cb176-13"><a href="reduced-dimension-hexbin-plot.html#cb176-13"></a>    plot_cmds[[<span class="st">&quot;theme_base&quot;</span>]] &lt;-<span class="st"> &quot;theme_bw() +&quot;</span></span>
+<span id="cb176-14"><a href="reduced-dimension-hexbin-plot.html#cb176-14"></a>    plot_cmds[[<span class="st">&quot;theme_legend&quot;</span>]] &lt;-<span class="st"> &quot;theme(legend.position = &#39;bottom&#39;)&quot;</span></span>
+<span id="cb176-15"><a href="reduced-dimension-hexbin-plot.html#cb176-15"></a></span>
+<span id="cb176-16"><a href="reduced-dimension-hexbin-plot.html#cb176-16"></a>    <span class="co"># Adding a faceting command, if applicable.</span></span>
+<span id="cb176-17"><a href="reduced-dimension-hexbin-plot.html#cb176-17"></a>    facet_cmd &lt;-<span class="st"> </span><span class="kw">.addFacets</span>(x)</span>
+<span id="cb176-18"><a href="reduced-dimension-hexbin-plot.html#cb176-18"></a>    <span class="cf">if</span> (<span class="kw">length</span>(facet_cmd)) {</span>
+<span id="cb176-19"><a href="reduced-dimension-hexbin-plot.html#cb176-19"></a>        N &lt;-<span class="st"> </span><span class="kw">length</span>(plot_cmds)</span>
+<span id="cb176-20"><a href="reduced-dimension-hexbin-plot.html#cb176-20"></a>        plot_cmds[[N]] &lt;-<span class="st"> </span><span class="kw">paste</span>(plot_cmds[[N]], <span class="st">&quot;+&quot;</span>)</span>
+<span id="cb176-21"><a href="reduced-dimension-hexbin-plot.html#cb176-21"></a>        plot_cmds &lt;-<span class="st"> </span><span class="kw">c</span>(plot_cmds, facet_cmd)</span>
+<span id="cb176-22"><a href="reduced-dimension-hexbin-plot.html#cb176-22"></a>    }</span>
+<span id="cb176-23"><a href="reduced-dimension-hexbin-plot.html#cb176-23"></a></span>
+<span id="cb176-24"><a href="reduced-dimension-hexbin-plot.html#cb176-24"></a>    <span class="co"># Adding self-brushing boxes, if they exist.</span></span>
+<span id="cb176-25"><a href="reduced-dimension-hexbin-plot.html#cb176-25"></a>    plot_cmds &lt;-<span class="st"> </span><span class="kw">.addMultiSelectionPlotCommands</span>(x,</span>
+<span id="cb176-26"><a href="reduced-dimension-hexbin-plot.html#cb176-26"></a>        <span class="dt">envir=</span>envir, <span class="dt">commands=</span>plot_cmds)</span>
+<span id="cb176-27"><a href="reduced-dimension-hexbin-plot.html#cb176-27"></a></span>
+<span id="cb176-28"><a href="reduced-dimension-hexbin-plot.html#cb176-28"></a>    gg_plot &lt;-<span class="st"> </span><span class="kw">.textEval</span>(plot_cmds, envir)</span>
+<span id="cb176-29"><a href="reduced-dimension-hexbin-plot.html#cb176-29"></a></span>
+<span id="cb176-30"><a href="reduced-dimension-hexbin-plot.html#cb176-30"></a>    <span class="kw">list</span>(<span class="dt">plot=</span>gg_plot, <span class="dt">commands=</span>plot_cmds)</span>
+<span id="cb176-31"><a href="reduced-dimension-hexbin-plot.html#cb176-31"></a>})</span></code></pre></div>
 <p>For brevity, we have omitted the more tiresome parts of coloring the bins with respect to assay values or metadata variables.
 However, it is relatively straightforward to extend <code>.generateDotPlot()</code> to ensure that it responds to such choices as well as any other relevant parameters in <code>x</code> (e.g., font size).</p>
 </div>
 <div id="in-action" class="section level2">
 <h2><span class="header-section-number">4.6</span> In action</h2>
-<p>To demonstrate, we will load an example dataset from the <em><a href="https://bioconductor.org/packages/3.11/scRNAseq">scRNAseq</a></em> package.
+<p>To demonstrate, we will load a small example dataset <span class="citation">(Tasic et al. <a href="#ref-tasic2016adult" role="doc-biblioref">2016</a>)</span> from the <em><a href="https://bioconductor.org/packages/3.11/scRNAseq">scRNAseq</a></em> package.
 This is provided as a <code>SingleCellExperiment</code> on which we compute the usual <span class="math inline">\(t\)</span>-SNE plot.</p>
-<div class="sourceCode" id="cb176"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb176-1"><a href="reduced-dimension-hexbin-plot.html#cb176-1"></a><span class="kw">library</span>(scRNAseq)</span>
-<span id="cb176-2"><a href="reduced-dimension-hexbin-plot.html#cb176-2"></a>sce &lt;-<span class="st"> </span><span class="kw">ReprocessedAllenData</span>(<span class="dt">assays=</span><span class="st">&quot;tophat_counts&quot;</span>)</span>
-<span id="cb176-3"><a href="reduced-dimension-hexbin-plot.html#cb176-3"></a></span>
-<span id="cb176-4"><a href="reduced-dimension-hexbin-plot.html#cb176-4"></a><span class="kw">library</span>(scater)</span>
-<span id="cb176-5"><a href="reduced-dimension-hexbin-plot.html#cb176-5"></a>sce &lt;-<span class="st"> </span><span class="kw">logNormCounts</span>(sce, <span class="dt">exprs_values=</span><span class="st">&quot;tophat_counts&quot;</span>)</span>
-<span id="cb176-6"><a href="reduced-dimension-hexbin-plot.html#cb176-6"></a>sce &lt;-<span class="st"> </span><span class="kw">runPCA</span>(sce, <span class="dt">ncomponents=</span><span class="dv">4</span>)</span>
-<span id="cb176-7"><a href="reduced-dimension-hexbin-plot.html#cb176-7"></a>sce &lt;-<span class="st"> </span><span class="kw">runTSNE</span>(sce)</span></code></pre></div>
+<div class="sourceCode" id="cb177"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb177-1"><a href="reduced-dimension-hexbin-plot.html#cb177-1"></a><span class="kw">library</span>(scRNAseq)</span>
+<span id="cb177-2"><a href="reduced-dimension-hexbin-plot.html#cb177-2"></a>sce &lt;-<span class="st"> </span><span class="kw">ReprocessedAllenData</span>(<span class="dt">assays=</span><span class="st">&quot;tophat_counts&quot;</span>)</span>
+<span id="cb177-3"><a href="reduced-dimension-hexbin-plot.html#cb177-3"></a></span>
+<span id="cb177-4"><a href="reduced-dimension-hexbin-plot.html#cb177-4"></a><span class="kw">set.seed</span>(<span class="dv">100</span>)</span>
+<span id="cb177-5"><a href="reduced-dimension-hexbin-plot.html#cb177-5"></a><span class="kw">library</span>(scater)</span>
+<span id="cb177-6"><a href="reduced-dimension-hexbin-plot.html#cb177-6"></a>sce &lt;-<span class="st"> </span><span class="kw">logNormCounts</span>(sce, <span class="dt">exprs_values=</span><span class="st">&quot;tophat_counts&quot;</span>)</span>
+<span id="cb177-7"><a href="reduced-dimension-hexbin-plot.html#cb177-7"></a>sce &lt;-<span class="st"> </span><span class="kw">runPCA</span>(sce, <span class="dt">ncomponents=</span><span class="dv">4</span>)</span>
+<span id="cb177-8"><a href="reduced-dimension-hexbin-plot.html#cb177-8"></a>sce &lt;-<span class="st"> </span><span class="kw">runTSNE</span>(sce)</span></code></pre></div>
 <p>We now set up an <code>iSEE()</code> instance with the hexbin and standard plots for showing reduced dimension results.
 We can see the obvious visual differences in the aesthetics between plots as well as the changes to the user interface.</p>
-<div class="sourceCode" id="cb177"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb177-1"><a href="reduced-dimension-hexbin-plot.html#cb177-1"></a>app &lt;-<span class="st"> </span><span class="kw">iSEE</span>(sce, <span class="dt">initial=</span><span class="kw">list</span>(</span>
-<span id="cb177-2"><a href="reduced-dimension-hexbin-plot.html#cb177-2"></a>    <span class="kw">ReducedDimensionPlot</span>(<span class="dt">Type=</span><span class="st">&quot;TSNE&quot;</span>, <span class="dt">VisualBoxOpen=</span><span class="ot">TRUE</span>, <span class="dt">VisualChoices=</span><span class="st">&quot;Size&quot;</span>),</span>
-<span id="cb177-3"><a href="reduced-dimension-hexbin-plot.html#cb177-3"></a>    <span class="kw">RedDimHexPlot</span>(<span class="dt">Type=</span><span class="st">&quot;TSNE&quot;</span>, <span class="dt">VisualBoxOpen=</span><span class="ot">TRUE</span>, <span class="dt">VisualChoices=</span><span class="st">&quot;Size&quot;</span>)</span>
-<span id="cb177-4"><a href="reduced-dimension-hexbin-plot.html#cb177-4"></a>))</span></code></pre></div>
+<div class="sourceCode" id="cb178"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb178-1"><a href="reduced-dimension-hexbin-plot.html#cb178-1"></a>app &lt;-<span class="st"> </span><span class="kw">iSEE</span>(sce, <span class="dt">initial=</span><span class="kw">list</span>(</span>
+<span id="cb178-2"><a href="reduced-dimension-hexbin-plot.html#cb178-2"></a>    <span class="kw">ReducedDimensionPlot</span>(<span class="dt">Type=</span><span class="st">&quot;TSNE&quot;</span>, <span class="dt">VisualBoxOpen=</span><span class="ot">TRUE</span>, <span class="dt">VisualChoices=</span><span class="st">&quot;Size&quot;</span>),</span>
+<span id="cb178-3"><a href="reduced-dimension-hexbin-plot.html#cb178-3"></a>    <span class="kw">RedDimHexPlot</span>(<span class="dt">Type=</span><span class="st">&quot;TSNE&quot;</span>, <span class="dt">VisualBoxOpen=</span><span class="ot">TRUE</span>, <span class="dt">VisualChoices=</span><span class="st">&quot;Size&quot;</span>)</span>
+<span id="cb178-4"><a href="reduced-dimension-hexbin-plot.html#cb178-4"></a>))</span></code></pre></div>
 
+</div>
+</div>
+<h3>References</h3>
+<div id="refs" class="references">
+<div id="ref-tasic2016adult">
+<p>Tasic, B., V. Menon, T. N. Nguyen, T. K. Kim, T. Jarsky, Z. Yao, B. Levi, et al. 2016. “Adult mouse cortical cell taxonomy revealed by single cell transcriptomics.” <em>Nat. Neurosci.</em> 19 (2): 335–46.</p>
 </div>
 </div>
             </section>
