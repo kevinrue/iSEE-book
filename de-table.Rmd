@@ -4,6 +4,10 @@ suppressPackageStartupMessages(require(BiocStyle))
 options(digits = 4)
 ```
 
+```{r, eval=!exists("SCREENSHOT"), include=FALSE}
+SCREENSHOT <- function(x, ...) knitr::include_graphics(x)
+```
+
 # Dynamic differential expression
 
 ## Overview
@@ -210,4 +214,8 @@ rdp <- ReducedDimensionPlot(PanelId=1L,
 dget <- DGETable(ColumnSelectionSource="ReducedDimensionPlot1", 
     PanelWidth=8L, DataBoxOpen=TRUE)
 app <- iSEE(sce, initial=list(rdp, dget))
+```
+
+```{r, echo=FALSE, out.width="100%"}
+SCREENSHOT("screenshots/de-table.png")
 ```

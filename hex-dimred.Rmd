@@ -7,6 +7,10 @@ suppressPackageStartupMessages(require(iSEE))
 options(digits = 4)
 ```
 
+```{r, eval=!exists("SCREENSHOT"), include=FALSE}
+SCREENSHOT <- function(x, ...) knitr::include_graphics(x)
+```
+
 # Reduced dimension hexbin plot {#developing}
 
 ## Overview
@@ -204,3 +208,6 @@ app <- iSEE(sce, initial=list(
 ))
 ```
 
+```{r, echo=FALSE, out.width="100%"}
+SCREENSHOT("screenshots/hex-dimred.png")
+```

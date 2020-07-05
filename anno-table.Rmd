@@ -4,6 +4,10 @@ suppressPackageStartupMessages(require(BiocStyle))
 options(digits = 4)
 ```
 
+```{r, eval=!exists("SCREENSHOT"), include=FALSE}
+SCREENSHOT <- function(x, ...) knitr::include_graphics(x)
+```
+
 # Annotated gene list
 
 ## Overview
@@ -226,4 +230,8 @@ It is probably best to click on some well-annotated genes as the set of RIKEN tr
 ```{r}
 gat <- GeneAnnoTable(PanelWidth=8L, Selected="Snap25", Search="Snap")
 app <- iSEE(sce, initial=list(gat))
+```
+
+```{r, echo=FALSE, out.width="100%"}
+SCREENSHOT("screenshots/anno-table.png")
 ```

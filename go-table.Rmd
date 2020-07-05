@@ -4,6 +4,10 @@ suppressPackageStartupMessages(require(BiocStyle))
 options(digits = 4)
 ```
 
+```{r, eval=!exists("SCREENSHOT"), include=FALSE}
+SCREENSHOT <- function(x, ...) knitr::include_graphics(x)
+```
+
 # Gene ontology table
 
 ## Overview
@@ -338,4 +342,8 @@ We set up an `iSEE` instance where clicking on any row in the `GOTable` will sub
 got <- GOTable(PanelWidth=8L, Selected="GO:0007049", Search="^cell cycle")
 rst <- RowDataTable(RowSelectionSource="GOTable1")
 app <- iSEE(sce, initial=list(got, rst))
+```
+
+```{r, echo=FALSE, out.width="100%"}
+SCREENSHOT("screenshots/go-table.png")
 ```
