@@ -24,7 +24,7 @@
 <meta name="author" content="Kevin Rue-Albrecht, Federico Marini, Charlotte Soneson, and Aaron Lun" />
 
 
-<meta name="date" content="2020-07-04" />
+<meta name="date" content="2020-07-05" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -176,11 +176,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="2.6.2" data-path="api.html"><a href="api.html#single"><i class="fa fa-check"></i><b>2.6.2</b> Single</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="server.html"><a href="server.html"><i class="fa fa-check"></i><b>3</b> The app server</a><ul>
-<li class="chapter" data-level="3.1" data-path="server.html"><a href="server.html#robjects"><i class="fa fa-check"></i><b>3.1</b> Reactive objects</a></li>
-<li class="chapter" data-level="3.2" data-path="server.html"><a href="server.html#persistent-non-reactive-objects"><i class="fa fa-check"></i><b>3.2</b> Persistent (non-reactive) objects</a></li>
-<li class="chapter" data-level="3.3" data-path="server.html"><a href="server.html#memory"><i class="fa fa-check"></i><b>3.3</b> The app memory</a></li>
-<li class="chapter" data-level="3.4" data-path="server.html"><a href="server.html#initialization-of-the-app-server"><i class="fa fa-check"></i><b>3.4</b> Initialization of the app server</a></li>
+<li class="chapter" data-level="3" data-path="server.html"><a href="server.html"><i class="fa fa-check"></i><b>3</b> Application state</a><ul>
+<li class="chapter" data-level="3.1" data-path="panels.html"><a href="panels.html#overview"><i class="fa fa-check"></i><b>3.1</b> Overview</a></li>
+<li class="chapter" data-level="3.2" data-path="server.html"><a href="server.html#updating-parameters"><i class="fa fa-check"></i><b>3.2</b> Updating parameters</a></li>
+<li class="chapter" data-level="3.3" data-path="server.html"><a href="server.html#using-the-memory"><i class="fa fa-check"></i><b>3.3</b> Using the memory</a></li>
+<li class="chapter" data-level="3.4" data-path="server.html"><a href="server.html#responding-to-events"><i class="fa fa-check"></i><b>3.4</b> Responding to events</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="developing.html"><a href="developing.html"><i class="fa fa-check"></i><b>4</b> Developing new panels</a><ul>
 <li class="chapter" data-level="4.1" data-path="developing.html"><a href="developing.html#create-a-new-s4-class"><i class="fa fa-check"></i><b>4.1</b> Create a new S4 class</a></li>
@@ -247,15 +247,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h1><span class="header-section-number">Chapter 4</span> Developing new panels</h1>
 <p>First, we need to load the <em><a href="https://bioconductor.org/packages/3.11/iSEE">iSEE</a></em> package for this chapter.
 This action imports all the builtin panel class definitions, including the virtual class <code>Panel</code> that is the base class for any <em><a href="https://bioconductor.org/packages/3.11/iSEE">iSEE</a></em> panel class.</p>
-<div class="sourceCode" id="cb167"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb167-1"><a href="developing.html#cb167-1"></a><span class="kw">library</span>(iSEE)</span></code></pre></div>
+<div class="sourceCode" id="cb168"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb168-1"><a href="developing.html#cb168-1"></a><span class="kw">library</span>(iSEE)</span></code></pre></div>
 <p>We also set up an example using our favorite dataset, creating a <code>SingleCellExperiment</code> object with some precomputed dimensionality reduction results.</p>
-<div class="sourceCode" id="cb168"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb168-1"><a href="developing.html#cb168-1"></a><span class="kw">library</span>(scRNAseq)</span>
-<span id="cb168-2"><a href="developing.html#cb168-2"></a>sce &lt;-<span class="st"> </span><span class="kw">ReprocessedAllenData</span>(<span class="dt">assays=</span><span class="st">&quot;tophat_counts&quot;</span>)</span>
-<span id="cb168-3"><a href="developing.html#cb168-3"></a></span>
-<span id="cb168-4"><a href="developing.html#cb168-4"></a><span class="kw">library</span>(scater)</span>
-<span id="cb168-5"><a href="developing.html#cb168-5"></a>sce &lt;-<span class="st"> </span><span class="kw">logNormCounts</span>(sce, <span class="dt">exprs_values=</span><span class="st">&quot;tophat_counts&quot;</span>)</span>
-<span id="cb168-6"><a href="developing.html#cb168-6"></a>sce &lt;-<span class="st"> </span><span class="kw">runPCA</span>(sce, <span class="dt">ncomponents=</span><span class="dv">4</span>)</span>
-<span id="cb168-7"><a href="developing.html#cb168-7"></a>sce &lt;-<span class="st"> </span><span class="kw">runTSNE</span>(sce)</span></code></pre></div>
+<div class="sourceCode" id="cb169"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb169-1"><a href="developing.html#cb169-1"></a><span class="kw">library</span>(scRNAseq)</span>
+<span id="cb169-2"><a href="developing.html#cb169-2"></a>sce &lt;-<span class="st"> </span><span class="kw">ReprocessedAllenData</span>(<span class="dt">assays=</span><span class="st">&quot;tophat_counts&quot;</span>)</span>
+<span id="cb169-3"><a href="developing.html#cb169-3"></a></span>
+<span id="cb169-4"><a href="developing.html#cb169-4"></a><span class="kw">library</span>(scater)</span>
+<span id="cb169-5"><a href="developing.html#cb169-5"></a>sce &lt;-<span class="st"> </span><span class="kw">logNormCounts</span>(sce, <span class="dt">exprs_values=</span><span class="st">&quot;tophat_counts&quot;</span>)</span>
+<span id="cb169-6"><a href="developing.html#cb169-6"></a>sce &lt;-<span class="st"> </span><span class="kw">runPCA</span>(sce, <span class="dt">ncomponents=</span><span class="dv">4</span>)</span>
+<span id="cb169-7"><a href="developing.html#cb169-7"></a>sce &lt;-<span class="st"> </span><span class="kw">runTSNE</span>(sce)</span></code></pre></div>
 <div id="create-a-new-s4-class" class="section level2">
 <h2><span class="header-section-number">4.1</span> Create a new S4 class</h2>
 <p>In the chapter <a href="panels.html#panels">Panel classes</a>, we saw how each type of panel is defined as an S4 class, organised in a hierarchy that allows new panel classes to inherit sets of properties and functionality from parent classes.</p>
@@ -265,26 +265,26 @@ This action imports all the builtin panel class definitions, including the virtu
 <p>The choice of a parent class depends on the properties that we want that new panel class to start with.
 For instance, to create a panel that inherits all the functionality of the <code>ReducedDimensionPlot</code> panel type, we simply define a new class that extends that class.
 For example in this chapter, we call that new class <code>RedDimHexPlot</code>.</p>
-<div class="sourceCode" id="cb169"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb169-1"><a href="developing.html#cb169-1"></a><span class="kw">setClass</span>(<span class="st">&quot;RedDimHexPlot&quot;</span>, <span class="dt">contains=</span><span class="st">&quot;ReducedDimensionPlot&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb170"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb170-1"><a href="developing.html#cb170-1"></a><span class="kw">setClass</span>(<span class="st">&quot;RedDimHexPlot&quot;</span>, <span class="dt">contains=</span><span class="st">&quot;ReducedDimensionPlot&quot;</span>)</span></code></pre></div>
 </div>
 <div id="add-a-constructor-function" class="section level2">
 <h2><span class="header-section-number">4.2</span> Add a constructor function</h2>
 <p>At this point, it is already possible to create instances of the new panel class.
 However, to facilitate this, new panels should provide a constructor function - best practice is to name it identically to the class - to accept arbitrary arguments controlling the initialization of new panel instances created by the function <code>new()</code>.</p>
 <p>Here, we define a simple constructor function that passes all incoming arguments <em>as is</em> to <code>new()</code>.</p>
-<div class="sourceCode" id="cb170"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb170-1"><a href="developing.html#cb170-1"></a>RedDimHexPlot &lt;-<span class="st"> </span><span class="cf">function</span>(...) {</span>
-<span id="cb170-2"><a href="developing.html#cb170-2"></a>    <span class="kw">new</span>(<span class="st">&quot;RedDimHexPlot&quot;</span>, ...)</span>
-<span id="cb170-3"><a href="developing.html#cb170-3"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb171"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb171-1"><a href="developing.html#cb171-1"></a>RedDimHexPlot &lt;-<span class="st"> </span><span class="cf">function</span>(...) {</span>
+<span id="cb171-2"><a href="developing.html#cb171-2"></a>    <span class="kw">new</span>(<span class="st">&quot;RedDimHexPlot&quot;</span>, ...)</span>
+<span id="cb171-3"><a href="developing.html#cb171-3"></a>}</span></code></pre></div>
 <p>At this point, we can already use instances of this new panel class in <em><a href="https://bioconductor.org/packages/3.11/iSEE">iSEE</a></em> apps.</p>
-<div class="sourceCode" id="cb171"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb171-1"><a href="developing.html#cb171-1"></a>RedDimHexPlot1 &lt;-<span class="st"> </span><span class="kw">RedDimHexPlot</span>()</span>
-<span id="cb171-2"><a href="developing.html#cb171-2"></a>initial &lt;-<span class="st"> </span><span class="kw">list</span>(RedDimHexPlot1)</span>
-<span id="cb171-3"><a href="developing.html#cb171-3"></a>app &lt;-<span class="st"> </span><span class="kw">iSEE</span>(sce, <span class="dt">initial =</span> initial)</span></code></pre></div>
+<div class="sourceCode" id="cb172"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb172-1"><a href="developing.html#cb172-1"></a>RedDimHexPlot1 &lt;-<span class="st"> </span><span class="kw">RedDimHexPlot</span>()</span>
+<span id="cb172-2"><a href="developing.html#cb172-2"></a>initial &lt;-<span class="st"> </span><span class="kw">list</span>(RedDimHexPlot1)</span>
+<span id="cb172-3"><a href="developing.html#cb172-3"></a>app &lt;-<span class="st"> </span><span class="kw">iSEE</span>(sce, <span class="dt">initial =</span> initial)</span></code></pre></div>
 <p>However, that would not be very exciting as instances of this new panel class would behave exactly like the those of the parent <code>ReducedDimensionPlot</code> class itself.
 To illustrate this, the following code chunk initializes an app displaying an instance of the new <code>RedDimHexPlot</code> and its parent <code>ReducedDimensionPlot</code> side by side.</p>
-<div class="sourceCode" id="cb172"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb172-1"><a href="developing.html#cb172-1"></a>RedDimHexPlot1 &lt;-<span class="st"> </span><span class="kw">RedDimHexPlot</span>()</span>
-<span id="cb172-2"><a href="developing.html#cb172-2"></a>ReducedDimensionPlot1 &lt;-<span class="st"> </span><span class="kw">ReducedDimensionPlot</span>()</span>
-<span id="cb172-3"><a href="developing.html#cb172-3"></a>initial &lt;-<span class="st"> </span><span class="kw">list</span>(RedDimHexPlot1, ReducedDimensionPlot1)</span>
-<span id="cb172-4"><a href="developing.html#cb172-4"></a>app &lt;-<span class="st"> </span><span class="kw">iSEE</span>(sce, <span class="dt">initial =</span> initial)</span></code></pre></div>
+<div class="sourceCode" id="cb173"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb173-1"><a href="developing.html#cb173-1"></a>RedDimHexPlot1 &lt;-<span class="st"> </span><span class="kw">RedDimHexPlot</span>()</span>
+<span id="cb173-2"><a href="developing.html#cb173-2"></a>ReducedDimensionPlot1 &lt;-<span class="st"> </span><span class="kw">ReducedDimensionPlot</span>()</span>
+<span id="cb173-3"><a href="developing.html#cb173-3"></a>initial &lt;-<span class="st"> </span><span class="kw">list</span>(RedDimHexPlot1, ReducedDimensionPlot1)</span>
+<span id="cb173-4"><a href="developing.html#cb173-4"></a>app &lt;-<span class="st"> </span><span class="kw">iSEE</span>(sce, <span class="dt">initial =</span> initial)</span></code></pre></div>
 </div>
 <div id="set-the-panel-name-in-the-gui" class="section level2">
 <h2><span class="header-section-number">4.3</span> Set the panel name in the GUI</h2>
@@ -292,7 +292,7 @@ To illustrate this, the following code chunk initializes an app displaying an in
 In other words, instances of both classes are entirely indistinguishable from each other in the GUI.</p>
 <p>The name of each panel displayed in the GUI is defined by the method <code>.fullName()</code>.
 To clearly distinguish the new panel class in the GUI, we overwrite this method to display a name different from the parent class.</p>
-<div class="sourceCode" id="cb173"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb173-1"><a href="developing.html#cb173-1"></a><span class="kw">setMethod</span>(<span class="st">&quot;.fullName&quot;</span>, <span class="st">&quot;RedDimHexPlot&quot;</span>, <span class="cf">function</span>(x) <span class="st">&quot;Reduced dimension hexagonal plot&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb174"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb174-1"><a href="developing.html#cb174-1"></a><span class="kw">setMethod</span>(<span class="st">&quot;.fullName&quot;</span>, <span class="st">&quot;RedDimHexPlot&quot;</span>, <span class="cf">function</span>(x) <span class="st">&quot;Reduced dimension hexagonal plot&quot;</span>)</span></code></pre></div>
 <p>With that, launching <code>app</code> again now highlights how panels of the new class now display a different title from the parent class.</p>
 </div>
 <div id="define-the-commands-generating-a-plot-output" class="section level2">
@@ -308,26 +308,26 @@ For instance, the most important environment variable is <code>plot.data</code>,
 <p>As an example, we overwrite the method <code>.generateDotPlot()</code> for the new class <code>RedDimHexPlot</code> to simply show the number of data points in the plotting area as a heatmap dividing the plane into regular hexagons.
 Notably, the contract described above guarantees that the function can immediately rely on the <code>plot.data</code> data-frame that is computed by methods defined for the parent class <code>ReducedDimensionPlot</code>.
 We also use the precomputed aesthetic <code>labels</code> associated with each column of <code>plot.data</code>, while setting a fixed label <code>"Count"</code> for the <code>fill</code> aesthetic associated with the count of observation in each hexagonal bin.</p>
-<div class="sourceCode" id="cb174"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb174-1"><a href="developing.html#cb174-1"></a><span class="kw">setMethod</span>(<span class="st">&quot;.generateDotPlot&quot;</span>, <span class="st">&quot;RedDimHexPlot&quot;</span>, <span class="cf">function</span>(x, labels, envir) {</span>
-<span id="cb174-2"><a href="developing.html#cb174-2"></a>    <span class="kw">stopifnot</span>(<span class="kw">require</span>(ggplot2))</span>
-<span id="cb174-3"><a href="developing.html#cb174-3"></a>    </span>
-<span id="cb174-4"><a href="developing.html#cb174-4"></a>    plot_cmds &lt;-<span class="st"> </span><span class="kw">list</span>()</span>
-<span id="cb174-5"><a href="developing.html#cb174-5"></a>    plot_cmds[[<span class="st">&quot;ggplot&quot;</span>]] &lt;-<span class="st"> &quot;ggplot() +&quot;</span></span>
-<span id="cb174-6"><a href="developing.html#cb174-6"></a>    </span>
-<span id="cb174-7"><a href="developing.html#cb174-7"></a>    <span class="co"># Adding hexbins to the plot.</span></span>
-<span id="cb174-8"><a href="developing.html#cb174-8"></a>    plot_cmds[[<span class="st">&quot;hex&quot;</span>]] &lt;-<span class="st"> &quot;geom_hex(aes(X, Y), plot.data) +&quot;</span></span>
-<span id="cb174-9"><a href="developing.html#cb174-9"></a>    plot_cmds[[<span class="st">&quot;labs&quot;</span>]] &lt;-<span class="st"> &quot;labs(fill=&#39;Count&#39;) +&quot;</span></span>
-<span id="cb174-10"><a href="developing.html#cb174-10"></a>    plot_cmds[[<span class="st">&quot;labs&quot;</span>]] &lt;-<span class="st"> </span><span class="kw">sprintf</span>(</span>
-<span id="cb174-11"><a href="developing.html#cb174-11"></a>        <span class="st">&quot;labs(x=&#39;%s&#39;, y=&#39;%s&#39;, title=&#39;%s&#39;, fill=&#39;%s&#39;) +&quot;</span>,</span>
-<span id="cb174-12"><a href="developing.html#cb174-12"></a>        labels<span class="op">$</span>X, labels<span class="op">$</span>Y, labels<span class="op">$</span>title, <span class="st">&quot;Count&quot;</span></span>
-<span id="cb174-13"><a href="developing.html#cb174-13"></a>        )</span>
-<span id="cb174-14"><a href="developing.html#cb174-14"></a>    plot_cmds[[<span class="st">&quot;theme_base&quot;</span>]] &lt;-<span class="st"> &quot;theme_bw() +&quot;</span></span>
-<span id="cb174-15"><a href="developing.html#cb174-15"></a>    plot_cmds[[<span class="st">&quot;theme_legend&quot;</span>]] &lt;-<span class="st"> &quot;theme(legend.position = &#39;bottom&#39;)&quot;</span></span>
-<span id="cb174-16"><a href="developing.html#cb174-16"></a>    </span>
-<span id="cb174-17"><a href="developing.html#cb174-17"></a>    gg_plot &lt;-<span class="st"> </span><span class="kw">eval</span>(<span class="kw">parse</span>(<span class="dt">text=</span>plot_cmds), envir)</span>
-<span id="cb174-18"><a href="developing.html#cb174-18"></a>    </span>
-<span id="cb174-19"><a href="developing.html#cb174-19"></a>    <span class="kw">list</span>(<span class="dt">plot=</span>gg_plot, <span class="dt">commands=</span>plot_cmds)</span>
-<span id="cb174-20"><a href="developing.html#cb174-20"></a>})</span></code></pre></div>
+<div class="sourceCode" id="cb175"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb175-1"><a href="developing.html#cb175-1"></a><span class="kw">setMethod</span>(<span class="st">&quot;.generateDotPlot&quot;</span>, <span class="st">&quot;RedDimHexPlot&quot;</span>, <span class="cf">function</span>(x, labels, envir) {</span>
+<span id="cb175-2"><a href="developing.html#cb175-2"></a>    <span class="kw">stopifnot</span>(<span class="kw">require</span>(ggplot2))</span>
+<span id="cb175-3"><a href="developing.html#cb175-3"></a>    </span>
+<span id="cb175-4"><a href="developing.html#cb175-4"></a>    plot_cmds &lt;-<span class="st"> </span><span class="kw">list</span>()</span>
+<span id="cb175-5"><a href="developing.html#cb175-5"></a>    plot_cmds[[<span class="st">&quot;ggplot&quot;</span>]] &lt;-<span class="st"> &quot;ggplot() +&quot;</span></span>
+<span id="cb175-6"><a href="developing.html#cb175-6"></a>    </span>
+<span id="cb175-7"><a href="developing.html#cb175-7"></a>    <span class="co"># Adding hexbins to the plot.</span></span>
+<span id="cb175-8"><a href="developing.html#cb175-8"></a>    plot_cmds[[<span class="st">&quot;hex&quot;</span>]] &lt;-<span class="st"> &quot;geom_hex(aes(X, Y), plot.data) +&quot;</span></span>
+<span id="cb175-9"><a href="developing.html#cb175-9"></a>    plot_cmds[[<span class="st">&quot;labs&quot;</span>]] &lt;-<span class="st"> &quot;labs(fill=&#39;Count&#39;) +&quot;</span></span>
+<span id="cb175-10"><a href="developing.html#cb175-10"></a>    plot_cmds[[<span class="st">&quot;labs&quot;</span>]] &lt;-<span class="st"> </span><span class="kw">sprintf</span>(</span>
+<span id="cb175-11"><a href="developing.html#cb175-11"></a>        <span class="st">&quot;labs(x=&#39;%s&#39;, y=&#39;%s&#39;, title=&#39;%s&#39;, fill=&#39;%s&#39;) +&quot;</span>,</span>
+<span id="cb175-12"><a href="developing.html#cb175-12"></a>        labels<span class="op">$</span>X, labels<span class="op">$</span>Y, labels<span class="op">$</span>title, <span class="st">&quot;Count&quot;</span></span>
+<span id="cb175-13"><a href="developing.html#cb175-13"></a>        )</span>
+<span id="cb175-14"><a href="developing.html#cb175-14"></a>    plot_cmds[[<span class="st">&quot;theme_base&quot;</span>]] &lt;-<span class="st"> &quot;theme_bw() +&quot;</span></span>
+<span id="cb175-15"><a href="developing.html#cb175-15"></a>    plot_cmds[[<span class="st">&quot;theme_legend&quot;</span>]] &lt;-<span class="st"> &quot;theme(legend.position = &#39;bottom&#39;)&quot;</span></span>
+<span id="cb175-16"><a href="developing.html#cb175-16"></a>    </span>
+<span id="cb175-17"><a href="developing.html#cb175-17"></a>    gg_plot &lt;-<span class="st"> </span><span class="kw">eval</span>(<span class="kw">parse</span>(<span class="dt">text=</span>plot_cmds), envir)</span>
+<span id="cb175-18"><a href="developing.html#cb175-18"></a>    </span>
+<span id="cb175-19"><a href="developing.html#cb175-19"></a>    <span class="kw">list</span>(<span class="dt">plot=</span>gg_plot, <span class="dt">commands=</span>plot_cmds)</span>
+<span id="cb175-20"><a href="developing.html#cb175-20"></a>})</span></code></pre></div>
 <p>Running <code>app</code> again highlights how the <code>RedDimHexPlot</code> panel fills each hexagonal bin with a color indicating the number of data points present in the corresponding area in the <code>ReducedDimensionPlot</code> panel.</p>
 <!-- TODO:
 second fastest visual result:

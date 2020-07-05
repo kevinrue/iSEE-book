@@ -113,7 +113,7 @@
 
 \title{Extending \emph{iSEE}}
 \author{Kevin Rue-Albrecht, Federico Marini, Charlotte Soneson, and Aaron Lun}
-\date{2020-07-04}
+\date{2020-07-05}
 
 \begin{document}
 \maketitle
@@ -680,8 +680,8 @@ This avoids potentially costly re-calculations throughout the lifetime of the \t
 ## 
 ## function (x, se) 
 ## standardGeneric(".cacheCommonInfo")
-## <bytecode: 0x7fc704e92270>
-## <environment: 0x7fc704eb17e0>
+## <bytecode: 0x7fc93b0f8060>
+## <environment: 0x7fc93b1175d0>
 ## Methods may be defined for arguments: x, se
 ## Use  showMethods(".cacheCommonInfo")  for currently available ones.
 \end{verbatim}
@@ -719,8 +719,8 @@ This is run for each panel during the \texttt{iSEE()} application set-up to vali
 ## 
 ## function (x, se) 
 ## standardGeneric(".refineParameters")
-## <bytecode: 0x7fc7045333c0>
-## <environment: 0x7fc7045749b0>
+## <bytecode: 0x7fc93a52d580>
+## <environment: 0x7fc93a56eb70>
 ## Methods may be defined for arguments: x, se
 ## Use  showMethods(".refineParameters")  for currently available ones.
 \end{verbatim}
@@ -770,8 +770,8 @@ This generic provides the most general mechanism for controlling the panel's int
 ## 
 ## function (x, se, select_info) 
 ## standardGeneric(".defineInterface")
-## <bytecode: 0x7fc704c186b0>
-## <environment: 0x7fc704c22ff0>
+## <bytecode: 0x7fc936ea9998>
+## <environment: 0x7fc936eb42d8>
 ## Methods may be defined for arguments: x, se, select_info
 ## Use  showMethods(".defineInterface")  for currently available ones.
 \end{verbatim}
@@ -805,8 +805,8 @@ This generic allows developers to fine-tune the data UI for subclasses without r
 ## 
 ## function (x, se, select_info) 
 ## standardGeneric(".defineDataInterface")
-## <bytecode: 0x7fc704c6f590>
-## <environment: 0x7fc704cd03b8>
+## <bytecode: 0x7fc936efc278>
+## <environment: 0x7fc936f50b70>
 ## Methods may be defined for arguments: x, se, select_info
 ## Use  showMethods(".defineDataInterface")  for currently available ones.
 \end{verbatim}
@@ -843,8 +843,8 @@ For example, we can remove row selection UI elements for panels that only accept
 ## 
 ## function (x, field) 
 ## standardGeneric(".hideInterface")
-## <bytecode: 0x7fc70470cf98>
-## <environment: 0x7fc704736898>
+## <bytecode: 0x7fc93a707158>
+## <environment: 0x7fc93a730a58>
 ## Methods may be defined for arguments: x, field
 ## Use  showMethods(".hideInterface")  for currently available ones.
 \end{verbatim}
@@ -884,8 +884,8 @@ For example, we can remove row selection UI elements for panels that only accept
 ## 
 ## function (x, se, select_info) 
 ## standardGeneric(".defineVisualColorInterface")
-## <bytecode: 0x7fc704b343a0>
-## <environment: 0x7fc704b700c8>
+## <bytecode: 0x7fc9335da798>
+## <environment: 0x7fc9333648c0>
 ## Methods may be defined for arguments: x, se, select_info
 ## Use  showMethods(".defineVisualColorInterface")  for currently available ones.
 \end{verbatim}
@@ -915,8 +915,8 @@ For example, we can remove row selection UI elements for panels that only accept
 ## 
 ## function (x, se) 
 ## standardGeneric(".defineVisualFacetInterface")
-## <bytecode: 0x7fc704aff7d0>
-## <environment: 0x7fc704b0b648>
+## <bytecode: 0x7fc93397d9c8>
+## <environment: 0x7fc93396d440>
 ## Methods may be defined for arguments: x, se
 ## Use  showMethods(".defineVisualFacetInterface")  for currently available ones.
 \end{verbatim}
@@ -946,8 +946,8 @@ For example, we can remove row selection UI elements for panels that only accept
 ## 
 ## function (x, se) 
 ## standardGeneric(".defineVisualShapeInterface")
-## <bytecode: 0x7fc7049ed930>
-## <environment: 0x7fc7049f60b0>
+## <bytecode: 0x7fc93a9e5418>
+## <environment: 0x7fc93a9f3aa8>
 ## Methods may be defined for arguments: x, se
 ## Use  showMethods(".defineVisualShapeInterface")  for currently available ones.
 \end{verbatim}
@@ -977,8 +977,8 @@ For example, we can remove row selection UI elements for panels that only accept
 ## 
 ## function (x, se) 
 ## standardGeneric(".defineVisualSizeInterface")
-## <bytecode: 0x7fc7049ade98>
-## <environment: 0x7fc7049bb958>
+## <bytecode: 0x7fc93a9a7c58>
+## <environment: 0x7fc93a9b5718>
 ## Methods may be defined for arguments: x, se
 ## Use  showMethods(".defineVisualSizeInterface")  for currently available ones.
 \end{verbatim}
@@ -1008,8 +1008,8 @@ For example, we can remove row selection UI elements for panels that only accept
 ## 
 ## function (x, se) 
 ## standardGeneric(".defineVisualTextInterface")
-## <bytecode: 0x7fc704907bc8>
-## <environment: 0x7fc704912ca0>
+## <bytecode: 0x7fc93a901988>
+## <environment: 0x7fc93a90aa60>
 ## Methods may be defined for arguments: x, se
 ## Use  showMethods(".defineVisualTextInterface")  for currently available ones.
 \end{verbatim}
@@ -1038,8 +1038,8 @@ For example, we can remove row selection UI elements for panels that only accept
 ## 
 ## function (x) 
 ## standardGeneric(".defineVisualOtherInterface")
-## <bytecode: 0x7fc704a3be00>
-## <environment: 0x7fc704a3e190>
+## <bytecode: 0x7fc93aa358e8>
+## <environment: 0x7fc93aa37c78>
 ## Methods may be defined for arguments: x
 ## Use  showMethods(".defineVisualOtherInterface")  for currently available ones.
 \end{verbatim}
@@ -1079,8 +1079,8 @@ Developers can define arbitrarily complex observer logic here as long as it is s
 ## {
 ##     standardGeneric(".createObservers")
 ## }
-## <bytecode: 0x7fc704d32d50>
-## <environment: 0x7fc704dab8c8>
+## <bytecode: 0x7fc936fb1908>
+## <environment: 0x7fc93b025c80>
 ## Methods may be defined for arguments: x, se, input, session, pObjects, rObjects
 ## Use  showMethods(".createObservers")  for currently available ones.
 \end{verbatim}
@@ -1131,8 +1131,8 @@ Note that this generic only defines the output in the \texttt{iSEE()} interface;
 ## {
 ##     standardGeneric(".defineOutput")
 ## }
-## <bytecode: 0x7fc704bdf050>
-## <environment: 0x7fc704bf6100>
+## <bytecode: 0x7fc936e70e70>
+## <environment: 0x7fc936e853e8>
 ## Methods may be defined for arguments: x
 ## Use  showMethods(".defineOutput")  for currently available ones.
 \end{verbatim}
@@ -1166,8 +1166,8 @@ This is usually as simple as calling functions like \texttt{renderPlotOutput()} 
 ## {
 ##     standardGeneric(".renderOutput")
 ## }
-## <bytecode: 0x7fc704489f20>
-## <environment: 0x7fc70449a978>
+## <bytecode: 0x7fc93a4840e0>
+## <environment: 0x7fc93a494b38>
 ## Methods may be defined for arguments: x, se, output, pObjects, rObjects
 ## Use  showMethods(".renderOutput")  for currently available ones.
 \end{verbatim}
@@ -1203,8 +1203,8 @@ Some effort is required here to ensure that the commands used to generate the ou
 ## {
 ##     standardGeneric(".generateOutput")
 ## }
-## <bytecode: 0x7fc7047a3740>
-## <environment: 0x7fc7047e62b0>
+## <bytecode: 0x7fc93a79d900>
+## <environment: 0x7fc93a7e0470>
 ## Methods may be defined for arguments: x, se, all_memory, all_contents
 ## Use  showMethods(".generateOutput")  for currently available ones.
 \end{verbatim}
@@ -1238,8 +1238,8 @@ This is called whenever the user requests a download of the panel outputs.
 ## {
 ##     standardGeneric(".exportOutput")
 ## }
-## <bytecode: 0x7fc7048eb1e0>
-## <environment: 0x7fc7048f24f8>
+## <bytecode: 0x7fc93a8e4fa0>
+## <environment: 0x7fc93a8ec2b8>
 ## Methods may be defined for arguments: x, se, all_memory, all_contents
 ## Use  showMethods(".exportOutput")  for currently available ones.
 \end{verbatim}
@@ -1275,8 +1275,8 @@ Developers of \texttt{DotPlot} subclasses can specialize this generic to avoid h
 ## 
 ## function (x, labels, envir) 
 ## standardGeneric(".generateDotPlot")
-## <bytecode: 0x7fc704864320>
-## <environment: 0x7fc704871238>
+## <bytecode: 0x7fc93a85e4e0>
+## <environment: 0x7fc93a86b3f8>
 ## Methods may be defined for arguments: x, labels, envir
 ## Use  showMethods(".generateDotPlot")  for currently available ones.
 \end{verbatim}
@@ -1306,8 +1306,8 @@ This allows developers to change the data setup for a \texttt{DotPlot} subclass 
 ## 
 ## function (x, envir) 
 ## standardGeneric(".generateDotPlotData")
-## <bytecode: 0x7fc7048280e0>
-## <environment: 0x7fc70484d900>
+## <bytecode: 0x7fc93a81e390>
+## <environment: 0x7fc93a847ac0>
 ## Methods may be defined for arguments: x, envir
 ## Use  showMethods(".generateDotPlotData")  for currently available ones.
 \end{verbatim}
@@ -1341,8 +1341,8 @@ This usually doesn't need to be specialized.
 ## 
 ## function (x, envir) 
 ## standardGeneric(".prioritizeDotPlotData")
-## <bytecode: 0x7fc70458b270>
-## <environment: 0x7fc70458ee10>
+## <bytecode: 0x7fc93a585430>
+## <environment: 0x7fc93a588fd0>
 ## Methods may be defined for arguments: x, envir
 ## Use  showMethods(".prioritizeDotPlotData")  for currently available ones.
 \end{verbatim}
@@ -1372,8 +1372,8 @@ This usually doesn't need to be specialized.
 ## 
 ## function (x) 
 ## standardGeneric(".colorByNoneDotPlotField")
-## <bytecode: 0x7fc704e16e28>
-## <environment: 0x7fc704e1e990>
+## <bytecode: 0x7fc93b08cbe0>
+## <environment: 0x7fc93b090748>
 ## Methods may be defined for arguments: x
 ## Use  showMethods(".colorByNoneDotPlotField")  for currently available ones.
 \end{verbatim}
@@ -1400,8 +1400,8 @@ This usually doesn't need to be specialized.
 ## 
 ## function (x) 
 ## standardGeneric(".colorByNoneDotPlotScale")
-## <bytecode: 0x7fc704df9560>
-## <environment: 0x7fc704dff1a8>
+## <bytecode: 0x7fc93b06d318>
+## <environment: 0x7fc93b072f60>
 ## Methods may be defined for arguments: x
 ## Use  showMethods(".colorByNoneDotPlotScale")  for currently available ones.
 \end{verbatim}
@@ -1435,8 +1435,8 @@ For example, a hypothetical MA plot panel would only accept log-fold changes on 
 ## 
 ## function (x, se) 
 ## standardGeneric(".allowableYAxisChoices")
-## <bytecode: 0x7fc704edb288>
-## <environment: 0x7fc704eddc70>
+## <bytecode: 0x7fc93b13d640>
+## <environment: 0x7fc93b140028>
 ## Methods may be defined for arguments: x, se
 ## Use  showMethods(".allowableYAxisChoices")  for currently available ones.
 \end{verbatim}
@@ -1464,8 +1464,8 @@ For example, a hypothetical MA plot panel would only accept log-fold changes on 
 ## 
 ## function (x, se) 
 ## standardGeneric(".allowableXAxisChoices")
-## <bytecode: 0x7fc7051d1ee0>
-## <environment: 0x7fc70534a1f0>
+## <bytecode: 0x7fc93b3fd898>
+## <environment: 0x7fc93b562dc0>
 ## Methods may be defined for arguments: x, se
 ## Use  showMethods(".allowableXAxisChoices")  for currently available ones.
 \end{verbatim}
@@ -1500,8 +1500,8 @@ If this is specialized, there is usually no need to specialize \texttt{.generate
 ## 
 ## function (x, envir) 
 ## standardGeneric(".generateTable")
-## <bytecode: 0x7fc704753890>
-## <environment: 0x7fc70475d200>
+## <bytecode: 0x7fc93a74da50>
+## <environment: 0x7fc93a7573c0>
 ## Methods may be defined for arguments: x, envir
 ## Use  showMethods(".generateTable")  for currently available ones.
 \end{verbatim}
@@ -1538,8 +1538,8 @@ It can also be used to indicate that the panel does not transmit anything.
 ## 
 ## function (x) 
 ## standardGeneric(".multiSelectionDimension")
-## <bytecode: 0x7fc7046475b8>
-## <environment: 0x7fc70464c710>
+## <bytecode: 0x7fc93a641778>
+## <environment: 0x7fc93a6468d0>
 ## Methods may be defined for arguments: x
 ## Use  showMethods(".multiSelectionDimension")  for currently available ones.
 \end{verbatim}
@@ -1574,8 +1574,8 @@ This is defined as the selection that the user can actively change by interactin
 ## 
 ## function (x) 
 ## standardGeneric(".multiSelectionActive")
-## <bytecode: 0x7fc7046cfbd8>
-## <environment: 0x7fc7046d62b0>
+## <bytecode: 0x7fc93a6c9d98>
+## <environment: 0x7fc93a6d0470>
 ## Methods may be defined for arguments: x
 ## Use  showMethods(".multiSelectionActive")  for currently available ones.
 \end{verbatim}
@@ -1608,8 +1608,8 @@ The identity of the selected rows/columns will ultimately be transmitted to othe
 ## 
 ## function (x, index) 
 ## standardGeneric(".multiSelectionCommands")
-## <bytecode: 0x7fc70466be40>
-## <environment: 0x7fc704670b70>
+## <bytecode: 0x7fc93a666000>
+## <environment: 0x7fc93a66ad30>
 ## Methods may be defined for arguments: x, index
 ## Use  showMethods(".multiSelectionCommands")  for currently available ones.
 \end{verbatim}
@@ -1640,8 +1640,8 @@ This is used for reporting ``percent selected'' statistics below each panel.
 ## 
 ## function (x, contents) 
 ## standardGeneric(".multiSelectionAvailable")
-## <bytecode: 0x7fc7046a8550>
-## <environment: 0x7fc7046afe40>
+## <bytecode: 0x7fc93a6a2710>
+## <environment: 0x7fc93a6aa000>
 ## Methods may be defined for arguments: x, contents
 ## Use  showMethods(".multiSelectionAvailable")  for currently available ones.
 \end{verbatim}
@@ -1671,8 +1671,8 @@ This is used to wipe selections in response to changes to the plot content that 
 ## 
 ## function (x) 
 ## standardGeneric(".multiSelectionClear")
-## <bytecode: 0x7fc70468d5b8>
-## <environment: 0x7fc704695e78>
+## <bytecode: 0x7fc93a687778>
+## <environment: 0x7fc93a690038>
 ## Methods may be defined for arguments: x
 ## Use  showMethods(".multiSelectionClear")  for currently available ones.
 \end{verbatim}
@@ -1703,8 +1703,8 @@ This is used to determine how changes in the upstream transmitters should propag
 ## 
 ## function (x) 
 ## standardGeneric(".multiSelectionRestricted")
-## <bytecode: 0x7fc704605d60>
-## <environment: 0x7fc704608dd8>
+## <bytecode: 0x7fc93a5fdf20>
+## <environment: 0x7fc93a600f98>
 ## Methods may be defined for arguments: x
 ## Use  showMethods(".multiSelectionRestricted")  for currently available ones.
 \end{verbatim}
@@ -1735,8 +1735,8 @@ This usually doesn't need to be specialized.
 ## 
 ## function (x) 
 ## standardGeneric(".multiSelectionInvalidated")
-## <bytecode: 0x7fc70461d0e8>
-## <environment: 0x7fc704622d30>
+## <bytecode: 0x7fc93a6152a8>
+## <environment: 0x7fc93a61aef0>
 ## Methods may be defined for arguments: x
 ## Use  showMethods(".multiSelectionInvalidated")  for currently available ones.
 \end{verbatim}
@@ -1769,8 +1769,8 @@ It can also be used to indicate that the panel does not transmit anything.
 ## 
 ## function (x) 
 ## standardGeneric(".singleSelectionDimension")
-## <bytecode: 0x7fc7044583c8>
-## <environment: 0x7fc704461cf0>
+## <bytecode: 0x7fc93a450588>
+## <environment: 0x7fc93a45beb0>
 ## Methods may be defined for arguments: x
 ## Use  showMethods(".singleSelectionDimension")  for currently available ones.
 \end{verbatim}
@@ -1804,8 +1804,8 @@ The identity of the row/column is passed onto other panels to affect their behav
 ## 
 ## function (x, pObjects) 
 ## standardGeneric(".singleSelectionValue")
-## <bytecode: 0x7fc7043e3f90>
-## <environment: 0x7fc7043e99a8>
+## <bytecode: 0x7fc93a3d6240>
+## <environment: 0x7fc93a3e1b68>
 ## Methods may be defined for arguments: x, pObjects
 ## Use  showMethods(".singleSelectionValue")  for currently available ones.
 \end{verbatim}
@@ -1836,8 +1836,8 @@ This will also automatically set up some of the more difficult observers if suff
 ## 
 ## function (x, pObjects) 
 ## standardGeneric(".singleSelectionValue")
-## <bytecode: 0x7fc7043e3f90>
-## <environment: 0x7fc7043e99a8>
+## <bytecode: 0x7fc93a3d6240>
+## <environment: 0x7fc93a3e1b68>
 ## Methods may be defined for arguments: x, pObjects
 ## Use  showMethods(".singleSelectionValue")  for currently available ones.
 \end{verbatim}
@@ -1855,53 +1855,62 @@ This will also automatically set up some of the more difficult observers if suff
 \end{verbatim}
 
 \hypertarget{server}{%
-\chapter{The app server}\label{server}}
+\chapter{Application state}\label{server}}
 
-\hypertarget{robjects}{%
-\section{Reactive objects}\label{robjects}}
+\hypertarget{overview}{%
+\section{Overview}\label{overview}}
 
-\hypertarget{persistent-non-reactive-objects}{%
-\section{Persistent (non-reactive) objects}\label{persistent-non-reactive-objects}}
+\emph{\href{https://bioconductor.org/packages/3.11/iSEE}{iSEE}} uses global variables to keep track of the application state and to trigger reactive expressions.
+These are passed in the ubiquitous \texttt{pObjects} and \texttt{rObjects} arguments for non-reactive and reactive variables, respectively.
+Both of these values have pass-by-reference semantics, meaning that any modifications to their contents within functions will persist outside of the function scope.
+\emph{\href{https://bioconductor.org/packages/3.11/iSEE}{iSEE}} provides several functions to facilitate the interactions with these objects.
 
-\hypertarget{memory}{%
-\section{The app memory}\label{memory}}
+\hypertarget{updating-parameters}{%
+\section{Updating parameters}\label{updating-parameters}}
 
-The app \texttt{memory} is a list of instances created from available panel classes and currently visible in the GUI.
-The order of panel instances in \texttt{memory} directly reflects their order in the GUI.
+The application memory is a list of \texttt{Panel} instances in \texttt{pObjects\$memory} that captures the current state of the \emph{\href{https://bioconductor.org/packages/3.11/iSEE}{iSEE}} application.
+Conceptually, one should be able to extract this list from a running application, pass it to the \texttt{initial=} argument of the \texttt{iSEE()} function and expect to recover the same state.
+All modifications to the state should be recorded in the memory, meaning that observer expressions will commonly contain code like:
 
-\hypertarget{initialization-of-the-app-server}{%
-\section{Initialization of the app server}\label{initialization-of-the-app-server}}
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{pObjects}\OperatorTok{$}\NormalTok{memory[[panel_name]][[param_name]] <-}\StringTok{ }\NormalTok{new_value}
+\end{Highlighting}
+\end{Shaded}
 
-The app server is initialized as soon as a valid \texttt{se} object is provided.
-This can be either in the call to \texttt{iSEE(se)} or using other mechanisms of data upload at runtime within the app (e.g., \texttt{fileInput} UI widgets when \texttt{iSEE()} is called without providing the \texttt{se} argument).
+By itself, modifying the application memory will not trigger any further actions.
+The memory is too complex to be treated as a reactive value as it would affect too many downstream observers.
+Instead, we provide the \texttt{.requestUpdate()} function to indicate to the application that a particular panel needs to be updated.
+This sets a flag in \texttt{rObjects} that will eventually trigger re-rendering of the specified panel.
 
-The internal function \texttt{iSEE:::.initialize\_server()} takes the \texttt{se} object and the list holding reactive values used to trigger re-rendering of the GUI, as described in the section \protect\hyperlink{robjects}{Reactive objects}.
+The \texttt{.requestCleanUpdate()} function provides a variant of this approach where the panel should be updated \emph{and} any active or saved multiple selections should be wiped.
+This is useful for dealing with changes to ``protected'' parameters that modify the panel contents such that any selection parameters are no longer relevant (e.g., invalidating brushes when the plot coordinates change).
+Yet another variant is the \texttt{.requestActiveSelectionUpdate()} function, which indicates whether a panel's active multiple selection has changed; this should be used in the observer expression that responds to the panel's multiple selection mechanism.
 
-The very first step invokes the internal function \texttt{checkColormapCompatibility()}.
-This function takes the \texttt{se} object and the optional argument \texttt{iSEE(colormap)}, and carries out a number of compatibility checks between the two objects.
-The function collects a character vector of incompatibility issues that are displayed - if any - as warning notifications in GUI when the app is launched.
+The two-step process of memory modification and calling \texttt{.requestUpdate()} is facilitated by functions like \texttt{.createUnprotectedParameterObservers()}, which sets up simple observers for parameter modifications.
+However, more complex observers will have to do this manually.
 
-Next, the internal function \texttt{iSEE:::.prepare\_SE()} calls the method \texttt{.cacheCommonInfo()} on each type of panel present provided to the arguments \texttt{iSEE(initial)} and \texttt{iSEE(extra)}, to precompute and cache information relevant to all the types of panels that will be available in that app instance.
+\hypertarget{using-the-memory}{%
+\section{Using the memory}\label{using-the-memory}}
 
-Shortly after, the internal function \texttt{iSEE:::.setup\_initial\_state()} calls the method \texttt{.refineParameters} on each panel instance provided to \texttt{iSEE(initial)}, to ensure that all the panels present in the GUI when the app is launched are initialized with valid parameters; any invalid parameter is replaced with sensible values for the given \texttt{se} object.
+In a similar vein, expressions to render output should \emph{never} touch the Shiny \texttt{input} object directly.
+(Indeed, \texttt{.renderOutput()} does not even have access to the \texttt{input}.)
+As all parameter changes pass through the memory, the updated values of each parameter should also be retrieved from memory.
+This involves extracting the desired \texttt{Panel} from \texttt{pObjects\$memory} in methods for generics like \texttt{.createObservers()} that rely on pass-by-reference semantics for correct evaluation of reactive expressions.
+Other generics that are not setting up reactive expressions can directly extract values from the supplied \texttt{Panel} object.
 
-The internal function \texttt{iSEE:::.create\_persistent\_objects()} executes the initialization of persistent (non-reactive) objects:
+Each \texttt{Panel} object can be treated as a list of panel parameters.
+Retrieving values is as simple as using the \texttt{{[}{[}} operator with the name of the parameter.
+Direct slot access should be avoided, consistent with best practice for S4 programming.
 
-\begin{itemize}
-\tightlist
-\item
-  the app \texttt{memory} (see the section \protect\hyperlink{memory}{The app memory})
-\item
-  the app \texttt{reservoir}, which stores one instance of panel type available for this app instance
-\item
-  the app \texttt{counter} is used to track the number of panels previously created for each type, and to assign an increasing identifier to new panel instances
-\item
-  the app \texttt{commands} stores the list of code chunks to display in the code tracker, to reproduce each panel output
-\item
-  the app \texttt{contents} stores the list of data point coordinates selectable in each panel instance\footnote{Data points downsampled for rendering speed performance remain selectable, even though they are not visible in the plot.}
-\item
-  the identifier of the panel under the control of speech recognition
-\end{itemize}
+\hypertarget{responding-to-events}{%
+\section{Responding to events}\label{responding-to-events}}
+
+Developers can respond to events by calling functions like \texttt{.trackUpdate()} within an observer or rendering expression.
+For example, \texttt{.trackUpdate()} will trigger re-evaluation of its context if the panel is updated by \texttt{.requestUpdate()}.
+Other variants like \texttt{.trackMultiSelection()} will trigger re-evaluation upon changes to the panel's multiple selections.
+This is mostly intended for panels that need to synchronize updates to multiple output elements.
+Developers should only use these functions to track updates to the same panel for which the observer/rendering expression is written; management of communication across panels is outside of the scope of these expressions.
 
 \hypertarget{developing}{%
 \chapter{Developing new panels}\label{developing}}
