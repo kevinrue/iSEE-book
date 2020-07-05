@@ -7,7 +7,7 @@ suppressPackageStartupMessages(require(iSEE))
 options(digits = 4)
 ```
 
-# Reduced dimension hexbin plot
+# Reduced dimension hexbin plot {#developing}
 
 ## Overview
 
