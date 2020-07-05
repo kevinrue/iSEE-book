@@ -27,6 +27,23 @@ setClass("RedDimHexPlot", contains="ReducedDimensionPlot",
     slots=c(BinResolution="numeric"))
 ```
 
+Any new slots should come with validity methods, as shown below.
+
+```{r, results='hide'}
+library(S4Vectors)
+setValidity2("RedDimHexPlot", function(object) {
+    msg <- character(0)
+
+    if (length(val <- object[["BinResolution"]])!=1L || val <= 0) {
+        msg <- c(msg, "'BinResolution' must be a positive number")
+    }
+    if (length(msg)) {
+        return(msg)
+    }
+    TRUE
+})
+```
+
 We specialize the `initialize()` method to provide a default for the new parameter.
 We also define a constructor function to make it easier to create a new instance.
 
@@ -158,13 +175,14 @@ However, it is relatively straightforward to extend `.generateDotPlot()` to ensu
 
 ## In action
 
-To demonstrate, we will load an example dataset from the `r Biocpkg("scRNAseq")` package.
+To demonstrate, we will load a small example dataset [@tasic2016adult] from the `r Biocpkg("scRNAseq")` package.
 This is provided as a `SingleCellExperiment` on which we compute the usual $t$-SNE plot.
 
 ```{r}
 library(scRNAseq)
 sce <- ReprocessedAllenData(assays="tophat_counts")
 
+set.seed(100)
 library(scater)
 sce <- logNormCounts(sce, exprs_values="tophat_counts")
 sce <- runPCA(sce, ncomponents=4)
