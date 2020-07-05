@@ -1,3 +1,5 @@
+# (PART) API overview {-}
+
 # Panel classes {#panels}
 
 ```{r, echo=FALSE, results="hide"}
