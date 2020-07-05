@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 3 Application state | Extending iSEE</title>
+  <title>Chapter 9 Contributors | Extending iSEE</title>
   <meta name="description" content="This book describes how to use the Bioconductor iSEE package to create web-applications for exploring data stored in SummarizedExperiment objects." />
   <meta name="generator" content="bookdown 0.20 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 3 Application state | Extending iSEE" />
+  <meta property="og:title" content="Chapter 9 Contributors | Extending iSEE" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 3 Application state | Extending iSEE" />
+  <meta name="twitter:title" content="Chapter 9 Contributors | Extending iSEE" />
   
   <meta name="twitter:description" content="This book describes how to use the Bioconductor iSEE package to create web-applications for exploring data stored in SummarizedExperiment objects." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="api.html"/>
-<link rel="next" href="developing.html"/>
+<link rel="prev" href="gene-ontology-table.html"/>
+<link rel="next" href="references.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -250,64 +250,26 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="server" class="section level1">
-<h1><span class="header-section-number">Chapter 3</span> Application state</h1>
-<div id="overview" class="section level2">
-<h2><span class="header-section-number">3.1</span> Overview</h2>
-<p><em><a href="https://bioconductor.org/packages/3.11/iSEE">iSEE</a></em> uses global variables to keep track of the application state and to trigger reactive expressions.
-These are passed in the ubiquitous <code>pObjects</code> and <code>rObjects</code> arguments for non-reactive and reactive variables, respectively.
-Both of these objects have pass-by-reference semantics, meaning that any modifications to their contents within functions will persist outside of the function scope.
-Of particular relevance is the application memory in <code>pObjects</code>, which panels are expected to read and modify to respond to user interaction and generate output.
-Developers should also refrain from adding their own application-wide reactive variables, and should only modify the existing ones through a dedicated set of functions provided by <em><a href="https://bioconductor.org/packages/3.11/iSEE">iSEE</a></em>.
-Respecting this paradigm will ensure that custom panels behave correctly in the context of the entire application.</p>
+<div id="contributors" class="section level1">
+<h1><span class="header-section-number">Chapter 9</span> Contributors</h1>
+<div id="aaron-lun" class="section level3 unnumbered">
+<h3><em>Aaron Lun</em></h3>
+<p>187 days of anime watched.
+Nuff said.</p>
 </div>
-<div id="updating-parameters" class="section level2">
-<h2><span class="header-section-number">3.2</span> Updating parameters</h2>
-<p>The application memory is a list of <code>Panel</code> instances in <code>pObjects$memory</code> that captures the current state of the <em><a href="https://bioconductor.org/packages/3.11/iSEE">iSEE</a></em> application.
-Conceptually, one should be able to extract this list from a running application, pass it to the <code>initial=</code> argument of the <code>iSEE()</code> function and expect to recover the same state.
-All modifications to the state should be recorded in the memory, meaning that observer expressions will commonly contain code like:</p>
-<div class="sourceCode" id="cb167"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb167-1"><a href="server.html#cb167-1"></a>pObjects<span class="op">$</span>memory[[panel_name]][[param_name]] &lt;-<span class="st"> </span>new_value</span></code></pre></div>
-<p>By itself, modifying the application memory will not trigger any further actions.
-The memory is too complex to be treated as a reactive value as it would affect too many downstream observers.
-Instead, we provide the <code>.requestUpdate()</code> function to indicate to the application that a particular panel needs to be updated.
-This sets a flag in <code>rObjects</code> that will eventually trigger re-rendering of the specified panel.</p>
-<p>The <code>.requestCleanUpdate()</code> function provides a variant of this approach where the panel should be updated <em>and</em> any active or saved multiple selections should be wiped.
-This is useful for dealing with changes to “protected” parameters that modify the panel contents such that any selection parameters are no longer relevant (e.g., invalidating brushes when the plot coordinates change).
-Yet another variant is the <code>.requestActiveSelectionUpdate()</code> function, which indicates whether a panel’s active multiple selection has changed; this should be used in the observer expression that responds to the panel’s multiple selection mechanism.</p>
-<p>The two-step process of memory modification and calling <code>.requestUpdate()</code> is facilitated by functions like <code>.createUnprotectedParameterObservers()</code>, which sets up simple observers for parameter modifications.
-However, more complex observers will have to do this manually.</p>
-</div>
-<div id="using-the-memory" class="section level2">
-<h2><span class="header-section-number">3.3</span> Using the memory</h2>
-<p>In a similar vein, expressions to render output should <em>never</em> touch the Shiny <code>input</code> object directly.
-(Indeed, <code>.renderOutput()</code> does not even have access to the <code>input</code>.)
-As all parameter changes pass through the memory, the updated values of each parameter should also be retrieved from memory.
-This involves extracting the desired <code>Panel</code> from <code>pObjects$memory</code> in methods for generics like <code>.createObservers()</code> that rely on pass-by-reference semantics for correct evaluation of reactive expressions.
-Other generics that are not setting up reactive expressions can directly extract values from the supplied <code>Panel</code> object.</p>
-<p>Each <code>Panel</code> object can be treated as a list of panel parameters.
-Retrieving values is as simple as using the <code>[[</code> operator with the name of the parameter.
-Direct slot access should be avoided, consistent with best practice for S4 programming.</p>
-</div>
-<div id="responding-to-events" class="section level2">
-<h2><span class="header-section-number">3.4</span> Responding to events</h2>
-<p>Developers can respond to events by calling functions like <code>.trackUpdate()</code> within an observer or rendering expression.
-For example, <code>.trackUpdate()</code> will trigger re-evaluation of its context if the panel is updated by <code>.requestUpdate()</code>.
-Other variants like <code>.trackMultiSelection()</code> will trigger re-evaluation upon changes to the panel’s multiple selections.
-This is mostly intended for panels that need to synchronize updates to multiple output elements.
-Developers should only use these functions to track updates to the same panel for which the observer/rendering expression is written; management of communication across panels is outside of the scope of these expressions.</p>
+<div id="kevin-rue-albrecht" class="section level3 unnumbered">
+<h3><em>Kevin Rue-Albrecht</em></h3>
+<p>Je n’en crois pas mes yeux!</p>
 
 </div>
 </div>
-
-
-
             </section>
 
           </div>
         </div>
       </div>
-<a href="api.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="developing.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="gene-ontology-table.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

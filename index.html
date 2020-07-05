@@ -135,6 +135,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <li class="divider"></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="part"><span><b>I API overview</b></span></li>
 <li class="chapter" data-level="1" data-path="panels.html"><a href="panels.html"><i class="fa fa-check"></i><b>1</b> Panel classes</a><ul>
 <li class="chapter" data-level="1.1" data-path="panels.html"><a href="panels.html#overview"><i class="fa fa-check"></i><b>1.1</b> Overview</a></li>
 <li class="chapter" data-level="1.2" data-path="panels.html"><a href="panels.html#virtual-classes"><i class="fa fa-check"></i><b>1.2</b> Virtual classes</a><ul>
@@ -182,6 +183,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.3" data-path="server.html"><a href="server.html#using-the-memory"><i class="fa fa-check"></i><b>3.3</b> Using the memory</a></li>
 <li class="chapter" data-level="3.4" data-path="server.html"><a href="server.html#responding-to-events"><i class="fa fa-check"></i><b>3.4</b> Responding to events</a></li>
 </ul></li>
+<li class="part"><span><b>II Worked examples</b></span></li>
 <li class="chapter" data-level="4" data-path="developing.html"><a href="developing.html"><i class="fa fa-check"></i><b>4</b> Developing new panels</a><ul>
 <li class="chapter" data-level="4.1" data-path="developing.html"><a href="developing.html#create-a-new-s4-class"><i class="fa fa-check"></i><b>4.1</b> Create a new S4 class</a></li>
 <li class="chapter" data-level="4.2" data-path="developing.html"><a href="developing.html#add-a-constructor-function"><i class="fa fa-check"></i><b>4.2</b> Add a constructor function</a></li>
@@ -222,6 +224,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="8.6" data-path="api.html"><a href="api.html#handling-selections"><i class="fa fa-check"></i><b>8.6</b> Handling selections</a></li>
 <li class="chapter" data-level="8.7" data-path="dynamic-reduced-dimensions.html"><a href="dynamic-reduced-dimensions.html#in-action"><i class="fa fa-check"></i><b>8.7</b> In action</a></li>
 </ul></li>
+<li class="part"><span><b>III Appendix</b></span></li>
+<li class="chapter" data-level="9" data-path="contributors.html"><a href="contributors.html"><i class="fa fa-check"></i><b>9</b> Contributors</a><ul>
+<li><a href="contributors.html#aaron-lun"><em>Aaron Lun</em></a></li>
+<li><a href="contributors.html#kevin-rue-albrecht"><em>Kevin Rue-Albrecht</em></a></li>
+</ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -250,11 +257,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="preface" class="section level1 unnumbered">
 <h1>Preface</h1>
-<p>The <a href="https://bioconductor.org/">Bioconductor</a> package <em><a href="https://bioconductor.org/packages/3.11/iSEE">iSEE</a></em> provides functions for creating an interactive graphical user interface (GUI) using the <a href="https://rstudio.com/">RStudio</a> <em><a href="https://CRAN.R-project.org/package=Shiny">Shiny</a></em> package for exploring data stored in <em><a href="https://bioconductor.org/packages/3.11/SummarizedExperiment">SummarizedExperiment</a></em> objects, including row- and column-level metadata <span class="citation">(Rue-Albrecht et al. <a href="#ref-rue2018isee" role="doc-biblioref">2018</a>)</span>.
-In this book we describe key concepts and case studies to create web-applications that leverage builtin panels and develop new ones.
-We also present case studies to illustrate the development of custom panels.</p>
+<p><a href="https://bioconductor.org/packages/iSEE"><img src="https://github.com/Bioconductor/BiocStickers/raw/master/iSEE/iSEE.png" width="200" alt="iSEE Sticker" align="right" style="margin: 0 1em 0 1em" /></a></p>
+<p>The <a href="https://bioconductor.org/">Bioconductor</a> package <em><a href="https://bioconductor.org/packages/3.11/iSEE">iSEE</a></em> provides functions to create an interactive graphical user interface (GUI) using the <a href="https://rstudio.com/">RStudio</a> <em><a href="https://CRAN.R-project.org/package=Shiny">Shiny</a></em> package for exploring data stored in <em><a href="https://bioconductor.org/packages/3.11/SummarizedExperiment">SummarizedExperiment</a></em> objects <span class="citation">(Rue-Albrecht et al. <a href="#ref-rue2018isee" role="doc-biblioref">2018</a>)</span>.
+This book describes how to use <em><a href="https://bioconductor.org/packages/3.11/iSEE">iSEE</a></em>’s application programming interface (API) to develop new panel types for custom visualizations.
+We also present case studies to illustrate the development process for a variety of custom panels.</p>
+<p>The contents of this book are intended for developers of custom panel classes, usually inside a dedicated package like <em><a href="https://bioconductor.org/packages/3.11/iSEEu">iSEEu</a></em>.
+Potential end-users of <em><a href="https://bioconductor.org/packages/3.11/iSEE">iSEE</a></em> should refer to the vignettes provided on the package landing page.</p>
 
 </div>
+
+
+
 <h3>References</h3>
 <div id="refs" class="references">
 <div id="ref-rue2018isee">
