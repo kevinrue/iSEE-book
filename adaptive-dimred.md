@@ -191,7 +191,7 @@ Brushing at any location in the former will then trigger dynamic recompution of 
 
 
 ```r
-rdp <- ReducedDimensionPlot(PanelId=1L,
+rdp <- ReducedDimensionPlot(PanelId=1L, PanelWidth=6L,
     BrushData = list(
         xmin = 17, xmax = 55, ymin = -36, ymax = 29,
         coords_css = list(xmin = 300L, xmax = 450L, ymin = 170L, ymax = 404L),
@@ -206,7 +206,7 @@ rdp <- ReducedDimensionPlot(PanelId=1L,
     )
 )
 
-drdp <- DynRedDimPlot(DataBoxOpen=TRUE, ColumnSelectionSource="ReducedDimensionPlot1")
+drdp <- DynRedDimPlot(DataBoxOpen=TRUE, ColumnSelectionSource="ReducedDimensionPlot1", PanelWidth=6L)
 app <- iSEE(sce, initial=list(rdp, drdp))
 ```
 

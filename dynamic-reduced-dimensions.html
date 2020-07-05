@@ -396,7 +396,7 @@ so we will omit that here for simplicity.</p>
 We’ll use the <code>sce</code> object from Chapter <a href="developing.html#developing">4</a>, which includes some precomputed dimensionality reduction results.
 The plan is to create a (fixed) reduced dimension plot that will transmit a multiple selection to our dynamic reduced dimension plot.
 Brushing at any location in the former will then trigger dynamic recompution of results in the latter.</p>
-<div class="sourceCode" id="cb186"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb186-1"><a href="dynamic-reduced-dimensions.html#cb186-1"></a>rdp &lt;-<span class="st"> </span><span class="kw">ReducedDimensionPlot</span>(<span class="dt">PanelId=</span>1L,</span>
+<div class="sourceCode" id="cb186"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb186-1"><a href="dynamic-reduced-dimensions.html#cb186-1"></a>rdp &lt;-<span class="st"> </span><span class="kw">ReducedDimensionPlot</span>(<span class="dt">PanelId=</span>1L, <span class="dt">PanelWidth=</span>6L,</span>
 <span id="cb186-2"><a href="dynamic-reduced-dimensions.html#cb186-2"></a>    <span class="dt">BrushData =</span> <span class="kw">list</span>(</span>
 <span id="cb186-3"><a href="dynamic-reduced-dimensions.html#cb186-3"></a>        <span class="dt">xmin =</span> <span class="dv">17</span>, <span class="dt">xmax =</span> <span class="dv">55</span>, <span class="dt">ymin =</span> <span class="dv">-36</span>, <span class="dt">ymax =</span> <span class="dv">29</span>,</span>
 <span id="cb186-4"><a href="dynamic-reduced-dimensions.html#cb186-4"></a>        <span class="dt">coords_css =</span> <span class="kw">list</span>(<span class="dt">xmin =</span> 300L, <span class="dt">xmax =</span> 450L, <span class="dt">ymin =</span> 170L, <span class="dt">ymax =</span> 404L),</span>
@@ -411,7 +411,7 @@ Brushing at any location in the former will then trigger dynamic recompution of 
 <span id="cb186-13"><a href="dynamic-reduced-dimensions.html#cb186-13"></a>    )</span>
 <span id="cb186-14"><a href="dynamic-reduced-dimensions.html#cb186-14"></a>)</span>
 <span id="cb186-15"><a href="dynamic-reduced-dimensions.html#cb186-15"></a></span>
-<span id="cb186-16"><a href="dynamic-reduced-dimensions.html#cb186-16"></a>drdp &lt;-<span class="st"> </span><span class="kw">DynRedDimPlot</span>(<span class="dt">DataBoxOpen=</span><span class="ot">TRUE</span>, <span class="dt">ColumnSelectionSource=</span><span class="st">&quot;ReducedDimensionPlot1&quot;</span>)</span>
+<span id="cb186-16"><a href="dynamic-reduced-dimensions.html#cb186-16"></a>drdp &lt;-<span class="st"> </span><span class="kw">DynRedDimPlot</span>(<span class="dt">DataBoxOpen=</span><span class="ot">TRUE</span>, <span class="dt">ColumnSelectionSource=</span><span class="st">&quot;ReducedDimensionPlot1&quot;</span>, <span class="dt">PanelWidth=</span>6L)</span>
 <span id="cb186-17"><a href="dynamic-reduced-dimensions.html#cb186-17"></a>app &lt;-<span class="st"> </span><span class="kw">iSEE</span>(sce, <span class="dt">initial=</span><span class="kw">list</span>(rdp, drdp))</span></code></pre></div>
 <p><img src="screenshots/adaptive-dimred.png" width="100%" /></p>
 
