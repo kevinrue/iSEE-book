@@ -10,8 +10,7 @@ options(digits = 4)
 
 When given a gene list, we often need to look up the function of the top genes in a search engine.
 This typically involves copy-pasting the gene name or ID into the search box and pressing Enter, which is a pain.
-Instead, we can automate this process in `r BiocStyle::Biocpkg("iSEE")` by creating an **annotated gene table**.
-We demonstrate by showing how we can dynamically look up annotation for each gene in the `rowData` of a `SummarizedExperiment`.
+Instead, we can automate this process in `r BiocStyle::Biocpkg("iSEE")` by creating an **annotated gene table** that dynamically looks up annotation for each gene in the `rowData` of a `SummarizedExperiment`.
 
 ## Class basics 
 
@@ -19,7 +18,7 @@ First, we define the basics of our new `Panel` class.
 Our new class will be showing the gene-level metadata, so we inherit from the `RowDataTable` class that does exactly this.
 We add some slots specifying which column of the table contains our gene IDs, the type of ID and the organism database to use.
 
-```{r, echo=FALSE}
+```{r}
 library(iSEE)
 library(S4Vectors)
 setClass("GeneAnnoTable", contains="RowDataTable",
@@ -65,6 +64,7 @@ setValidity2("GeneAnnoTable", function(object) {
 ```
 
 We then specialize the initialize method to set reasonable defaults for these parameters.
+We also provide a constructor to conveniently create new instances.
 
 ```{r}
 setMethod("initialize", "GeneAnnoTable", function(.Object, IDColumn=NULL, 
@@ -73,6 +73,10 @@ setMethod("initialize", "GeneAnnoTable", function(.Object, IDColumn=NULL,
     callNextMethod(.Object, IDColumn=IDColumn, IDType=IDType,
         Organism=Organism, AnnoBoxOpen=AnnoBoxOpen, ...)
 })
+
+GeneAnnoTable <- function(...) {
+    new("GeneAnnoTable", ...)
+}
 ```
 
 ## Setting up the interface
@@ -205,24 +209,21 @@ setMethod(".renderOutput", "GeneAnnoTable", function(x, se, ..., output, pObject
 })
 ```
 
-Observant readers will note that the body of the rendering expression uses `instance` rather than `x`.
+Observant readers will note that the body of the rendering expression uses `pObjects$memory[[panel_name]]` rather than `x`.
 This is intentional as it ensures that we are using the parameter settings from the current state of the app.
 If we used `x`, we would always be using the parameters from the initial state of the app, which is not what we want.
 
 ## In action
 
-Let's put our new panel to the test using the `sce` object, preprocessed in a [previous chapter](#developing).
-
 ```{r, include=FALSE}
 sce <- readRDS("sce.rds")
 ```
 
-Setting up the iSEE instance is as easy as:
+Let's put our new panel to the test using the `sce` object from Chapter \@ref(developing).
+We set up our `iSEE` instance such that clicking on any row will bring up the Entrez annotation (if available) for that feature.
+It is probably best to click on some well-annotated genes as the set of RIKEN transcripts at the front don't have much annotation.
 
 ```{r}
-gat <- new("GeneAnnoTable", PanelWidth=8L)
+gat <- GeneAnnoTable(PanelWidth=8L, Selected="Snap25", Search="Snap")
 app <- iSEE(sce, initial=list(gat))
 ```
-
-Clicking on any row will bring up the Entrez annotation (if available) for that feature.
-It is probably best to click on some well-annotated genes as the set of RIKEN transcripts at the front don't have much annotation.
