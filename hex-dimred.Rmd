@@ -3,19 +3,163 @@
 ```{r, include=FALSE}
 knitr::opts_chunk$set(message = FALSE, warning = FALSE, error = FALSE, cache = FALSE)
 suppressPackageStartupMessages(require(BiocStyle))
+suppressPackageStartupMessages(require(iSEE))
 options(digits = 4)
 ```
 
-# Developing new panels {#developing}
+# Reduced dimension hexbin plot
 
-First, we need to load the `r Biocpkg("iSEE")` package for this chapter.
-This action imports all the builtin panel class definitions, including the virtual class `Panel` that is the base class for any `r Biocpkg("iSEE")` panel class.
+## Overview
+
+In this example, we will create a panel class to show dimensionality reduction results using a hexbin plot.
+The idea is to improve plotting speed for large datasets by binning points rather than showing each point individually.
+Astute readers will note that the proposed class is the same as the `ReducedDimensionHexPlot` from `r Biocpkg("iSEEu")`.
+This chapter will describe the most relevant aspects of the development process to create a reasonably functional class.
+
+## Class basics
+
+The choice of a parent class depends on the properties that we want that new panel class to start with.
+In this case, to create a panel that inherits all the functionality of the `ReducedDimensionPlot` panel type, we simply define a new class that extends that class.
+We will call the new class `RedDimHexPlot`, adding an extra parameter to control the resolution of the hexbins.
 
 ```{r}
-library(iSEE)
+setClass("RedDimHexPlot", contains="ReducedDimensionPlot", 
+    slots=c(BinResolution="numeric"))
 ```
 
-We also set up an example using our favorite dataset, creating a `SingleCellExperiment` object with some precomputed dimensionality reduction results.
+We specialize the `initialize()` method to provide a default for the new parameter.
+We also define a constructor function to make it easier to create a new instance.
+
+```{r}
+setMethod("initialize", "RedDimHexPlot",
+    function(.Object, BinResolution=100, ...)
+{
+    callNextMethod(.Object, BinResolution=BinResolution, ...)
+})
+
+RedDimHexPlot <- function(...) {
+    new("RedDimHexPlot", ...)
+}
+```
+
+At this point, we can already create and use instances of this new panel class in `r Biocpkg("iSEE")` apps.
+However, that would not be very exciting as instances of this new panel class would behave exactly like the those of the parent `ReducedDimensionPlot` class.
+Let's define a few more methods to introduce some more relevant differences in behavior.
+
+## Setting up the interface
+
+Currently, instances of our new class are indistinguishable from the parent `ReducedDimensionPlot` in the `iSEE` interface.
+To differentiate our new class, we create a method for the `.fullName()` generic to show a different name.
+
+```{r}
+setMethod(".fullName", "RedDimHexPlot", function(x) "Reduced dimension hexagonal plot")
+```
+
+While we're here, we might as well give the panel a different color as well.
+
+```{r}
+setMethod(".panelColor", "RedDimHexPlot", function(x) "#AA5500")
+```
+
+We also override aspects of the user interface to add a parameter to modify the bin resolution.
+Here, we place a `numericInput` widget into the set of parameters controlling the size aesthetics.
+
+```{r}
+setMethod(".defineVisualSizeInterface", "RedDimHexPlot", function(x) {
+    plot_name <- .getEncodedName(x)
+    tagList(
+        numericInput(
+            paste0(plot_name, "_", "BinResolution"), label="Bin resolution:",
+            min=1, value=x[["BinResolution"]], step = 1)
+    )
+})
+```
+
+Conversely, some other aspects of the UI are now irrelevant because we are no longer showing individual points.
+This includes the shape of the points, point-related downsampling and a variety of other aesthetic features. 
+Thus, we hide or disable them to avoid cluttering the interface.
+
+```{r}
+setMethod(".hideInterface", "RedDimHexPlot", function(x, field) {
+    if (field == "Downsample") TRUE else callNextMethod()
+})
+
+setMethod(".defineVisualShapeInterface", "RedDimHexPlot", function(x) {
+    NULL
+})
+
+setMethod(".defineVisualOtherInterface", "RedDimHexPlot", function(x) {
+    NULL
+})
+```
+
+## Creating the observers
+
+The only new UI element we added was the widget to control the bin resolution.
+Thus, the only new observer that needs to be added is the one that respects to this element.
+Note the use of `callNextMethod()` to ensure that the observers for the parent class are also instantiated.
+
+```{r}
+setMethod(".createObservers", "RedDimHexPlot", function(x, se, input, session, pObjects, rObjects) {
+    callNextMethod()
+
+    plot_name <- .getEncodedName(x)
+
+    .createProtectedParameterObservers(plot_name,
+        fields=c("BinResolution"),
+        input=input, pObjects=pObjects, rObjects=rObjects)
+
+    invisible(NULL)
+})
+```
+
+## Generating the plot
+
+We create a method for the `.generateDotPlot()` generic to implement our hexbinning strategy.
+The contract for this generic guarantees that our method can immediately rely on the `plot.data` data-frame that is computed by methods defined for the parent `ReducedDimensionPlot` class.
+We also use the precomputed aesthetic `labels` associated with each column of `plot.data`, while setting a fixed label `"Count"` for the `fill` aesthetic associated with the count of observation in each hexagonal bin.
+
+```{r}
+library(ggplot2)
+setMethod(".generateDotPlot", "RedDimHexPlot", function(x, labels, envir) {
+    plot_cmds <- list()
+    plot_cmds[["ggplot"]] <- "dot.plot <- ggplot() +"
+    
+    # Adding hexbins to the plot.
+    plot_cmds[["hex"]] <- "geom_hex(aes(X, Y), plot.data) +"
+    plot_cmds[["labs"]] <- "labs(fill='Count') +"
+    plot_cmds[["labs"]] <- sprintf(
+        "labs(x='%s', y='%s', title='%s', fill='%s') +",
+        labels$X, labels$Y, labels$title, "Count"
+        )
+    plot_cmds[["theme_base"]] <- "theme_bw() +"
+    plot_cmds[["theme_legend"]] <- "theme(legend.position = 'bottom')"
+
+    # Adding a faceting command, if applicable.
+    facet_cmd <- .addFacets(x)
+    if (length(facet_cmd)) {
+        N <- length(plot_cmds)
+        plot_cmds[[N]] <- paste(plot_cmds[[N]], "+")
+        plot_cmds <- c(plot_cmds, facet_cmd)
+    }
+
+    # Adding self-brushing boxes, if they exist.
+    plot_cmds <- .addMultiSelectionPlotCommands(x,
+        envir=envir, commands=plot_cmds)
+
+    gg_plot <- .textEval(plot_cmds, envir)
+
+    list(plot=gg_plot, commands=plot_cmds)
+})
+```
+
+For brevity, we have omitted the more tiresome parts of coloring the bins with respect to assay values or metadata variables.
+However, it is relatively straightforward to extend `.generateDotPlot()` to ensure that it responds to such choices as well as any other relevant parameters in `x` (e.g., font size).
+
+## In action
+
+To demonstrate, we will load an example dataset from the `r Biocpkg("scRNAseq")` package.
+This is provided as a `SingleCellExperiment` on which we compute the usual $t$-SNE plot.
 
 ```{r}
 library(scRNAseq)
@@ -32,121 +176,13 @@ sce <- runTSNE(sce)
 saveRDS(sce, "sce.rds")
 ```
 
-## Create a new S4 class
-
-In the chapter [Panel classes](#panels), we saw how each type of panel is defined as an S4 class, organised in a hierarchy that allows new panel classes to inherit sets of properties and functionality from parent classes.
-
-As a result, developing a new panel type starts with the creation of a new class that inherits from the `Panel` class.
-
-While it is possible to create a new panel class that directly inherits from the top-most virtual `Panel` class, this is the most advanced use case that we will describe in later chapters. <!-- TODO: cross-reference when done. -->
-
-Instead, new concrete panel classes can be rapidly derived from other concrete parent panel classes, using the inheritance relationships between classes to reuse properties and functionality defined in the parent classes and its own parent classes.
-
-The choice of a parent class depends on the properties that we want that new panel class to start with.
-For instance, to create a panel that inherits all the functionality of the `ReducedDimensionPlot` panel type, we simply define a new class that extends that class.
-For example in this chapter, we call that new class `RedDimHexPlot`.
+We now set up an `iSEE()` instance with the hexbin and standard plots for showing reduced dimension results.
+We can see the obvious visual differences in the aesthetics between plots as well as the changes to the user interface. 
 
 ```{r}
-setClass("RedDimHexPlot", contains="ReducedDimensionPlot")
+app <- iSEE(sce, initial=list(
+    ReducedDimensionPlot(Type="TSNE", VisualBoxOpen=TRUE, VisualChoices="Size"),
+    RedDimHexPlot(Type="TSNE", VisualBoxOpen=TRUE, VisualChoices="Size")
+))
 ```
 
-## Add a constructor function
-
-At this point, it is already possible to create instances of the new panel class.
-However, to facilitate this, new panels should provide a constructor function - best practice is to name it identically to the class - to accept arbitrary arguments controlling the initialization of new panel instances created by the function `new()`.
-
-Here, we define a simple constructor function that passes all incoming arguments _as is_ to `new()`.
-
-```{r}
-RedDimHexPlot <- function(...) {
-    new("RedDimHexPlot", ...)
-}
-```
-
-At this point, we can already use instances of this new panel class in `r Biocpkg("iSEE")` apps.
-
-```{r}
-RedDimHexPlot1 <- RedDimHexPlot()
-initial <- list(RedDimHexPlot1)
-app <- iSEE(sce, initial = initial)
-```
-
-However, that would not be very exciting as instances of this new panel class would behave exactly like the those of the parent `ReducedDimensionPlot` class itself.
-To illustrate this, the following code chunk initializes an app displaying an instance of the new `RedDimHexPlot` and its parent `ReducedDimensionPlot` side by side.
-
-```{r}
-RedDimHexPlot1 <- RedDimHexPlot()
-ReducedDimensionPlot1 <- ReducedDimensionPlot()
-initial <- list(RedDimHexPlot1, ReducedDimensionPlot1)
-app <- iSEE(sce, initial = initial)
-```
-
-## Set the panel name in the GUI
-
-The panel class that we created so far also inherited the name of the parent panel class.
-In other words, instances of both classes are entirely indistinguishable from each other in the GUI.
-
-The name of each panel displayed in the GUI is defined by the method `.fullName()`.
-To clearly distinguish the new panel class in the GUI, we overwrite this method to display a name different from the parent class.
-
-```{r}
-setMethod(".fullName", "RedDimHexPlot", function(x) "Reduced dimension hexagonal plot")
-```
-
-With that, launching `app` again now highlights how panels of the new class now display a different title from the parent class.
-
-## Define the commands generating a plot output
-
-Importantly, the API separates the generation of commands processing data from `sce` into a data-frame, from the generation of commands producing a `ggplot` object using the processed data-frame.
-If a new panel class derived from `DotPlot` is meant to process data in the same way as its parent panel, only to display it in a different way, it is then possible to overwrite only the method `.generateDotPlot()`.
-Meanwhile, the data preprocessing will be implicitly handled by the other API methods inherited from the parent class.
-
-Importantly, the method `.generateDotPlot()` requires two key arguments: `labels` provides the plot labels for each of the aesthetics in the plot data, and `envir` provides the environment in which the plotting commands are to be evaluated to produce the `ggplot` object.
-
-In particular, the contract offered by iSEE to panel developers promises the presence of certain variables in `envir`, that `.generateDotPlot()` can rely on.
-Using those environment variables, `.generateDotPlot()` can make decisions altering the plotting commands and the resulting `ggplot` object.
-For instance, the most important environment variable is `plot.data`, the data-frame that contains one row per data point to display in `DotPlot` panels.
-
-Readers should refer to the **"Generating the ggplot object"** section of `help(".generateDotPlot", "iSEE")` for more information.
-
-As an example, we overwrite the method `.generateDotPlot()` for the new class `RedDimHexPlot` to simply show the number of data points in the plotting area as a heatmap dividing the plane into regular hexagons.
-Notably, the contract described above guarantees that the function can immediately rely on the `plot.data` data-frame that is computed by methods defined for the parent class `ReducedDimensionPlot`.
-We also use the precomputed aesthetic `labels` associated with each column of `plot.data`, while setting a fixed label `"Count"` for the `fill` aesthetic associated with the count of observation in each hexagonal bin.
-
-```{r}
-setMethod(".generateDotPlot", "RedDimHexPlot", function(x, labels, envir) {
-    stopifnot(require(ggplot2))
-    
-    plot_cmds <- list()
-    plot_cmds[["ggplot"]] <- "ggplot() +"
-    
-    # Adding hexbins to the plot.
-    plot_cmds[["hex"]] <- "geom_hex(aes(X, Y), plot.data) +"
-    plot_cmds[["labs"]] <- "labs(fill='Count') +"
-    plot_cmds[["labs"]] <- sprintf(
-        "labs(x='%s', y='%s', title='%s', fill='%s') +",
-        labels$X, labels$Y, labels$title, "Count"
-        )
-    plot_cmds[["theme_base"]] <- "theme_bw() +"
-    plot_cmds[["theme_legend"]] <- "theme(legend.position = 'bottom')"
-    
-    gg_plot <- eval(parse(text=plot_cmds), envir)
-    
-    list(plot=gg_plot, commands=plot_cmds)
-})
-```
-
-Running `app` again highlights how the `RedDimHexPlot` panel fills each hexagonal bin with a color indicating the number of data points present in the corresponding area in the `ReducedDimensionPlot` panel.
-
-<!-- TODO:
-second fastest visual result:
-override the plotting function
--->
-
-<!-- TODO: add a UI (preferably that affects XY) -->
-
-<!-- TODO: add an observer -->
-
-<!-- TODO: override the XY data logic -->
-
-<!-- TODO: override the plot logic (again, see above) -->
