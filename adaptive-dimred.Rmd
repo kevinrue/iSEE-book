@@ -10,6 +10,7 @@ options(digits = 4)
 
 In this case study, we will create a custom panel class to regenerate sample-level PCA coordinates using only a subset of points transmitted as a multiple column selection from another panel.
 We call this a **dynamic reduced dimension plot**, as it is dynamically recomputing the dimensionality reduction results rather than using pre-computed values in the `reducedDims()` slot of a `SingleCellExperiment` object.
+This proposed class is the basis of the `DynamicReducedDimensionPlot` from the `r Biocpkg("iSEEu")` package.
 
 ## Class basics
 
@@ -20,7 +21,7 @@ including interface elements and observers to handle multiple selections and res
 
 ```{r, echo=FALSE}
 library(iSEE)
-setClass("DynReducedDimensionPlot", contains="ColumnDotPlot",
+setClass("DynRedDimPlot", contains="ColumnDotPlot",
     slots=c(NGenes="integer", Type="character"))
 ```
 
@@ -29,7 +30,7 @@ Any new slots should also come with validity methods, as shown below.
 
 ```{r, results='hide'}
 library(S4Vectors)
-setValidity2("DynReducedDimensionPlot", function(object) {
+setValidity2("DynRedDimPlot", function(object) {
     msg <- character(0)
 
     if (length(n <- object[["NGenes"]])!=1L || n < 1L) {
@@ -48,14 +49,19 @@ setValidity2("DynReducedDimensionPlot", function(object) {
 })
 ```
 
-It is also worthwhile specializing the `initialize()` method to provide a default for new parameters:
+We specialize the `initialize()` method to provide a default for new parameters.
+We also implement a constructor for instances of this class.
 
 ```{r}
-setMethod("initialize", "DynReducedDimensionPlot", 
+setMethod("initialize", "DynRedDimPlot", 
     function(.Object, Type="PCA", NGenes=1000L, ...) 
 {
     callNextMethod(.Object, Type=Type, NGenes=NGenes, ...)
 })
+
+DynRedDimPlot <- function(...) {
+    new("DynRedDimPlot", ...)
+}
 ```
 
 ## Setting up the interface
@@ -64,9 +70,9 @@ The most basic requirement is to define some methods that describe our new panel
 This includes defining the full name and desired default color for display purposes:
 
 ```{r}
-setMethod(".fullName", "DynReducedDimensionPlot", function(x) "Dynamic reduced dimension plot")
+setMethod(".fullName", "DynRedDimPlot", function(x) "Dynamic reduced dimension plot")
 
-setMethod(".panelColor", "DynReducedDimensionPlot", function(x) "#0F0F0F")
+setMethod(".panelColor", "DynRedDimPlot", function(x) "#0F0F0F")
 ```
 
 We also add interface elements to change the result type and the number of genes.
@@ -74,7 +80,7 @@ This is most easily done by specializing the `.defineDataInterface` method:
 
 ```{r}
 library(shiny)
-setMethod(".defineDataInterface", "DynReducedDimensionPlot", function(x, se, select_info) {
+setMethod(".defineDataInterface", "DynRedDimPlot", function(x, se, select_info) {
     plot_name <- .getEncodedName(x)
 
     list(
@@ -86,9 +92,9 @@ setMethod(".defineDataInterface", "DynReducedDimensionPlot", function(x, se, sel
 })
 ```
 
-We call `.getEncodedName()` to obtain a unique name for the current instance of our panel, e.g., `DynReducedDimensionPlot1`.
+We call `.getEncodedName()` to obtain a unique name for the current instance of our panel, e.g., `DynRedDimPlot1`.
 We then `paste0` the name of our panel to the name of any parameter to ensure that the ID is unique to this instance of our panel;
-otherwise, multiple `DynReducedDimensionPlot`s would override each other.
+otherwise, multiple `DynRedDimPlot`s would override each other.
 One can imagine this as a poor man's Shiny module.
 
 ## Creating the observers
@@ -98,7 +104,7 @@ Note the use of `callNextMethod()` to ensure that observers of the parent class 
 this automatically ensures that we can respond to changes in parameters provided by `ColumnDotPlot`.
 
 ```{r}
-setMethod(".createObservers", "DynReducedDimensionPlot", 
+setMethod(".createObservers", "DynRedDimPlot", 
     function(x, se, input, session, pObjects, rObjects) 
 {
     callNextMethod()
@@ -117,6 +123,15 @@ We use the `.createProtectedParameterObservers()` utility to set up observers fo
 which will instruct `iSEE()` to destroy existing brushes and lassos when these parameters are changed.
 The idea here is that brushes/lassos made on the previous plot do not make sense when the coordinates are recomputed.
 
+For this particular panel class, an additional helpful feature is to override `.multiSelectionInvalidated`.
+This indicates that any brushes or lassos in our plot should be destroyed when we receive a new column selection.
+Doing so is the only sensible course of action as the reduced dimension coordinates for one set of samples have no obvious relationship to the coordinates for another set of samples;
+having old brushes or lassos hanging around would be of no benefit at best, and be misleading at worst.
+
+```{r}
+setMethod(".multiSelectionInvalidated", "DynRedDimPlot", function(x) TRUE)
+```
+
 ## Making the plot
 
 When working with a `ColumnDotPlot` subclass, the easiest way to change plotting content to override the `.generateDotPlotData` method.
@@ -125,7 +140,7 @@ It should also return a character vector of R commands describing how that `plot
 The easiest way to do this is to create a character vector of commands and call `eval(parse(text=...), envir=envir)` to evaluate them within `envir`.
 
 ```{r}
-setMethod(".generateDotPlotData", "DynReducedDimensionPlot", function(x, envir) {
+setMethod(".generateDotPlotData", "DynRedDimPlot", function(x, envir) {
     commands <- character(0)
 
     if (!exists("col_selected", envir=envir, inherits=FALSE)) {
@@ -164,33 +179,35 @@ thus avoiding an unnecessary delay from recomputation.
 Doing so requires overriding `.renderOutput()` to take advantage of the cached contents of the plot, 
 so we will omit that here for simplicity. 
 
-## Finishing touches
-
-For this particular panel class, an additional helpful feature is to override `.multiSelectionInvalidated`.
-This indicates that any brushes or lassos in our plot should be destroyed when we receive a new column selection.
-Doing so is the only sensible course of action as the reduced dimension coordinates for one set of samples have no obvious relationship to the coordinates for another set of samples;
-having old brushes or lassos hanging around would be of no benefit at best, and be misleading at worst.
-
-```{r}
-setMethod(".multiSelectionInvalidated", "DynReducedDimensionPlot", function(x) TRUE)
-```
-
 ## In action
-
-Let's put our new panel to the test.
-We use the `sce` object, preprocessed in a [previous chapter](#developing), including some precomputed dimensionality reduction results.
 
 ```{r, include=FALSE}
 sce <- readRDS("sce.rds")
 ```
 
+Let's put our new panel to the test.
+We'll use the `sce` object from Chapter \@ref(developing), which includes some precomputed dimensionality reduction results.
 The plan is to create a (fixed) reduced dimension plot that will transmit a multiple selection to our dynamic reduced dimension plot.
-This is as easy as:
+Brushing at any location in the former will then trigger dynamic recompution of results in the latter.
 
 ```{r}
-rdp <- ReducedDimensionPlot(PanelId=1L)
-drdp <- new("DynReducedDimensionPlot", ColumnSelectionSource="ReducedDimensionPlot1")
+rdp <- ReducedDimensionPlot(PanelId=1L,
+    BrushData = list(
+        xmin = 17, xmax = 55, ymin = -36, ymax = 29,
+        coords_css = list(xmin = 300L, xmax = 450L, ymin = 170L, ymax = 404L),
+        coords_img = list( xmin = 375L, xmax = 562, ymin = 212, ymax = 505L),
+        img_css_ratio = list(x = 1, y = 1),
+        mapping = list(x = "X", y = "Y"),
+        domain = list(left = -49, right = 57, bottom = -53, top = 70),
+        range = list(left = 49, right = 570, bottom = 580, top = 31),
+        log = list(x = NULL, y = NULL),
+        direction = "xy", brushId = "ReducedDimensionPlot1_Brush",
+        outputId = "ReducedDimensionPlot1"
+    )
+)
+
+drdp <- DynRedDimPlot(DataBoxOpen=TRUE, ColumnSelectionSource="ReducedDimensionPlot1")
 app <- iSEE(sce, initial=list(rdp, drdp))
 ```
 
-Brushing at any location in `ReducedDimensionPlot1` will then trigger dynamically recompution of results in our `DynReducedDimensionPlot`.
+
