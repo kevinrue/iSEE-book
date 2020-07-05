@@ -203,8 +203,8 @@ We can see the obvious visual differences in the aesthetics between plots as wel
 
 ```{r}
 app <- iSEE(sce, initial=list(
-    ReducedDimensionPlot(Type="TSNE", VisualBoxOpen=TRUE, VisualChoices="Size"),
-    RedDimHexPlot(Type="TSNE", VisualBoxOpen=TRUE, VisualChoices="Size")
+    ReducedDimensionPlot(Type="TSNE", VisualBoxOpen=TRUE, VisualChoices="Size", PanelWidth=6L),
+    RedDimHexPlot(Type="TSNE", VisualBoxOpen=TRUE, VisualChoices="Size", PanelWidth=6L)
 ))
 ```
 
