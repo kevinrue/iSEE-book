@@ -41,3 +41,7 @@ pre code {
 .book .book-body .page-wrapper .page-inner section.normal h2 {
   color: #87b13f;
 }
+
+.book .book-body .page-wrapper .page-inner section.normal h3 {
+  color: #1a81c2;
+}
