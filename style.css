@@ -13,19 +13,25 @@ pre code {
   white-space: inherit;
 }
 
-.book .book-summary ul.summary li a,
-.book .book-summary ul.summary li span {
-  color: #c4d931;
-  font-weight: bold;
-}
+/*
+#0092ac   blue
+#c4d931   green (on blue)
+#87b13f   green (on white)
+*/
 
 .book .book-summary {
   background-color: #0092ac;
 }
 
+.book .book-summary ul.summary li a,
+.book .book-summary ul.summary li span {
+  color: white;
+  /*font-weight: bold;*/
+}
+
 .book .book-summary ul.summary li a:hover,
 .book .book-summary ul.summary li.active>a {
-  color: white;
+  color: #c4d931;
 }
 
 /*.book .book-summary ul.summary li.part>span*/
